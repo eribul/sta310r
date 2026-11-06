@@ -1,0 +1,394 @@
+---
+title: "Computer exercise 1: Survival analysis"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+    fig_width: 7
+    fig_height: 5
+vignette: >
+  %\VignetteIndexEntry{Computer exercise 1: Survival analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE,
+  warning = FALSE
+)
+
+# A fixed seed, only so that the element ids that gt gives its tables are
+# reproducible: then inst/doc/ only changes when the text changes.
+set.seed(1014)
+```
+
+<style>
+.callout-note {
+  border-left: 4px solid #0d6efd;
+  background: #f1f5fb;
+  padding: 0.75em 1em;
+  margin: 1em 0;
+}
+</style>
+
+::: {.callout-note}
+**About this computer exercise.**
+
+This exercise follows the lecture *Survival analysis* and the corresponding parts of Collett,
+*Modelling Survival Data in Medical Research* (4th ed.):
+
+- **Chapter 1** — censoring, the survivor function $S(t)$, the hazard $h(t)$ and the cumulative hazard $H(t)$
+- **Chapter 2** — Kaplan–Meier, Nelson–Aalen, median and percentiles, the log-rank test
+- **Chapter 3** — Cox proportional hazards regression and hazard ratios
+- **Section 4.4** — checking the proportional hazards assumption
+
+Sections 1–6 each contain a short introduction, worked R code that you should run
+yourself, and questions to answer. The solutions are in a separate document, [Computer exercise 1:
+solutions](cs1-solutions.html) (`vignette("cs1-solutions")`), which uses the same numbering as this
+exercise.
+
+The data are a synthetic Scottish metastatic breast cancer (MBC) cohort, `scottish_mbc_cohort`,
+which is distributed with this package. It is not one of the data sets from Collett (2023) — it
+comes from the teaching material of the Edinburgh Cancer Informatics Group, and the same cohort is
+used in their online tutorial, which is linked at the end of this document and cited under
+[Data and software](#data-and-software).
+:::
+
+## Learning objectives
+
+After this exercise you should be able to
+
+- explain right-censoring and the independent (non-informative) censoring assumption;
+- estimate and interpret $S(t)$ with Kaplan–Meier: survival at fixed times, median survival, and survival curves by group;
+- estimate the cumulative hazard $H(t)$ with the Nelson–Aalen estimator and relate it to $S(t)$;
+- test for differences in survival between groups with the log-rank test;
+- fit and interpret a Cox proportional hazards model (hazard ratios with confidence intervals);
+- check the proportional hazards assumption with a log–log plot and `cox.zph()`.
+
+## Data and software
+
+The analysis uses the `survival` package for the estimation, `ggsurvfit` for Kaplan–Meier plots
+and `gtsummary` for regression tables. Start by loading the packages and the data:
+
+```{r}
+# The package with the course data sets is attached last, because several of its
+# data sets have the same names as data sets in `survival` (for example
+# `myeloma` and `ovarian`); the most recently attached package is the one that
+# is found first.
+library(tidyverse)
+library(survival)
+library(ggsurvfit)
+library(gtsummary)
+library(sta310r)
+
+mbc <- scottish_mbc_cohort
+glimpse(mbc)
+```
+
+The cohort is entirely synthetic and contains no real patient data. It is documented, with its
+source and licence, on the help page `?scottish_mbc_cohort`.
+
+The variables used in this exercise are:
+
+| Variable | Description |
+|---|---|
+| `patient_id` | Patient identifier |
+| `observed_time` | Follow-up time in months from diagnosis to death or censoring |
+| `status` | Event indicator: 1 = death, 0 = censored (alive at last follow-up) |
+| `age_at_diagnosis` | Age at diagnosis (years) |
+| `ecog_ps` | ECOG performance status at baseline: 0 (best) to 3 (worst) |
+| `hormone_receptor` | Hormone receptor status: `HR-positive` / `HR-negative` |
+| `her2_status` | HER2 status: `Positive` / `Negative` |
+| `n_metastatic_sites` | Number of metastatic sites at diagnosis |
+| `presentation` | `De novo metastatic` or `Recurrent` |
+| `first_line_treatment` | First-line treatment |
+
+## 1. Time-to-event data and censoring
+
+In survival analysis the outcome has two parts: **how long** each subject was followed
+(the survival time) and **what happened** at the end of that time (event or censoring).
+Right-censoring means that we only know that the true event time is *larger* than the observed
+time. All the methods in this exercise assume that censoring is **independent**
+(non-informative): a patient censored at time $t$ must be representative of all patients who were
+still event-free at $t$.
+
+**1.** The data set has one row per patient. In your own words, answer:
+
+(a) What is the time origin (start of follow-up)?
+(b) What is the time scale, and in which unit is it measured?
+(c) What is the event of interest?
+(d) What does `status = 0` mean?
+(e) Name two reasons why a patient in this cohort could be censored.
+
+**2.** Describe the cohort numerically: how many patients are there, how many deaths, how many
+censored observations, and what percentage is censored? What is the range of the follow-up times?
+
+**3.** True or false? Justify each answer briefly.
+
+(a) A patient censored at 10 months is still in the risk set at 12 months.
+(b) If censoring is informative, the Kaplan–Meier estimate is always biased upwards.
+(c) The hazard $h(t)$ is the probability of dying at time $t$.
+(d) Survival times are usually right-skewed, so the mean survival time is preferred to the median.
+(e) Left-censoring means that the true event time is smaller than the observed time, and interval
+censoring means that the event time is known only to lie within an interval.
+
+**4.** Explain why a logistic regression of `status` on the covariates is *not* the right model for
+these data. What extra information does a survival analysis use that logistic regression throws away?
+
+## 2. The survivor function and the Kaplan–Meier estimator
+
+The survivor function $S(t) = P(T \ge t)$ is the probability of surviving until time $t$ or longer.
+Without censoring it is estimated by the empirical proportion still event-free. With censoring we use
+the **Kaplan–Meier** (product-limit) estimator: at each event time $t_j$ we multiply by the
+conditional survival fraction $(n_j - d_j)/n_j$, where $n_j$ is the number at risk and $d_j$ the
+number of events at $t_j$,
+
+$$\hat S(t) = \prod_{t_j \le t} \left(1 - \frac{d_j}{n_j}\right).$$
+
+The following code fits the overall survivor function and prints the estimate at a few time points:
+
+```{r}
+km_overall <- survfit(Surv(observed_time, status) ~ 1, data = mbc)
+km_overall
+summary(km_overall, times = c(6, 12, 24, 36, 48, 60), extend = TRUE)
+```
+
+and the figure below shows the same curve with a confidence band, a line at the median, and a
+number-at-risk table:
+
+```{r}
+#| fig-width: 7
+#| fig-height: 5
+#| fig-dpi: 150
+survfit2(Surv(observed_time, status) ~ 1, data = mbc) |>
+  ggsurvfit() +
+  add_confidence_interval() +
+  add_quantile(y_value = 0.5) +
+  add_risktable() +
+  labs(x = "Time since diagnosis (months)", y = "Survival probability")
+```
+
+**5.** Use the output above and report
+
+(a) the median survival time with a 95 % confidence interval;
+(b) $\hat S(12)$ and $\hat S(24)$ with 95 % confidence intervals.
+
+Interpret each number in words.
+
+**6.** Look at the `n.risk` column of the summary output.
+
+(a) How many patients are still at risk just before 6, 12 and 24 months?
+(b) Between two consecutive event times there may be only censored observations. Does the
+Kaplan–Meier estimate change there — does the curve drop or stay flat? Why?
+(c) The number at risk falls much faster than the number of deaths. Explain.
+
+**7.** Describe the shape of the Kaplan–Meier curve in the figure. What does the long, almost flat
+part after about 60 months mean.
+
+**8.** A colleague ignores censoring and estimates 2-year survival as "the proportion of patients
+who did not die within 24 months", i.e. $1 - (\text{deaths within 24 months})/850$. Compute this
+naive estimate and compare it with the Kaplan–Meier estimate from Question 5. In which direction is
+the naive estimate biased, and why? Would the problem be worse or less serious in a study with more
+censoring?
+
+**9.** Fit and plot the survivor function separately for the two hormone-receptor groups
+(`hormone_receptor`). Report the median survival time for each group and interpret the curves.
+Does the plot suggest that the two groups differ? *Hint:* reuse the code above with
+`Surv(observed_time, status) ~ hormone_receptor`.
+
+## 3. Hazard and cumulative hazard
+
+The hazard $h(t)$ is the instantaneous rate of the event at time $t$ among those still at risk.
+The cumulative hazard $H(t) = \int_0^t h(u)\,du$ accumulates the risk over time, and it is linked to
+the survivor function by $S(t) = \exp(-H(t))$, i.e. $H(t) = -\log S(t)$. The **Nelson–Aalen**
+estimator estimates $H(t)$ as the cumulative sum of the event fractions
+$\hat H(t) = \sum_{t_j \le t} d_j/n_j$.
+
+The next two code blocks plot the cumulative hazard by hormone-receptor status and compare the
+Nelson–Aalen estimate with $-\log \hat S(t)$:
+
+```{r}
+#| fig-width: 7
+#| fig-height: 4.5
+#| fig-dpi: 150
+km_hr <- survfit2(Surv(observed_time, status) ~ hormone_receptor, data = mbc)
+
+km_hr |>
+  ggsurvfit(type = "cumhaz") +
+  labs(x = "Time since diagnosis (months)", y = "Cumulative hazard")
+```
+
+```{r}
+tibble(
+  time = km_overall$time,
+  nelson_aalen = km_overall$cumhaz,
+  neg_log_S = -log(km_overall$surv)
+) |>
+  filter(time %in% c(12, 24)) |>
+  knitr::kable(digits = 3)
+```
+
+**10.** Interpret the cumulative hazard curves. Which group accumulates risk faster, and what does
+the *slope* of a cumulative hazard curve represent?
+
+**11.** The `cumhaz` component of a `survfit` object is the Nelson–Aalen estimate of $H(t)$. The
+table above compares it with $-\log \hat S(t)$ (the Kaplan–Meier-based estimate of the cumulative
+hazard) at $t = 12$ and $t = 24$ months. They agree closely but not exactly — why?
+
+## 4. The log-rank test
+
+To compare two or more groups we test the null hypothesis that they have the same survival
+distribution. At every event time $t_j$ the **log-rank test** compares the observed number of deaths
+in a group, $o_{1j}$, with the number expected under the null hypothesis if the groups were
+exchangeable, $e_{1j} = d_j\, n_{1j}/n_j$, where $n_{1j}$ is the number at risk in group 1 and
+$n_j = n_{1j} + n_{2j}$. The total observed and expected counts are compared with a chi-squared test.
+
+The code below compares the two hormone-receptor groups:
+
+```{r}
+lr_hr <- survdiff(Surv(observed_time, status) ~ hormone_receptor, data = mbc)
+lr_hr
+```
+
+**12.** Use the output to report the observed and expected numbers of deaths in each group, the test
+statistic with degrees of freedom, and the p-value. State the conclusion in clinical language.
+
+**13.** Survival is also related to ECOG performance status, which has four groups (0, 1, 2, 3).
+Carry out a log-rank test comparing the four groups (replace `hormone_receptor` by `ecog_ps`).
+
+(a) What is the null hypothesis here?
+(b) Report the test statistic, degrees of freedom and p-value.
+(c) A significant result tells you *that* the groups differ — what does it *not* tell you?
+
+**Bonus (weighted tests).** The log-rank test gives equal weight to all event times. Suppose you
+suspected that the two hormone-receptor groups differed mainly *early* after diagnosis, with the
+curves converging later. Which alternative test would put more weight on early differences, and how
+would you run it in R? Does it change the conclusion for `hormone_receptor`?
+
+**14.** The expected counts in `survdiff()` are built from the risk sets. Write a short loop that
+computes the observed and expected number of deaths for the **HR-negative** group directly, as
+$$O = \sum_j o_{1j}, \qquad E = \sum_j d_j\,\frac{n_{1j}}{n_j},$$
+summed over all distinct event times. Compare with the `survdiff()` output from Question 12.
+
+*Bonus:* also compute the variance
+
+$$V = \sum_j \frac{d_j (n_j - d_j) n_{1j} n_{2j}}{n_j^2 (n_j - 1)}$$
+
+and the test statistic $(O - E)^2 / V$.
+
+**15.** A colleague wants to compare the hormone-receptor groups while **adjusting for ECOG
+performance status**, but does not want to assume proportional hazards. Which test would you use?
+Carry it out (*hint:* add `+ strata(ecog_ps)` to the right-hand side of the `survdiff()` formula) and
+compare the result with the unadjusted log-rank test.
+
+## 5. Cox proportional hazards regression
+
+The Cox proportional hazards model writes the hazard for a patient with covariates
+$x_1, \dots, x_p$ as
+
+$$h(t \mid x) = h_0(t)\exp(\beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p),$$
+
+where $h_0(t)$ is an unspecified baseline hazard. The model is **semi-parametric**: the baseline
+hazard is left free, and the covariate effects are summarised by **hazard ratios**,
+$\mathrm{HR} = \exp(\beta)$, which are assumed to be constant over time.
+
+The code below fits a univariable Cox model with `hormone_receptor` (the reference level is
+`HR-negative`):
+
+```{r}
+cox_hr <- coxph(Surv(observed_time, status) ~ hormone_receptor, data = mbc)
+tbl_regression(cox_hr, exponentiate = TRUE)
+```
+
+**16.** Use the table above.
+
+(a) Report the estimated hazard ratio with 95 % confidence interval and the p-value.
+(b) Interpret the hazard ratio in words (relative to the reference group).
+(c) Compute and interpret the hazard ratio for HR-negative *versus* HR-positive.
+(d) Compare the p-value with the log-rank p-value from Question 12.
+
+**17.** Fit a multivariable Cox model with `hormone_receptor`, `her2_status`, `n_metastatic_sites`,
+`ecog_ps` (as a factor) and age per 10 years as covariates. Present the hazard ratios in a table and
+interpret each one. Which variables are associated with survival after adjustment?
+
+*Hint:* create a modelling data set first, for example
+`mbc_model <- mbc |> mutate(ecog_ps = factor(ecog_ps), age_dec = age_at_diagnosis / 10)`, and use
+`tbl_regression(..., exponentiate = TRUE)`.
+
+**18.** The rule of thumb for a Cox (or logistic) regression is that the number of covariates should
+be less than (number of events in the smaller group)/10. How many events are there in this cohort?
+How many covariates can you afford? Is the model in Question 17 reasonable from this point of view?
+
+**Bonus (variable selection).** The lecture ends the Cox section with automatic variable selection
+(e.g. stepwise forward selection). What is the main statistical criticism of choosing the variables
+in a model by stepwise selection?
+
+**19.** A colleague ignores the time-to-event nature of the data and fits a logistic regression of
+`status` on `hormone_receptor` instead (`glm(status ~ hormone_receptor, family = binomial)`).
+
+(a) Compute the odds ratio and compare it with the hazard ratio from Question 16.
+(b) Explain why the two measures differ.
+(c) Critique the following statement: *"Patients with HR-negative tumours were 2.5 times more likely
+to die."*
+
+## 6. Checking the proportional hazards assumption
+
+The Cox model assumes that the hazard ratio between any two patients is **constant over time**
+(proportional hazards). Writing $S(t \mid x)$ for the survivor function, the model implies
+
+$$\log\{-\log S(t \mid x)\} = \log\{-\log S_0(t)\} + \beta x,$$
+
+so the curves of $\log(-\log \hat S(t))$ against $t$ for two groups should be **parallel** if
+proportional hazards holds. The plot below shows this log–log (log-cumulative-hazard) plot for the
+two hormone-receptor groups:
+
+```{r}
+#| fig-width: 7
+#| fig-height: 4.5
+#| fig-dpi: 150
+survfit2(Surv(observed_time, status) ~ hormone_receptor, data = mbc) |>
+  ggsurvfit(type = "cloglog") +
+  add_confidence_interval(type = "ribbon", alpha = 0.15) +
+  labs(x = "Time since diagnosis (months)", y = "log(-log S(t))")
+```
+
+**20.** Are the two curves in the log–log plot roughly parallel? What does that say about the
+proportional hazards assumption for `hormone_receptor`?
+
+**21.** `cox.zph()` tests the proportional hazards assumption using (scaled) Schoenfeld residuals.
+Apply it to the multivariable model from Question 17.
+
+(a) Report and interpret the test for each covariate and for `GLOBAL`.
+(b) Is there anything to worry about? What would you do about it?
+
+**22.** Suppose a covariate in a Cox model clearly violates the proportional hazards assumption.
+Describe **two** ways of handling this, and say what the resulting estimates mean.
+
+## Wrap-up and reporting
+
+When you report a survival analysis, check that you have
+
+- stated the **time origin, time scale and event** definition;
+- reported the **amount of censoring** and any concerns about informative censoring;
+- given **number at risk** alongside every Kaplan–Meier plot;
+- reported **medians and survival at fixed times with confidence intervals**, not the mean;
+- paired the log-rank test with an **effect estimate** (hazard ratio) rather than only a p-value;
+- checked and reported the **proportional hazards assumption** when using a Cox model;
+- interpreted hazard ratios as **relative rates**, not as probabilities or relative risks.
+
+## Further reading
+
+- Collett, *Modelling Survival Data in Medical Research*, 4th ed.: Chapters 1–3 and Section 4.4.
+- The course lecture *Survival analysis* (slides on censoring, Kaplan–Meier, the log-rank test and
+  the Cox model).
+- Edinburgh Cancer Informatics Group, [*Survival Analysis in R: A Practical
+  Tutorial*](https://edinburgh-cancer-informatics.github.io/onco-stats/tutorials/survival_analysis_tutorial.html)
+  — a longer walk-through of the same MBC cohort, with extra practice exercises. The cohort itself
+  (and the simulation that generated it) is available in their
+  [`onco-stats` repository](https://github.com/Edinburgh-Cancer-Informatics/onco-stats/tree/main/docs/data),
+  and is redistributed here under its MIT licence; see `?scottish_mbc_cohort`.
+- Thomas E. Love, [*Survival analysis*](https://thomaselove.github.io/432-notes/survival_data.html),
+  Chapters 29–31.

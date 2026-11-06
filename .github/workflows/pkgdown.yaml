@@ -1,0 +1,66 @@
+name: Package documentation
+
+# Bygger pkgdown-sajten och publicerar den på GitHub Pages.
+# URL:en i _pkgdown.yml (https://eribul.github.io/sta310r/) förutsätter att
+# sajten ligger i repots rot, vilket den gör här eftersom paketet är hela repot.
+
+on:
+  push:
+    branches: [main]
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never run two deployments at once; keep the newest queued run.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  docs:
+    name: Build and deploy the package site
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Pandoc
+        uses: r-lib/actions/setup-pandoc@v2
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      # `dependencies` defaults to "all", so the packages used by the
+      # vignettes (tidyverse, ggsurvfit, gtsummary, ...) are installed too.
+      - name: Install dependencies
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::pkgdown
+          needs: website
+
+      # install = TRUE lets pkgdown install the package from its source
+      # directory before building the site.
+      - name: Build the package site
+        run: pkgdown::build_site_github_pages(new_process = FALSE, install = TRUE)
+        shell: Rscript {0}
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload the site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
