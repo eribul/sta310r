@@ -3,6 +3,7 @@
 \docType{data}
 \name{mice}
 \alias{mice}
+\alias{d12.7}
 \title{Survival of laboratory mice with competing causes of death}
 \format{
 A data frame with 181 rows and 3 variables:
@@ -36,6 +37,13 @@ other causes) and 82 in the germ-free environment (29, 15 and 38).
 The data illustrate estimation of the cumulative incidence function for each
 cause and cause-specific Cox regression (Example 12.7).
 }
+\section{Aliases}{
+
+The data set is available under the alias \code{d12.7}; \code{dX.Y} is the alias for
+the data set used in Example X.Y of Collett (2023). See
+\link{dataset_by_exercise} for the complete index.
+}
+
 \examples{
 str(mice)
 table(mice$environment, mice$causeofdeath)

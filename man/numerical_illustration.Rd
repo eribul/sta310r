@@ -3,6 +3,7 @@
 \docType{data}
 \name{numerical_illustration}
 \alias{numerical_illustration}
+\alias{d5.9}
 \title{A numerical illustration of two factors}
 \format{
 A data frame with 37 rows and 4 variables:
@@ -31,6 +32,13 @@ between A and B, are more complicated, and are used to compare Weibull
 proportional hazards and accelerated failure time models fitted to the same
 data (Example 5.9).
 }
+\section{Aliases}{
+
+The data set is available under the alias \code{d5.9}; \code{dX.Y} is the alias for
+the data set used in Example X.Y of Collett (2023). See
+\link{dataset_by_exercise} for the complete index.
+}
+
 \examples{
 str(numerical_illustration)
 survival::survfit(

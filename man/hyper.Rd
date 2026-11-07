@@ -3,6 +3,14 @@
 \docType{data}
 \name{hyper}
 \alias{hyper}
+\alias{d3.4}
+\alias{d3.10}
+\alias{d3.11}
+\alias{d3.13}
+\alias{d3.14}
+\alias{d5.10}
+\alias{d6.1}
+\alias{d6.4}
 \title{Treatment of hypernephroma}
 \format{
 A data frame with 36 rows and 4 variables:
@@ -37,6 +45,14 @@ models with and without interaction, and the interpretation of the baseline
 hazard (Examples 3.4, 3.10, 3.11, 3.13 and 3.14), followed by the
 corresponding Weibull analysis (Examples 5.10, 6.1 and 6.4).
 }
+\section{Aliases}{
+
+The data set is available under the aliases \code{d3.4}, \code{d3.10}, \code{d3.11},
+\code{d3.13}, \code{d3.14}, \code{d5.10}, \code{d6.1}, \code{d6.4}; \code{dX.Y} is the alias for the data
+set used in Example X.Y of Collett (2023). See \link{dataset_by_exercise} for
+the complete index.
+}
+
 \examples{
 str(hyper)
 survival::coxph(

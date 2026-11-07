@@ -12,3 +12,6 @@
 ^Meta$
 ^CRAN-SUBMISSION$
 ^README\.html$
+^AGENTS\.md$
+^\.codewhale$
+^\.vscode$

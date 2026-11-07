@@ -41,6 +41,12 @@ diagnostics, a test of proportional hazards for treatment using a
 time-dependent variable, and a comparison with a Weibull proportional
 hazards model.
 }
+\section{Aliases}{
+
+This data set is not used in a numbered example, so it has no \code{dX.Y} alias.
+See \link{dataset_by_exercise} for the complete index.
+}
+
 \examples{
 str(bladder)
 survival::coxph(

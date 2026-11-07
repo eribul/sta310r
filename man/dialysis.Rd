@@ -3,6 +3,15 @@
 \docType{data}
 \name{dialysis}
 \alias{dialysis}
+\alias{d4.1}
+\alias{d4.2}
+\alias{d4.3}
+\alias{d4.4}
+\alias{d4.6}
+\alias{d4.7}
+\alias{d4.10}
+\alias{d4.11}
+\alias{d4.12}
 \title{Infection in patients on dialysis}
 \format{
 A data frame with 13 rows and 5 variables:
@@ -39,6 +48,14 @@ model-checking diagnostics for the Cox model: Cox-Snell, martingale and
 deviance residuals and influence (Examples 4.1-4.4), a non-linear effect of
 age and a time-dependent effect of sex (Examples 4.10-4.12).
 }
+\section{Aliases}{
+
+The data set is available under the aliases \code{d4.1}, \code{d4.2}, \code{d4.3}, \code{d4.4},
+\code{d4.6}, \code{d4.7}, \code{d4.10}, \code{d4.11}, \code{d4.12}; \code{dX.Y} is the alias for the data
+set used in Example X.Y of Collett (2023). See \link{dataset_by_exercise} for
+the complete index.
+}
+
 \examples{
 str(dialysis)
 survival::coxph(survival::Surv(time, status) ~ age + sex, data = dialysis)

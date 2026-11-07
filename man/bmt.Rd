@@ -43,6 +43,12 @@ log-logistic and lognormal models and with a Cox model, and checking the
 adequacy of the preferred model. See \link{bmt_leukaemia} (a different study of
 23 patients) and \link{bmt_outcome} (EBMT registry data).
 }
+\section{Aliases}{
+
+This data set is not used in a numbered example, so it has no \code{dX.Y} alias.
+See \link{dataset_by_exercise} for the complete index.
+}
+
 \examples{
 str(bmt)
 survival::coxph(

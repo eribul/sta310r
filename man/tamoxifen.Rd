@@ -3,6 +3,7 @@
 \docType{data}
 \name{tamoxifen}
 \alias{tamoxifen}
+\alias{d13.3}
 \title{Clinical trial of tamoxifen in breast cancer patients}
 \format{
 A data frame with 641 rows and 18 variables:
@@ -54,6 +55,13 @@ multiple events. Because a woman can experience more than one of the five
 event types, the data are rearranged into one row per possible event per
 woman before fitting the model (Example 13.3).
 }
+\section{Aliases}{
+
+The data set is available under the alias \code{d13.3}; \code{dX.Y} is the alias for
+the data set used in Example X.Y of Collett (2023). See
+\link{dataset_by_exercise} for the complete index.
+}
+
 \examples{
 str(tamoxifen)
 table(tamoxifen$treat)

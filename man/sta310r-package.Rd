@@ -14,7 +14,7 @@ of teaching functions used in the STA310 lectures and computer exercises.
 
 All 33 data sets distributed with the book are available with their original
 column names and the short object names used in the course material (for
-example \link{iud}, \link{breast}, \link{myeloma}, \link[survival:ovarian]{ovarian}, \link{liver} and \link[survival:rats]{rats}). Use
+example \link{iud}, \link{breast}, \link{myeloma}, \link{ovarian}, \link{liver} and \link{rats}). Use
 \code{data(package = "sta310r")} or the package index for a complete list. Each
 data set is documented with the background of the study, the coded variables
 and the relevant examples in Collett (2023).

@@ -3,6 +3,7 @@
 \docType{data}
 \name{bmt_outcome}
 \alias{bmt_outcome}
+\alias{d13.4}
 \title{Patient outcome following bone marrow transplantation}
 \format{
 A data frame with 2204 rows and 9 variables:
@@ -48,6 +49,13 @@ time of relapse when the first transition is modelled. To fit the model the
 data are expanded into one row per possible transition per patient
 (Example 13.4).
 }
+\section{Aliases}{
+
+The data set is available under the alias \code{d13.4}; \code{dX.Y} is the alias for
+the data set used in Example X.Y of Collett (2023). See
+\link{dataset_by_exercise} for the complete index.
+}
+
 \examples{
 str(bmt_outcome)
 table(bmt_outcome$leukaemia, bmt_outcome$age)

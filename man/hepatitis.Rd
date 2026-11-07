@@ -3,6 +3,9 @@
 \docType{data}
 \name{hepatitis}
 \alias{hepatitis}
+\alias{d15.1}
+\alias{d15.2}
+\alias{d15.3}
 \title{Chronic active hepatitis}
 \format{
 A data frame with 44 rows and 3 variables:
@@ -35,6 +38,13 @@ roughly 400 patients (Examples 15.1-15.3). The appendix also suggests
 survival curves by treatment, the log-rank and Wilcoxon tests, Cox and
 Weibull models and a log-cumulative hazard plot.
 }
+\section{Aliases}{
+
+The data set is available under the aliases \code{d15.1}, \code{d15.2}, \code{d15.3};
+\code{dX.Y} is the alias for the data set used in Example X.Y of Collett (2023).
+See \link{dataset_by_exercise} for the complete index.
+}
+
 \examples{
 str(hepatitis)
 survival::survfit(survival::Surv(time, status) ~ treatment, data = hepatitis)

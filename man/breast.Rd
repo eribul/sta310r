@@ -3,6 +3,25 @@
 \docType{data}
 \name{breast}
 \alias{breast}
+\alias{d1.2}
+\alias{d2.11}
+\alias{d2.12}
+\alias{d2.13}
+\alias{d2.14}
+\alias{d3.1}
+\alias{d3.3}
+\alias{d5.5}
+\alias{d5.6}
+\alias{d5.7}
+\alias{d5.8}
+\alias{d5.13}
+\alias{d5.14}
+\alias{d5.17}
+\alias{d10.1}
+\alias{d10.2}
+\alias{d16.4}
+\alias{d16.5}
+\alias{d16.6}
 \title{Prognosis for women with breast cancer}
 \format{
 A data frame with 45 rows and 3 variables:
@@ -39,6 +58,15 @@ Kaplan-Meier estimate by group (Examples 2.11-2.14), the log-rank and
 Wilcoxon tests (Section 2.4) and a Cox model with \code{stain} as the single
 covariate (Examples 3.1 and 3.3).
 }
+\section{Aliases}{
+
+The data set is available under the aliases \code{d1.2}, \code{d2.11}, \code{d2.12},
+\code{d2.13}, \code{d2.14}, \code{d3.1}, \code{d3.3}, \code{d5.5}, \code{d5.6}, \code{d5.7}, \code{d5.8}, \code{d5.13},
+\code{d5.14}, \code{d5.17}, \code{d10.1}, \code{d10.2}, \code{d16.4}, \code{d16.5}, \code{d16.6}; \code{dX.Y} is
+the alias for the data set used in Example X.Y of Collett (2023). See
+\link{dataset_by_exercise} for the complete index.
+}
+
 \examples{
 str(breast)
 survival::survfit(survival::Surv(time, status) ~ stain, data = breast)

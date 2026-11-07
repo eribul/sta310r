@@ -3,6 +3,12 @@
 \docType{data}
 \name{liver}
 \alias{liver}
+\alias{d12.1}
+\alias{d12.2}
+\alias{d12.3}
+\alias{d12.4}
+\alias{d12.5}
+\alias{d12.6}
 \title{Survival of liver transplant recipients}
 \format{
 A data frame with 1761 rows and 7 variables:
@@ -47,6 +53,14 @@ incidence of each cause of graft failure, cause-specific hazard models and
 the subdistribution approach (Examples 12.1-12.6). See \link{liver_wait} for the
 waiting-list data from the same registry.
 }
+\section{Aliases}{
+
+The data set is available under the aliases \code{d12.1}, \code{d12.2}, \code{d12.3},
+\code{d12.4}, \code{d12.5}, \code{d12.6}; \code{dX.Y} is the alias for the data set used in
+Example X.Y of Collett (2023). See \link{dataset_by_exercise} for the complete
+index.
+}
+
 \examples{
 str(liver)
 table(liver$cof)

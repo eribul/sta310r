@@ -1,0 +1,1769 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Data sets by exercise</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Data sets by exercise</h1>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#the-dx.y-aliases" id="toc-the-dx.y-aliases">The
+<code>dX.Y</code> aliases</a></li>
+<li><a href="#index-by-data-set" id="toc-index-by-data-set">Index by
+data set</a></li>
+<li><a href="#index-by-example" id="toc-index-by-example">Index by
+example</a></li>
+<li><a href="#data-sets-without-a-numbered-example" id="toc-data-sets-without-a-numbered-example">Data sets without a
+numbered example</a></li>
+<li><a href="#using-the-index-in-r" id="toc-using-the-index-in-r">Using
+the index in R</a></li>
+</ul>
+</div>
+
+<p>This vignette presents <code>dataset_by_exercise</code>, the index
+that links every data set in <code>sta310r</code> to the worked examples
+in Collett (2023) that use it. The same index is available as a data
+set, so you can filter and sort it in R rather than reading it here.</p>
+<div id="the-dx.y-aliases" class="section level2">
+<h2>The <code>dX.Y</code> aliases</h2>
+<p>Each example that uses a data set gives that data set an alias
+<code>dX.Y</code>, where <code>X.Y</code> is the number of the example.
+For example, Example 3.7 uses the <code>myeloma</code> data, so
+<code>d3.7</code> is an alias for <code>myeloma</code>:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">identical</span>(d3.7, myeloma)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">dim</span>(d3.7)</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co">#&gt; [1] 48 10</span></span></code></pre></div>
+<p>A data set that is used in more than one example has one alias per
+example. The aliases are ordinary data objects in the package, so
+<code>d3.7</code> works after <code>library(sta310r)</code> just like
+<code>myeloma</code> does, and <code>?d3.7</code> opens the help page of
+the data set. The index below is the authoritative list of which alias
+belongs to which example.</p>
+</div>
+<div id="index-by-data-set" class="section level2">
+<h2>Index by data set</h2>
+<p>One row per data set, with its aliases and example numbers collapsed
+into a single string. The full index, with one row per data set and
+example, is in the next section.</p>
+<table>
+<colgroup>
+<col width="7%" />
+<col width="17%" />
+<col width="38%" />
+<col width="32%" />
+<col width="1%" />
+<col width="3%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Data set</th>
+<th align="left">Title</th>
+<th align="left">Aliases</th>
+<th align="left">Examples</th>
+<th align="right">Rows</th>
+<th align="right">Variables</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">aortic</td>
+<td align="left">Survival following aortic valve replacement</td>
+<td align="left">d8.5, d8.6, d8.7, d8.8, d8.9</td>
+<td align="left">8.5, 8.6, 8.7, 8.8, 8.9</td>
+<td align="right">988</td>
+<td align="right">11</td>
+</tr>
+<tr class="even">
+<td align="left">bladder</td>
+<td align="left">Recurrence of bladder cancer</td>
+<td align="left">—</td>
+<td align="left">—</td>
+<td align="right">86</td>
+<td align="right">6</td>
+</tr>
+<tr class="odd">
+<td align="left">bmt</td>
+<td align="left">Bone marrow transplantation in leukaemia patients</td>
+<td align="left">—</td>
+<td align="left">—</td>
+<td align="right">37</td>
+<td align="right">9</td>
+</tr>
+<tr class="even">
+<td align="left">bmt_leukaemia</td>
+<td align="left">Bone marrow transplantation in the treatment of
+leukaemia</td>
+<td align="left">d8.2</td>
+<td align="left">8.2</td>
+<td align="right">23</td>
+<td align="right">8</td>
+</tr>
+<tr class="odd">
+<td align="left">bmt_outcome</td>
+<td align="left">Patient outcome following bone marrow
+transplantation</td>
+<td align="left">d13.4</td>
+<td align="left">13.4</td>
+<td align="right">2204</td>
+<td align="right">9</td>
+</tr>
+<tr class="even">
+<td align="left">breast</td>
+<td align="left">Prognosis for women with breast cancer</td>
+<td align="left">d1.2, d2.11, d2.12, d2.13, d2.14, d3.1, d3.3, d5.5,
+d5.6, d5.7, d5.8, d5.13, d5.14, d5.17, d10.1, d10.2, d16.4, d16.5,
+d16.6</td>
+<td align="left">1.2, 2.11, 2.12, 2.13, 2.14, 3.1, 3.3, 5.5, 5.6, 5.7,
+5.8, 5.13, 5.14, 5.17, 10.1, 10.2, 16.4, 16.5, 16.6</td>
+<td align="right">45</td>
+<td align="right">3</td>
+</tr>
+<tr class="odd">
+<td align="left">breast_rfs</td>
+<td align="left">Recurrence-free survival in breast cancer patients</td>
+<td align="left">d6.5, d6.6</td>
+<td align="left">6.5, 6.6</td>
+<td align="right">686</td>
+<td align="right">11</td>
+</tr>
+<tr class="even">
+<td align="left">cgd</td>
+<td align="left">Chronic granulomatous disease</td>
+<td align="left">—</td>
+<td align="left">—</td>
+<td align="right">128</td>
+<td align="right">12</td>
+</tr>
+<tr class="odd">
+<td align="left">cirrhosis</td>
+<td align="left">Data from a cirrhosis study (baseline)</td>
+<td align="left">d8.4</td>
+<td align="left">8.4</td>
+<td align="right">12</td>
+<td align="right">6</td>
+</tr>
+<tr class="even">
+<td align="left">cirrhosis_cp</td>
+<td align="left">Data from a cirrhosis study (counting process
+format)</td>
+<td align="left">—</td>
+<td align="left">—</td>
+<td align="right">54</td>
+<td align="right">7</td>
+</tr>
+<tr class="odd">
+<td align="left">cirrhosis_lbr</td>
+<td align="left">Data from a cirrhosis study (log-bilirubin data)</td>
+<td align="left">—</td>
+<td align="left">—</td>
+<td align="right">42</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="left">dialysis</td>
+<td align="left">Infection in patients on dialysis</td>
+<td align="left">d4.1, d4.2, d4.3, d4.4, d4.6, d4.7, d4.10, d4.11,
+d4.12</td>
+<td align="left">4.1, 4.2, 4.3, 4.4, 4.6, 4.7, 4.10, 4.11, 4.12</td>
+<td align="right">13</td>
+<td align="right">5</td>
+</tr>
+<tr class="odd">
+<td align="left">ducks</td>
+<td align="left">Survival of black ducks</td>
+<td align="left">—</td>
+<td align="left">—</td>
+<td align="right">50</td>
+<td align="right">6</td>
+</tr>
+<tr class="even">
+<td align="left">gastric</td>
+<td align="left">Survival of patients with gastric cancer</td>
+<td align="left">d11.2, d11.3</td>
+<td align="left">11.2, 11.3</td>
+<td align="right">90</td>
+<td align="right">4</td>
+</tr>
+<tr class="odd">
+<td align="left">help</td>
+<td align="left">Health evaluation and linkage to primary care</td>
+<td align="left">d16.7</td>
+<td align="left">16.7</td>
+<td align="right">447</td>
+<td align="right">7</td>
+</tr>
+<tr class="even">
+<td align="left">hepatitis</td>
+<td align="left">Chronic active hepatitis</td>
+<td align="left">d15.1, d15.2, d15.3</td>
+<td align="left">15.1, 15.2, 15.3</td>
+<td align="right">44</td>
+<td align="right">3</td>
+</tr>
+<tr class="odd">
+<td align="left">hyper</td>
+<td align="left">Treatment of hypernephroma</td>
+<td align="left">d3.4, d3.10, d3.11, d3.13, d3.14, d5.10, d6.1,
+d6.4</td>
+<td align="left">3.4, 3.10, 3.11, 3.13, 3.14, 5.10, 6.1, 6.4</td>
+<td align="right">36</td>
+<td align="right">4</td>
+</tr>
+<tr class="even">
+<td align="left">iud</td>
+<td align="left">Time to discontinuation of an intrauterine device
+(IUD)</td>
+<td align="left">d1.1, d2.3, d2.4, d2.5, d2.7, d2.8, d2.9, d2.10, d5.1,
+d5.2, d5.3, d5.4, d16.1, d16.2, d16.3</td>
+<td align="left">1.1, 2.3, 2.4, 2.5, 2.7, 2.8, 2.9, 2.10, 5.1, 5.2, 5.3,
+5.4, 16.1, 16.2, 16.3</td>
+<td align="right">18</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="left">kidney</td>
+<td align="left">Survival following kidney transplantation</td>
+<td align="left">d10.4</td>
+<td align="left">10.4</td>
+<td align="right">434</td>
+<td align="right">7</td>
+</tr>
+<tr class="even">
+<td align="left">kidney_centres</td>
+<td align="left">Comparisons between kidney transplant centres</td>
+<td align="left">d11.4, d11.5, d11.6, d11.7, d11.8</td>
+<td align="left">11.4, 11.5, 11.6, 11.7, 11.8</td>
+<td align="right">1439</td>
+<td align="right">9</td>
+</tr>
+<tr class="odd">
+<td align="left">liver</td>
+<td align="left">Survival of liver transplant recipients</td>
+<td align="left">d12.1, d12.2, d12.3, d12.4, d12.5, d12.6</td>
+<td align="left">12.1, 12.2, 12.3, 12.4, 12.5, 12.6</td>
+<td align="right">1761</td>
+<td align="right">7</td>
+</tr>
+<tr class="even">
+<td align="left">liver_wait</td>
+<td align="left">Time to death while waiting for a liver transplant</td>
+<td align="left">d14.1, d14.3</td>
+<td align="left">14.1, 14.3</td>
+<td align="right">281</td>
+<td align="right">7</td>
+</tr>
+<tr class="odd">
+<td align="left">lung_transplant</td>
+<td align="left">Survival of patients registered for a lung
+transplant</td>
+<td align="left">d10.3</td>
+<td align="left">10.3</td>
+<td align="right">196</td>
+<td align="right">7</td>
+</tr>
+<tr class="even">
+<td align="left">melanoma</td>
+<td align="left">Survival times of patients with melanoma</td>
+<td align="left">d2.15, d2.16</td>
+<td align="left">2.15, 2.16</td>
+<td align="right">30</td>
+<td align="right">4</td>
+</tr>
+<tr class="odd">
+<td align="left">mice</td>
+<td align="left">Survival of laboratory mice with competing causes of
+death</td>
+<td align="left">d12.7</td>
+<td align="left">12.7</td>
+<td align="right">181</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="left">myeloma</td>
+<td align="left">Survival of multiple myeloma patients</td>
+<td align="left">d1.3, d2.2, d2.6, d3.2, d3.5, d3.7, d3.8, d3.9, d3.15,
+d3.17, d3.19, d3.20, d4.5, d4.8, d4.9, d5.16</td>
+<td align="left">1.3, 2.2, 2.6, 3.2, 3.5, 3.7, 3.8, 3.9, 3.15, 3.17,
+3.19, 3.20, 4.5, 4.8, 4.9, 5.16</td>
+<td align="right">48</td>
+<td align="right">10</td>
+</tr>
+<tr class="odd">
+<td align="left">numerical_illustration</td>
+<td align="left">A numerical illustration of two factors</td>
+<td align="left">d5.9</td>
+<td align="left">5.9</td>
+<td align="right">37</td>
+<td align="right">4</td>
+</tr>
+<tr class="even">
+<td align="left">ovarian</td>
+<td align="left">Chemotherapy in ovarian cancer patients</td>
+<td align="left">d5.11, d5.12, d7.1, d7.2, d7.3, d7.4, d8.3</td>
+<td align="left">5.11, 5.12, 7.1, 7.2, 7.3, 7.4, 8.3</td>
+<td align="right">26</td>
+<td align="right">7</td>
+</tr>
+<tr class="odd">
+<td align="left">prostate</td>
+<td align="left">Comparison of two treatments for prostatic cancer</td>
+<td align="left">d1.4, d3.6, d3.12, d3.16, d5.15</td>
+<td align="left">1.4, 3.6, 3.12, 3.16, 5.15</td>
+<td align="right">38</td>
+<td align="right">8</td>
+</tr>
+<tr class="even">
+<td align="left">pulmonary</td>
+<td align="left">Pulmonary metastasis in patients with osteosarcoma</td>
+<td align="left">d2.1</td>
+<td align="left">2.1</td>
+<td align="right">11</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">rats</td>
+<td align="left">Recurrence of mammary tumours in female rats</td>
+<td align="left">d13.2</td>
+<td align="left">13.2</td>
+<td align="right">254</td>
+<td align="right">4</td>
+</tr>
+<tr class="even">
+<td align="left">scottish_mbc_cohort</td>
+<td align="left">Synthetic Scottish metastatic breast cancer cohort</td>
+<td align="left">—</td>
+<td align="left">—</td>
+<td align="right">850</td>
+<td align="right">21</td>
+</tr>
+<tr class="odd">
+<td align="left">tamoxifen</td>
+<td align="left">Clinical trial of tamoxifen in breast cancer
+patients</td>
+<td align="left">d13.3</td>
+<td align="left">13.3</td>
+<td align="right">641</td>
+<td align="right">18</td>
+</tr>
+<tr class="even">
+<td align="left">ulcer</td>
+<td align="left">Recurrence of an ulcer</td>
+<td align="left">d9.1, d9.4, d9.5, d9.6, d9.7, d11.1</td>
+<td align="left">9.1, 9.4, 9.5, 9.6, 9.7, 11.1</td>
+<td align="right">43</td>
+<td align="right">6</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="index-by-example" class="section level2">
+<h2>Index by example</h2>
+<p>The full index, ordered by chapter and example. Rows without an alias
+are data sets that are not used in a numbered example; the
+<code>note</code> column says where they come from.</p>
+<table>
+<colgroup>
+<col width="3%" />
+<col width="2%" />
+<col width="10%" />
+<col width="26%" />
+<col width="57%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Example</th>
+<th align="left">Alias</th>
+<th align="left">Data set</th>
+<th align="left">Example title</th>
+<th align="left">Note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1.1</td>
+<td align="left">d1.1</td>
+<td align="left">iud</td>
+<td align="left">Time to discontinuation of the use of an IUD</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">1.2</td>
+<td align="left">d1.2</td>
+<td align="left">breast</td>
+<td align="left">Prognosis for women with breast cancer</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">1.3</td>
+<td align="left">d1.3</td>
+<td align="left">myeloma</td>
+<td align="left">Survival of multiple myeloma patients</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">1.4</td>
+<td align="left">d1.4</td>
+<td align="left">prostate</td>
+<td align="left">Comparison of two treatments for prostatic cancer</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">2.1</td>
+<td align="left">d2.1</td>
+<td align="left">pulmonary</td>
+<td align="left">Pulmonary metastasis</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">2.2</td>
+<td align="left">d2.2</td>
+<td align="left">myeloma</td>
+<td align="left">Survival of multiple myeloma patients</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">2.3</td>
+<td align="left">d2.3</td>
+<td align="left">iud</td>
+<td align="left">Time to discontinuation of the use of an IUD</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">2.4</td>
+<td align="left">d2.4</td>
+<td align="left">iud</td>
+<td align="left">Time to discontinuation of the use of an IUD</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">2.5</td>
+<td align="left">d2.5</td>
+<td align="left">iud</td>
+<td align="left">Time to discontinuation of the use of an IUD</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">2.6</td>
+<td align="left">d2.6</td>
+<td align="left">myeloma</td>
+<td align="left">Survival of multiple myeloma patients</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">2.7</td>
+<td align="left">d2.7</td>
+<td align="left">iud</td>
+<td align="left">Time to discontinuation of the use of an IUD</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">2.8</td>
+<td align="left">d2.8</td>
+<td align="left">iud</td>
+<td align="left">Time to discontinuation of the use of an IUD</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">2.9</td>
+<td align="left">d2.9</td>
+<td align="left">iud</td>
+<td align="left">Time to discontinuation of the use of an IUD</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">2.10</td>
+<td align="left">d2.10</td>
+<td align="left">iud</td>
+<td align="left">Time to discontinuation of the use of an IUD</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">2.11</td>
+<td align="left">d2.11</td>
+<td align="left">breast</td>
+<td align="left">Prognosis for women with breast cancer</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">2.12</td>
+<td align="left">d2.12</td>
+<td align="left">breast</td>
+<td align="left">Prognosis for women with breast cancer</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">2.13</td>
+<td align="left">d2.13</td>
+<td align="left">breast</td>
+<td align="left">Prognosis for women with breast cancer</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">2.14</td>
+<td align="left">d2.14</td>
+<td align="left">breast</td>
+<td align="left">Prognosis for women with breast cancer</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">2.15</td>
+<td align="left">d2.15</td>
+<td align="left">melanoma</td>
+<td align="left">Survival times of patients with melanoma</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">2.16</td>
+<td align="left">d2.16</td>
+<td align="left">melanoma</td>
+<td align="left">Survival times of patients with melanoma</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">3.1</td>
+<td align="left">d3.1</td>
+<td align="left">breast</td>
+<td align="left">Prognosis for women with breast cancer</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">3.2</td>
+<td align="left">d3.2</td>
+<td align="left">myeloma</td>
+<td align="left">Survival of multiple myeloma patients</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">3.3</td>
+<td align="left">d3.3</td>
+<td align="left">breast</td>
+<td align="left">Prognosis for women with breast cancer</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">3.4</td>
+<td align="left">d3.4</td>
+<td align="left">hyper</td>
+<td align="left">Treatment of hypernephroma</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">3.5</td>
+<td align="left">d3.5</td>
+<td align="left">myeloma</td>
+<td align="left">Survival of multiple myeloma patients</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">3.6</td>
+<td align="left">d3.6</td>
+<td align="left">prostate</td>
+<td align="left">Comparison of two treatments for prostatic cancer</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">3.7</td>
+<td align="left">d3.7</td>
+<td align="left">myeloma</td>
+<td align="left">Survival of multiple myeloma patients</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">3.8</td>
+<td align="left">d3.8</td>
+<td align="left">myeloma</td>
+<td align="left">Survival of multiple myeloma patients</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">3.9</td>
+<td align="left">d3.9</td>
+<td align="left">myeloma</td>
+<td align="left">Survival of multiple myeloma patients</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">3.10</td>
+<td align="left">d3.10</td>
+<td align="left">hyper</td>
+<td align="left">Treatment of hypernephroma</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">3.11</td>
+<td align="left">d3.11</td>
+<td align="left">hyper</td>
+<td align="left">Treatment of hypernephroma</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">3.12</td>
+<td align="left">d3.12</td>
+<td align="left">prostate</td>
+<td align="left">Comparison of two treatments for prostatic cancer</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">3.13</td>
+<td align="left">d3.13</td>
+<td align="left">hyper</td>
+<td align="left">Treatment of hypernephroma</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">3.14</td>
+<td align="left">d3.14</td>
+<td align="left">hyper</td>
+<td align="left">Treatment of hypernephroma</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">3.15</td>
+<td align="left">d3.15</td>
+<td align="left">myeloma</td>
+<td align="left">Survival of multiple myeloma patients</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">3.16</td>
+<td align="left">d3.16</td>
+<td align="left">prostate</td>
+<td align="left">Comparison of two treatments for prostatic cancer</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">3.17</td>
+<td align="left">d3.17</td>
+<td align="left">myeloma</td>
+<td align="left">Survival of multiple myeloma patients</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">3.19</td>
+<td align="left">d3.19</td>
+<td align="left">myeloma</td>
+<td align="left">Survival of multiple myeloma patients</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">3.20</td>
+<td align="left">d3.20</td>
+<td align="left">myeloma</td>
+<td align="left">Survival of multiple myeloma patients</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">4.1</td>
+<td align="left">d4.1</td>
+<td align="left">dialysis</td>
+<td align="left">Infection in patients on dialysis</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">4.2</td>
+<td align="left">d4.2</td>
+<td align="left">dialysis</td>
+<td align="left">Infection in patients on dialysis</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">4.3</td>
+<td align="left">d4.3</td>
+<td align="left">dialysis</td>
+<td align="left">Infection in patients on dialysis</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">4.4</td>
+<td align="left">d4.4</td>
+<td align="left">dialysis</td>
+<td align="left">Infection in patients on dialysis</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">4.5</td>
+<td align="left">d4.5</td>
+<td align="left">myeloma</td>
+<td align="left">Survival of multiple myeloma patients</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">4.6</td>
+<td align="left">d4.6</td>
+<td align="left">dialysis</td>
+<td align="left">Infection in patients on dialysis</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">4.7</td>
+<td align="left">d4.7</td>
+<td align="left">dialysis</td>
+<td align="left">Infection in patients on dialysis</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">4.8</td>
+<td align="left">d4.8</td>
+<td align="left">myeloma</td>
+<td align="left">Survival of multiple myeloma patients</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">4.9</td>
+<td align="left">d4.9</td>
+<td align="left">myeloma</td>
+<td align="left">Survival of multiple myeloma patients</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">4.10</td>
+<td align="left">d4.10</td>
+<td align="left">dialysis</td>
+<td align="left">Infection in patients on dialysis</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">4.11</td>
+<td align="left">d4.11</td>
+<td align="left">dialysis</td>
+<td align="left">Infection in patients on dialysis</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">4.12</td>
+<td align="left">d4.12</td>
+<td align="left">dialysis</td>
+<td align="left">Infection in patients on dialysis</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">5.1</td>
+<td align="left">d5.1</td>
+<td align="left">iud</td>
+<td align="left">Time to discontinuation of the use of an IUD</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">5.2</td>
+<td align="left">d5.2</td>
+<td align="left">iud</td>
+<td align="left">Time to discontinuation of the use of an IUD</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">5.3</td>
+<td align="left">d5.3</td>
+<td align="left">iud</td>
+<td align="left">Time to discontinuation of the use of an IUD</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">5.4</td>
+<td align="left">d5.4</td>
+<td align="left">iud</td>
+<td align="left">Time to discontinuation of the use of an IUD</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">5.5</td>
+<td align="left">d5.5</td>
+<td align="left">breast</td>
+<td align="left">Prognosis for women with breast cancer</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">5.6</td>
+<td align="left">d5.6</td>
+<td align="left">breast</td>
+<td align="left">Prognosis for women with breast cancer</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">5.7</td>
+<td align="left">d5.7</td>
+<td align="left">breast</td>
+<td align="left">Prognosis for women with breast cancer</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">5.8</td>
+<td align="left">d5.8</td>
+<td align="left">breast</td>
+<td align="left">Prognosis for women with breast cancer</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">5.9</td>
+<td align="left">d5.9</td>
+<td align="left">numerical_illustration</td>
+<td align="left">A numerical illustration</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">5.10</td>
+<td align="left">d5.10</td>
+<td align="left">hyper</td>
+<td align="left">Treatment of hypernephroma</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">5.11</td>
+<td align="left">d5.11</td>
+<td align="left">ovarian</td>
+<td align="left">Chemotherapy in ovarian cancer patients</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">5.12</td>
+<td align="left">d5.12</td>
+<td align="left">ovarian</td>
+<td align="left">Chemotherapy in ovarian cancer patients</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">5.13</td>
+<td align="left">d5.13</td>
+<td align="left">breast</td>
+<td align="left">Prognosis for women with breast cancer</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">5.14</td>
+<td align="left">d5.14</td>
+<td align="left">breast</td>
+<td align="left">Prognosis for women with breast cancer</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">5.15</td>
+<td align="left">d5.15</td>
+<td align="left">prostate</td>
+<td align="left">Comparison of two treatments for prostatic cancer</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">5.16</td>
+<td align="left">d5.16</td>
+<td align="left">myeloma</td>
+<td align="left">Survival of multiple myeloma patients</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">5.17</td>
+<td align="left">d5.17</td>
+<td align="left">breast</td>
+<td align="left">Prognosis for women with breast cancer</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">6.1</td>
+<td align="left">d6.1</td>
+<td align="left">hyper</td>
+<td align="left">Treatment of hypernephroma</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">6.4</td>
+<td align="left">d6.4</td>
+<td align="left">hyper</td>
+<td align="left">Treatment of hypernephroma</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">6.5</td>
+<td align="left">d6.5</td>
+<td align="left">breast_rfs</td>
+<td align="left">Recurrence-free survival in breast cancer patients</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">6.6</td>
+<td align="left">d6.6</td>
+<td align="left">breast_rfs</td>
+<td align="left">Recurrence-free survival in breast cancer patients</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">7.1</td>
+<td align="left">d7.1</td>
+<td align="left">ovarian</td>
+<td align="left">Chemotherapy in ovarian cancer patients</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">7.2</td>
+<td align="left">d7.2</td>
+<td align="left">ovarian</td>
+<td align="left">Chemotherapy in ovarian cancer patients</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">7.3</td>
+<td align="left">d7.3</td>
+<td align="left">ovarian</td>
+<td align="left">Chemotherapy in ovarian cancer patients</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">7.4</td>
+<td align="left">d7.4</td>
+<td align="left">ovarian</td>
+<td align="left">Chemotherapy in ovarian cancer patients</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">8.2</td>
+<td align="left">d8.2</td>
+<td align="left">bmt_leukaemia</td>
+<td align="left">Bone marrow transplantation in the treatment of
+leukaemia</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">8.3</td>
+<td align="left">d8.3</td>
+<td align="left">ovarian</td>
+<td align="left">Chemotherapy in ovarian cancer patients</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">8.4</td>
+<td align="left">d8.4</td>
+<td align="left">cirrhosis</td>
+<td align="left">Data from a cirrhosis study</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">8.4</td>
+<td align="left">NA</td>
+<td align="left">cirrhosis_cp</td>
+<td align="left">Data from a cirrhosis study</td>
+<td align="left">Counting process form of the cirrhosis study; used with
+Example 8.4, whose alias d8.4 is the baseline data.</td>
+</tr>
+<tr class="odd">
+<td align="left">8.4</td>
+<td align="left">NA</td>
+<td align="left">cirrhosis_lbr</td>
+<td align="left">Data from a cirrhosis study</td>
+<td align="left">Long-format log-bilirubin measurements for the
+cirrhosis study; used with Example 8.4, whose alias d8.4 is the baseline
+data.</td>
+</tr>
+<tr class="even">
+<td align="left">8.5</td>
+<td align="left">d8.5</td>
+<td align="left">aortic</td>
+<td align="left">Survival following aortic valve replacement</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">8.6</td>
+<td align="left">d8.6</td>
+<td align="left">aortic</td>
+<td align="left">Survival following aortic valve replacement</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">8.7</td>
+<td align="left">d8.7</td>
+<td align="left">aortic</td>
+<td align="left">Survival following aortic valve replacement</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">8.8</td>
+<td align="left">d8.8</td>
+<td align="left">aortic</td>
+<td align="left">Survival following aortic valve replacement</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">8.9</td>
+<td align="left">d8.9</td>
+<td align="left">aortic</td>
+<td align="left">Survival following aortic valve replacement</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">9.1</td>
+<td align="left">d9.1</td>
+<td align="left">ulcer</td>
+<td align="left">Recurrence of an ulcer</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">9.4</td>
+<td align="left">d9.4</td>
+<td align="left">ulcer</td>
+<td align="left">Recurrence of an ulcer</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">9.5</td>
+<td align="left">d9.5</td>
+<td align="left">ulcer</td>
+<td align="left">Recurrence of an ulcer</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">9.6</td>
+<td align="left">d9.6</td>
+<td align="left">ulcer</td>
+<td align="left">Recurrence of an ulcer</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">9.7</td>
+<td align="left">d9.7</td>
+<td align="left">ulcer</td>
+<td align="left">Recurrence of an ulcer</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">10.1</td>
+<td align="left">d10.1</td>
+<td align="left">breast</td>
+<td align="left">Prognosis for women with breast cancer</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">10.2</td>
+<td align="left">d10.2</td>
+<td align="left">breast</td>
+<td align="left">Prognosis for women with breast cancer</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">10.3</td>
+<td align="left">d10.3</td>
+<td align="left">lung_transplant</td>
+<td align="left">Survival of patients registered for a lung
+transplant</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">10.4</td>
+<td align="left">d10.4</td>
+<td align="left">kidney</td>
+<td align="left">Survival following kidney transplantation</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">11.1</td>
+<td align="left">d11.1</td>
+<td align="left">ulcer</td>
+<td align="left">Recurrence of an ulcer</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">11.2</td>
+<td align="left">d11.2</td>
+<td align="left">gastric</td>
+<td align="left">Survival of patients with gastric cancer</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">11.3</td>
+<td align="left">d11.3</td>
+<td align="left">gastric</td>
+<td align="left">Survival of patients with gastric cancer</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">11.4</td>
+<td align="left">d11.4</td>
+<td align="left">kidney_centres</td>
+<td align="left">Comparisons between kidney transplant centres</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">11.5</td>
+<td align="left">d11.5</td>
+<td align="left">kidney_centres</td>
+<td align="left">Comparisons between kidney transplant centres</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">11.6</td>
+<td align="left">d11.6</td>
+<td align="left">kidney_centres</td>
+<td align="left">Comparisons between kidney transplant centres</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">11.7</td>
+<td align="left">d11.7</td>
+<td align="left">kidney_centres</td>
+<td align="left">Comparisons between kidney transplant centres</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">11.8</td>
+<td align="left">d11.8</td>
+<td align="left">kidney_centres</td>
+<td align="left">Comparisons between kidney transplant centres</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">12.1</td>
+<td align="left">d12.1</td>
+<td align="left">liver</td>
+<td align="left">Survival of liver transplant recipients</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">12.2</td>
+<td align="left">d12.2</td>
+<td align="left">liver</td>
+<td align="left">Survival of liver transplant recipients</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">12.3</td>
+<td align="left">d12.3</td>
+<td align="left">liver</td>
+<td align="left">Survival of liver transplant recipients</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">12.4</td>
+<td align="left">d12.4</td>
+<td align="left">liver</td>
+<td align="left">Survival of liver transplant recipients</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">12.5</td>
+<td align="left">d12.5</td>
+<td align="left">liver</td>
+<td align="left">Survival of liver transplant recipients</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">12.6</td>
+<td align="left">d12.6</td>
+<td align="left">liver</td>
+<td align="left">Survival of liver transplant recipients</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">12.7</td>
+<td align="left">d12.7</td>
+<td align="left">mice</td>
+<td align="left">Survival of laboratory mice</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">13.2</td>
+<td align="left">d13.2</td>
+<td align="left">rats</td>
+<td align="left">Recurrence of mammary tumours in female rats</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">13.3</td>
+<td align="left">d13.3</td>
+<td align="left">tamoxifen</td>
+<td align="left">Clinical trial of tamoxifen in breast cancer
+patients</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">13.4</td>
+<td align="left">d13.4</td>
+<td align="left">bmt_outcome</td>
+<td align="left">Patient outcome following bone marrow
+transplantation</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">14.1</td>
+<td align="left">d14.1</td>
+<td align="left">liver_wait</td>
+<td align="left">Time to death while waiting for a liver transplant</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">14.3</td>
+<td align="left">d14.3</td>
+<td align="left">liver_wait</td>
+<td align="left">Time to death while waiting for a liver transplant</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">15.1</td>
+<td align="left">d15.1</td>
+<td align="left">hepatitis</td>
+<td align="left">Survival from chronic active hepatitis</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">15.2</td>
+<td align="left">d15.2</td>
+<td align="left">hepatitis</td>
+<td align="left">Survival from chronic active hepatitis</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">15.3</td>
+<td align="left">d15.3</td>
+<td align="left">hepatitis</td>
+<td align="left">Survival from chronic active hepatitis</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">16.1</td>
+<td align="left">d16.1</td>
+<td align="left">iud</td>
+<td align="left">Time to discontinuation of the use of an IUD</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">16.2</td>
+<td align="left">d16.2</td>
+<td align="left">iud</td>
+<td align="left">Time to discontinuation of the use of an IUD</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">16.3</td>
+<td align="left">d16.3</td>
+<td align="left">iud</td>
+<td align="left">Time to discontinuation of the use of an IUD</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">16.4</td>
+<td align="left">d16.4</td>
+<td align="left">breast</td>
+<td align="left">Prognosis for women with breast cancer</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">16.5</td>
+<td align="left">d16.5</td>
+<td align="left">breast</td>
+<td align="left">Prognosis for women with breast cancer</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">16.6</td>
+<td align="left">d16.6</td>
+<td align="left">breast</td>
+<td align="left">Prognosis for women with breast cancer</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">16.7</td>
+<td align="left">d16.7</td>
+<td align="left">help</td>
+<td align="left">Health evaluation and linkage to primary care</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">bladder</td>
+<td align="left">NA</td>
+<td align="left">Collett (2023), Appendix B.2; no numbered example.</td>
+</tr>
+<tr class="odd">
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">bmt</td>
+<td align="left">NA</td>
+<td align="left">Collett (2023), Appendix B.4; no numbered example.</td>
+</tr>
+<tr class="even">
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">cgd</td>
+<td align="left">NA</td>
+<td align="left">Collett (2023), Appendix B.5; no numbered example.</td>
+</tr>
+<tr class="odd">
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">ducks</td>
+<td align="left">NA</td>
+<td align="left">Collett (2023), Appendix B.3; no numbered example.</td>
+</tr>
+<tr class="even">
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">scottish_mbc_cohort</td>
+<td align="left">NA</td>
+<td align="left">Course data set from the Edinburgh Cancer Informatics
+group; not from Collett (2023) and not used in a numbered example.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="data-sets-without-a-numbered-example" class="section level2">
+<h2>Data sets without a numbered example</h2>
+<p>Four of the data sets from the book are used in the appendices rather
+than in a numbered example, and the Scottish cohort is course material
+rather than book data. They have no <code>dX.Y</code> alias:</p>
+<table>
+<colgroup>
+<col width="1%" />
+<col width="9%" />
+<col width="26%" />
+<col width="61%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">Data set</th>
+<th align="left">Title</th>
+<th align="left">Note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">80</td>
+<td align="left">cirrhosis_cp</td>
+<td align="left">Data from a cirrhosis study (counting process
+format)</td>
+<td align="left">Counting process form of the cirrhosis study; used with
+Example 8.4, whose alias d8.4 is the baseline data.</td>
+</tr>
+<tr class="even">
+<td align="left">81</td>
+<td align="left">cirrhosis_lbr</td>
+<td align="left">Data from a cirrhosis study (log-bilirubin data)</td>
+<td align="left">Long-format log-bilirubin measurements for the
+cirrhosis study; used with Example 8.4, whose alias d8.4 is the baseline
+data.</td>
+</tr>
+<tr class="odd">
+<td align="left">126</td>
+<td align="left">bladder</td>
+<td align="left">Recurrence of bladder cancer</td>
+<td align="left">Collett (2023), Appendix B.2; no numbered example.</td>
+</tr>
+<tr class="even">
+<td align="left">127</td>
+<td align="left">bmt</td>
+<td align="left">Bone marrow transplantation in leukaemia patients</td>
+<td align="left">Collett (2023), Appendix B.4; no numbered example.</td>
+</tr>
+<tr class="odd">
+<td align="left">128</td>
+<td align="left">cgd</td>
+<td align="left">Chronic granulomatous disease</td>
+<td align="left">Collett (2023), Appendix B.5; no numbered example.</td>
+</tr>
+<tr class="even">
+<td align="left">129</td>
+<td align="left">ducks</td>
+<td align="left">Survival of black ducks</td>
+<td align="left">Collett (2023), Appendix B.3; no numbered example.</td>
+</tr>
+<tr class="odd">
+<td align="left">130</td>
+<td align="left">scottish_mbc_cohort</td>
+<td align="left">Synthetic Scottish metastatic breast cancer cohort</td>
+<td align="left">Course data set from the Edinburgh Cancer Informatics
+group; not from Collett (2023) and not used in a numbered example.</td>
+</tr>
+</tbody>
+</table>
+<p>The cirrhosis study is a special case. Example 8.4 uses three forms
+of the same data: <code>cirrhosis</code> (the baseline values, alias
+<code>d8.4</code>), <code>cirrhosis_lbr</code> (the log-bilirubin
+measurements in long format) and <code>cirrhosis_cp</code> (the counting
+process format). Only the baseline object has the alias; the other two
+are listed with the same example but without an alias.</p>
+</div>
+<div id="using-the-index-in-r" class="section level2">
+<h2>Using the index in R</h2>
+<p>Because the index is a data frame, you can query it directly:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># Which data set does Example 8.3 use?</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>dataset_by_exercise<span class="sc">$</span>dataset[dataset_by_exercise<span class="sc">$</span>example <span class="sc">==</span> <span class="st">&quot;8.3&quot;</span>]</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#&gt; [1] &quot;ovarian&quot; NA        NA        NA        NA        NA</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co"># Which examples use the myeloma data?</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="fu">subset</span>(dataset_by_exercise, dataset <span class="sc">==</span> <span class="st">&quot;myeloma&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;alias&quot;</span>, <span class="st">&quot;example&quot;</span>))</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt;    alias example</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt; 3   d1.3     1.3</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt; 6   d2.2     2.2</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt; 10  d2.6     2.6</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt; 22  d3.2     3.2</span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#&gt; 25  d3.5     3.5</span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co">#&gt; 27  d3.7     3.7</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co">#&gt; 28  d3.8     3.8</span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co">#&gt; 29  d3.9     3.9</span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co">#&gt; 35 d3.15    3.15</span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co">#&gt; 37 d3.17    3.17</span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="co">#&gt; 38 d3.19    3.19</span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="co">#&gt; 39 d3.20    3.20</span></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="co">#&gt; 44  d4.5     4.5</span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="co">#&gt; 47  d4.8     4.8</span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="co">#&gt; 48  d4.9     4.9</span></span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a><span class="co">#&gt; 67 d5.16    5.16</span></span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="co"># All data sets used in Chapter 3</span></span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="fu">unique</span>(dataset_by_exercise<span class="sc">$</span>dataset[dataset_by_exercise<span class="sc">$</span>chapter <span class="sc">==</span> <span class="dv">3</span>])</span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a><span class="co">#&gt; [1] &quot;breast&quot;   &quot;myeloma&quot;  &quot;hyper&quot;    &quot;prostate&quot; NA</span></span></code></pre></div>
+<p>The index is generated by
+<code>data-raw/dataset_by_exercise.R</code>. If a new data set is added,
+or the example mapping changes, update that script and re-run it; it
+recreates both <code>dataset_by_exercise</code> and the
+<code>dX.Y</code> aliases.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -42,6 +42,13 @@ response).
 The baseline values are in \link{cirrhosis} and the repeated measurements in
 \link{cirrhosis_lbr}.
 }
+\section{Aliases}{
+
+Used in Example 8.4, but the alias \code{d8.4} is the baseline \link{cirrhosis}; this
+counting-process form has no alias of its own. See \link{dataset_by_exercise}
+for the complete index.
+}
+
 \examples{
 str(cirrhosis_cp)
 survival::coxph(

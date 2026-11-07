@@ -49,7 +49,8 @@ and the relevant examples in Collett (2023):
 
 ``` r
 library(sta310r)
-data(package = "sta310r")$results[, "Item"]
+items <- data(package = "sta310r")$results[, "Item"]
+items[!grepl("^d[0-9]+[.][0-9]+$", items) & items != "dataset_by_exercise"]
 #>  [1] "aortic"                 "bladder"                "bmt"                   
 #>  [4] "bmt_leukaemia"          "bmt_outcome"            "breast"                
 #>  [7] "breast_rfs"             "cgd"                    "cirrhosis"             
@@ -98,6 +99,69 @@ iud
 #> 18  107      0
 ```
 
+## Data sets by exercise
+
+Each data set that is used in a worked example of Collett (2023) has an
+alias `dX.Y`, where `X.Y` is the number of the example. For example,
+`d3.7` is the `myeloma` data used in Example 3.7, and `d8.4` is the
+baseline cirrhosis data. The aliases are ordinary data objects: `d3.7`
+works after `library(sta310r)`, and `?d3.7` opens the help page of the
+data set. The complete mapping, with one row per data set and example,
+is the `dataset_by_exercise` data set. This is an overview by data set;
+the full table is in `vignette("datasets-by-exercise")`.
+
+``` r
+index <- dataset_by_exercise
+by_dataset <- do.call(rbind, lapply(split(index, index$dataset), function(x) {
+  used <- x[!is.na(x$alias), , drop = FALSE]
+  data.frame(
+    data_set = x$dataset[1],
+    aliases = if (nrow(used)) paste(used$alias, collapse = ", ") else "—",
+    examples = if (nrow(used)) paste(used$example, collapse = ", ") else "—"
+  )
+}))
+by_dataset <- by_dataset[order(by_dataset$data_set), ]
+rownames(by_dataset) <- NULL
+knitr::kable(by_dataset, col.names = c("Data set", "Aliases", "Examples"))
+```
+
+| Data set | Aliases | Examples |
+|:---|:---|:---|
+| aortic | d8.5, d8.6, d8.7, d8.8, d8.9 | 8.5, 8.6, 8.7, 8.8, 8.9 |
+| bladder | — | — |
+| bmt | — | — |
+| bmt_leukaemia | d8.2 | 8.2 |
+| bmt_outcome | d13.4 | 13.4 |
+| breast | d1.2, d2.11, d2.12, d2.13, d2.14, d3.1, d3.3, d5.5, d5.6, d5.7, d5.8, d5.13, d5.14, d5.17, d10.1, d10.2, d16.4, d16.5, d16.6 | 1.2, 2.11, 2.12, 2.13, 2.14, 3.1, 3.3, 5.5, 5.6, 5.7, 5.8, 5.13, 5.14, 5.17, 10.1, 10.2, 16.4, 16.5, 16.6 |
+| breast_rfs | d6.5, d6.6 | 6.5, 6.6 |
+| cgd | — | — |
+| cirrhosis | d8.4 | 8.4 |
+| cirrhosis_cp | — | — |
+| cirrhosis_lbr | — | — |
+| dialysis | d4.1, d4.2, d4.3, d4.4, d4.6, d4.7, d4.10, d4.11, d4.12 | 4.1, 4.2, 4.3, 4.4, 4.6, 4.7, 4.10, 4.11, 4.12 |
+| ducks | — | — |
+| gastric | d11.2, d11.3 | 11.2, 11.3 |
+| help | d16.7 | 16.7 |
+| hepatitis | d15.1, d15.2, d15.3 | 15.1, 15.2, 15.3 |
+| hyper | d3.4, d3.10, d3.11, d3.13, d3.14, d5.10, d6.1, d6.4 | 3.4, 3.10, 3.11, 3.13, 3.14, 5.10, 6.1, 6.4 |
+| iud | d1.1, d2.3, d2.4, d2.5, d2.7, d2.8, d2.9, d2.10, d5.1, d5.2, d5.3, d5.4, d16.1, d16.2, d16.3 | 1.1, 2.3, 2.4, 2.5, 2.7, 2.8, 2.9, 2.10, 5.1, 5.2, 5.3, 5.4, 16.1, 16.2, 16.3 |
+| kidney | d10.4 | 10.4 |
+| kidney_centres | d11.4, d11.5, d11.6, d11.7, d11.8 | 11.4, 11.5, 11.6, 11.7, 11.8 |
+| liver | d12.1, d12.2, d12.3, d12.4, d12.5, d12.6 | 12.1, 12.2, 12.3, 12.4, 12.5, 12.6 |
+| liver_wait | d14.1, d14.3 | 14.1, 14.3 |
+| lung_transplant | d10.3 | 10.3 |
+| melanoma | d2.15, d2.16 | 2.15, 2.16 |
+| mice | d12.7 | 12.7 |
+| myeloma | d1.3, d2.2, d2.6, d3.2, d3.5, d3.7, d3.8, d3.9, d3.15, d3.17, d3.19, d3.20, d4.5, d4.8, d4.9, d5.16 | 1.3, 2.2, 2.6, 3.2, 3.5, 3.7, 3.8, 3.9, 3.15, 3.17, 3.19, 3.20, 4.5, 4.8, 4.9, 5.16 |
+| numerical_illustration | d5.9 | 5.9 |
+| ovarian | d5.11, d5.12, d7.1, d7.2, d7.3, d7.4, d8.3 | 5.11, 5.12, 7.1, 7.2, 7.3, 7.4, 8.3 |
+| prostate | d1.4, d3.6, d3.12, d3.16, d5.15 | 1.4, 3.6, 3.12, 3.16, 5.15 |
+| pulmonary | d2.1 | 2.1 |
+| rats | d13.2 | 13.2 |
+| scottish_mbc_cohort | — | — |
+| tamoxifen | d13.3 | 13.3 |
+| ulcer | d9.1, d9.4, d9.5, d9.6, d9.7, d11.1 | 9.1, 9.4, 9.5, 9.6, 9.7, 11.1 |
+
 ## Teaching functions
 
 - `km_estimate()` and `plot_km()`: the Kaplan-Meier estimator with
@@ -143,10 +207,11 @@ cbind(cox_fit = coef(fit), coxph = coef(ref))
 ```
 
 See `vignette("sta310r")` for a walk-through of the data sets and the
-teaching functions, and `vignette("cs1-survival-analysis")` for the
-first computer exercise. The solutions are a separate document,
+teaching functions, `vignette("datasets-by-exercise")` for the complete
+data set index and `vignette("cs1-survival-analysis")` for the first
+computer exercise. The solutions are a separate document,
 `vignette("cs1-solutions")`, with the same question numbering as the
-exercise. All three are HTML documents. The same material, with a
+exercise. All of them are HTML documents. The same material, with a
 complete reference index, is online at
 <https://eribul.github.io/sta310r/>.
 

@@ -3,6 +3,11 @@
 \docType{data}
 \name{aortic}
 \alias{aortic}
+\alias{d8.5}
+\alias{d8.6}
+\alias{d8.7}
+\alias{d8.8}
+\alias{d8.9}
 \title{Survival following aortic valve replacement}
 \format{
 A data frame with 988 rows and 11 variables:
@@ -45,6 +50,13 @@ The data are used for joint modelling of a longitudinal and a survival
 outcome (Examples 8.5-8.9). The full data set is available as \code{heart.valve}
 in the joineR package.
 }
+\section{Aliases}{
+
+The data set is available under the aliases \code{d8.5}, \code{d8.6}, \code{d8.7}, \code{d8.8},
+\code{d8.9}; \code{dX.Y} is the alias for the data set used in Example X.Y of Collett
+(2023). See \link{dataset_by_exercise} for the complete index.
+}
+
 \examples{
 str(aortic)
 length(unique(aortic$id))

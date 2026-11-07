@@ -1,3 +1,17 @@
+# sta310r (development version)
+
+* Added `dataset_by_exercise`, an index that links every data set to the worked
+  examples of Collett (2023) that use it, with the example number, chapter,
+  example title and the data set dimensions.
+* Every data set that is used in a numbered example now has an alias `dX.Y`,
+  where `X.Y` is the example number. The aliases are ordinary data objects, so
+  `d3.7` is the `myeloma` data used in Example 3.7 and `d8.4` is the baseline
+  cirrhosis data. A data set used in several examples has one alias per
+  example. The aliases are listed on the help page of the corresponding data
+  set.
+* Added the vignette "Data sets by exercise", which presents the index, and an
+  overview of it in the README.
+
 # sta310r 0.1.0
 
 * First release: the data sets from Collett (2023) and the teaching functions

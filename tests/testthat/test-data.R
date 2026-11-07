@@ -1,44 +1,101 @@
-test_that("all documented data sets are available", {
-  items <- data(package = "sta310r")$results[, "Item"]
-  expected <- c(
-    "aortic",
-    "bladder",
-    "bmt",
-    "bmt_leukaemia",
-    "bmt_outcome",
-    "breast",
-    "breast_rfs",
-    "cgd",
-    "cirrhosis",
-    "cirrhosis_cp",
-    "cirrhosis_lbr",
-    "dialysis",
-    "ducks",
-    "gastric",
-    "help",
-    "hepatitis",
-    "hyper",
-    "iud",
-    "kidney",
-    "kidney_centres",
-    "liver",
-    "liver_wait",
-    "lung_transplant",
-    "melanoma",
-    "mice",
-    "myeloma",
-    "numerical_illustration",
-    "ovarian",
-    "prostate",
-    "pulmonary",
-    "rats",
-    "scottish_mbc_cohort",
-    "tamoxifen",
-    "ulcer"
-  )
+base_datasets <- c(
+  "aortic",
+  "bladder",
+  "bmt",
+  "bmt_leukaemia",
+  "bmt_outcome",
+  "breast",
+  "breast_rfs",
+  "cgd",
+  "cirrhosis",
+  "cirrhosis_cp",
+  "cirrhosis_lbr",
+  "dialysis",
+  "ducks",
+  "gastric",
+  "help",
+  "hepatitis",
+  "hyper",
+  "iud",
+  "kidney",
+  "kidney_centres",
+  "liver",
+  "liver_wait",
+  "lung_transplant",
+  "melanoma",
+  "mice",
+  "myeloma",
+  "numerical_illustration",
+  "ovarian",
+  "prostate",
+  "pulmonary",
+  "rats",
+  "scottish_mbc_cohort",
+  "tamoxifen",
+  "ulcer"
+)
 
-  expect_setequal(items, expected)
-  expect_length(items, 34L)
+test_that("the package data are the data sets, the index and the aliases", {
+  items <- data(package = "sta310r")$results[, "Item"]
+  aliases <- dataset_by_exercise$alias[!is.na(dataset_by_exercise$alias)]
+
+  expect_setequal(items, c(base_datasets, aliases, "dataset_by_exercise"))
+})
+
+test_that("the data set index links each data set to its examples", {
+  index <- dataset_by_exercise
+
+  expect_s3_class(index, "data.frame")
+  expect_named(
+    index,
+    c(
+      "dataset",
+      "dataset_title",
+      "alias",
+      "example",
+      "chapter",
+      "chapter_title",
+      "example_title",
+      "n_rows",
+      "n_variables",
+      "note"
+    )
+  )
+  expect_setequal(unique(index$dataset), base_datasets)
+  expect_identical(anyDuplicated(index$alias[!is.na(index$alias)]), 0L)
+  expect_equal(nrow(index), 130L)
+
+  pkg <- as.environment("package:sta310r")
+  aliased <- index[!is.na(index$alias), ]
+  expect_identical(aliased$alias, paste0("d", aliased$example))
+  expect_true(all(grepl("^[0-9]+[.][0-9]+$", aliased$example)))
+  expect_equal(
+    index$n_rows,
+    unname(vapply(index$dataset, function(x) nrow(get(x, envir = pkg)), integer(1)))
+  )
+  expect_equal(
+    index$n_variables,
+    unname(vapply(index$dataset, function(x) ncol(get(x, envir = pkg)), integer(1)))
+  )
+})
+
+test_that("every data set alias is a copy of its data set", {
+  pkg <- as.environment("package:sta310r")
+  aliased <- dataset_by_exercise[!is.na(dataset_by_exercise$alias), ]
+
+  for (i in seq_len(nrow(aliased))) {
+    expect_identical(
+      get(aliased$alias[i], envir = pkg),
+      get(aliased$dataset[i], envir = pkg)
+    )
+  }
+})
+
+test_that("the aliases are part of the package data", {
+  items <- data(package = "sta310r")$results[, "Item"]
+  aliases <- dataset_by_exercise$alias[!is.na(dataset_by_exercise$alias)]
+
+  expect_true(all(aliases %in% items))
 })
 
 test_that("the synthetic Scottish MBC cohort has the structure used in the exercise", {

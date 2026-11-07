@@ -3,6 +3,21 @@
 \docType{data}
 \name{iud}
 \alias{iud}
+\alias{d1.1}
+\alias{d2.3}
+\alias{d2.4}
+\alias{d2.5}
+\alias{d2.7}
+\alias{d2.8}
+\alias{d2.9}
+\alias{d2.10}
+\alias{d5.1}
+\alias{d5.2}
+\alias{d5.3}
+\alias{d5.4}
+\alias{d16.1}
+\alias{d16.2}
+\alias{d16.3}
 \title{Time to discontinuation of an intrauterine device (IUD)}
 \format{
 A data frame with 18 rows and 2 variables:
@@ -40,6 +55,14 @@ In the book they are used for the Kaplan-Meier estimate and the median
 (Examples 2.3-2.10), for exponential, Weibull and log-logistic parametric
 models (Examples 5.1-5.4) and for Bayesian analyses (Examples 16.1-16.3).
 }
+\section{Aliases}{
+
+The data set is available under the aliases \code{d1.1}, \code{d2.3}, \code{d2.4}, \code{d2.5},
+\code{d2.7}, \code{d2.8}, \code{d2.9}, \code{d2.10}, \code{d5.1}, \code{d5.2}, \code{d5.3}, \code{d5.4}, \code{d16.1},
+\code{d16.2}, \code{d16.3}; \code{dX.Y} is the alias for the data set used in Example X.Y
+of Collett (2023). See \link{dataset_by_exercise} for the complete index.
+}
+
 \examples{
 str(iud)
 survival::survfit(survival::Surv(time, status) ~ 1, data = iud)

@@ -3,6 +3,7 @@
 \docType{data}
 \name{kidney}
 \alias{kidney}
+\alias{d10.4}
 \title{Survival following kidney transplantation}
 \format{
 A data frame with 434 rows and 7 variables:
@@ -42,6 +43,13 @@ with and without a shared frailty effect for the donor (Example 10.4).
 See \link{kidney_centres} for transplant survival in eight centres, a
 centre-level analogue of the same problem.
 }
+\section{Aliases}{
+
+The data set is available under the alias \code{d10.4}; \code{dX.Y} is the alias for
+the data set used in Example X.Y of Collett (2023). See
+\link{dataset_by_exercise} for the complete index.
+}
+
 \examples{
 str(kidney)
 length(unique(kidney$donor))

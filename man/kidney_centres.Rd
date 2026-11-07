@@ -3,6 +3,11 @@
 \docType{data}
 \name{kidney_centres}
 \alias{kidney_centres}
+\alias{d11.4}
+\alias{d11.5}
+\alias{d11.6}
+\alias{d11.7}
+\alias{d11.8}
 \title{Comparisons between kidney transplant centres}
 \format{
 A data frame with 1439 rows and 9 variables:
@@ -41,6 +46,13 @@ The data are used to compare centre-specific one-year failure rates, both
 unadjusted and risk-adjusted through a Cox model, and to estimate
 centre-specific rates with fixed and random effects (Examples 11.4-11.8).
 }
+\section{Aliases}{
+
+The data set is available under the aliases \code{d11.4}, \code{d11.5}, \code{d11.6},
+\code{d11.7}, \code{d11.8}; \code{dX.Y} is the alias for the data set used in Example X.Y
+of Collett (2023). See \link{dataset_by_exercise} for the complete index.
+}
+
 \examples{
 str(kidney_centres)
 table(kidney_centres$centre)

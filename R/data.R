@@ -17,6 +17,7 @@
 #' (Collett, 2023, Example 1.1). The data come from a World Health Organization
 #' study of contraceptive methods.
 #'
+#' @aliases d1.1 d2.3 d2.4 d2.5 d2.7 d2.8 d2.9 d2.10 d5.1 d5.2 d5.3 d5.4 d16.1 d16.2 d16.3
 #' @format A data frame with 18 rows and 2 variables:
 #' \describe{
 #'   \item{time}{Time from first use of the IUD to discontinuation, in weeks.}
@@ -38,6 +39,12 @@
 #' (Examples 2.3-2.10), for exponential, Weibull and log-logistic parametric
 #' models (Examples 5.1-5.4) and for Bayesian analyses (Examples 16.1-16.3).
 #'
+#' @section Aliases:
+#' The data set is available under the aliases `d1.1`, `d2.3`, `d2.4`, `d2.5`,
+#' `d2.7`, `d2.8`, `d2.9`, `d2.10`, `d5.1`, `d5.2`, `d5.3`, `d5.4`, `d16.1`,
+#' `d16.2`, `d16.3`; `dX.Y` is the alias for the data set used in Example X.Y
+#' of Collett (2023). See [dataset_by_exercise] for the complete index.
+#'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Example 1.1 (Table 1.1). Data from the World
 #'   Health Organization (1987).
@@ -53,6 +60,7 @@
 #' Grade II, III or IV breast tumour, classified by whether the tumour stained
 #' positively or negatively with the lectin HPA (Collett, 2023, Example 1.2).
 #'
+#' @aliases d1.2 d2.11 d2.12 d2.13 d2.14 d3.1 d3.3 d5.5 d5.6 d5.7 d5.8 d5.13 d5.14 d5.17 d10.1 d10.2 d16.4 d16.5 d16.6
 #' @format A data frame with 45 rows and 3 variables:
 #' \describe{
 #'   \item{stain}{Result of HPA staining: 1 = negative, 2 = positive. Positive
@@ -74,6 +82,13 @@
 #' Wilcoxon tests (Section 2.4) and a Cox model with `stain` as the single
 #' covariate (Examples 3.1 and 3.3).
 #'
+#' @section Aliases:
+#' The data set is available under the aliases `d1.2`, `d2.11`, `d2.12`,
+#' `d2.13`, `d2.14`, `d3.1`, `d3.3`, `d5.5`, `d5.6`, `d5.7`, `d5.8`, `d5.13`,
+#' `d5.14`, `d5.17`, `d10.1`, `d10.2`, `d16.4`, `d16.5`, `d16.6`; `dX.Y` is
+#' the alias for the data set used in Example X.Y of Collett (2023). See
+#' [dataset_by_exercise] for the complete index.
+#'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Example 1.2 (Table 1.2). Data from Leathem and
 #'   Brooks (1987).
@@ -89,6 +104,7 @@
 #' multiple myeloma, together with seven prognostic variables (Collett, 2023,
 #' Example 1.3).
 #'
+#' @aliases d1.3 d2.2 d2.6 d3.2 d3.5 d3.7 d3.8 d3.9 d3.15 d3.17 d3.19 d3.20 d4.5 d4.8 d4.9 d5.16
 #' @format A data frame with 48 rows and 10 variables:
 #' \describe{
 #'   \item{patient}{Patient number (1-48).}
@@ -115,6 +131,13 @@
 #' (Examples 4.5, 4.8 and 4.9) and a Weibull model for a prognostic index
 #' (Example 5.16).
 #'
+#' @section Aliases:
+#' The data set is available under the aliases `d1.3`, `d2.2`, `d2.6`, `d3.2`,
+#' `d3.5`, `d3.7`, `d3.8`, `d3.9`, `d3.15`, `d3.17`, `d3.19`, `d3.20`, `d4.5`,
+#' `d4.8`, `d4.9`, `d5.16`; `dX.Y` is the alias for the data set used in
+#' Example X.Y of Collett (2023). See [dataset_by_exercise] for the complete
+#' index.
+#'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Example 1.3 (Table 1.3). Original data from
 #'   Krall, Uthoff and Harley (1975); the study was carried out at the Medical
@@ -134,6 +157,7 @@
 #' randomised to placebo or to diethylstilbestrol (DES) (Collett, 2023,
 #' Example 1.4).
 #'
+#' @aliases d1.4 d3.6 d3.12 d3.16 d5.15
 #' @format A data frame with 38 rows and 8 variables:
 #' \describe{
 #'   \item{patient}{Patient number (1-38).}
@@ -161,6 +185,11 @@
 #' 5.15), and the fitted Cox model is re-used for an accelerated failure time
 #' comparison (Example 5.15).
 #'
+#' @section Aliases:
+#' The data set is available under the aliases `d1.4`, `d3.6`, `d3.12`,
+#' `d3.16`, `d5.15`; `dX.Y` is the alias for the data set used in Example X.Y
+#' of Collett (2023). See [dataset_by_exercise] for the complete index.
+#'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Example 1.4 (Table 1.4). The full trial is
 #'   given in Andrews and Herzberg (1985).
@@ -178,6 +207,7 @@
 #' Survival times, in months, of eleven male patients with pulmonary metastasis
 #' arising from osteosarcoma (Collett, 2023, Example 2.1).
 #'
+#' @aliases d2.1
 #' @format A data frame with 11 rows and 1 variable:
 #' \describe{
 #'   \item{time}{Survival time in months.}
@@ -190,6 +220,11 @@
 #' months are 1.000, 0.909, 0.455, 0.273 and 0.091, and S(t) is zero after 17
 #' months. The example is used in the book to introduce the empirical survivor
 #' function before censoring is considered.
+#'
+#' @section Aliases:
+#' The data set is available under the alias `d2.1`; `dX.Y` is the alias for
+#' the data set used in Example X.Y of Collett (2023). See
+#' [dataset_by_exercise] for the complete index.
 #'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Example 2.1. Data from Burdette and Gehan
@@ -206,6 +241,7 @@
 #' immunotherapy treatment groups and stratified by age group (Collett, 2023,
 #' Example 2.15).
 #'
+#' @aliases d2.15 d2.16
 #' @format A data frame with 30 rows and 4 variables:
 #' \describe{
 #'   \item{age}{Age group: 1 = 21-40 years, 2 = 41-60 years, 3 = 61 years and
@@ -220,6 +256,11 @@
 #' The tumour was removed surgically before randomisation. The data are used to
 #' illustrate the log-rank test for comparing two treatment groups within each
 #' age stratum (Examples 2.15 and 2.16) and the log-rank test for trend.
+#'
+#' @section Aliases:
+#' The data set is available under the aliases `d2.15`, `d2.16`; `dX.Y` is the
+#' alias for the data set used in Example X.Y of Collett (2023). See
+#' [dataset_by_exercise] for the complete index.
 #'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Examples 2.15 and 2.16 (Table 2.9). Data from
@@ -240,6 +281,7 @@
 #' without a nephrectomy, and classified by age group (Collett, 2023,
 #' Example 3.4).
 #'
+#' @aliases d3.4 d3.10 d3.11 d3.13 d3.14 d5.10 d6.1 d6.4
 #' @format A data frame with 36 rows and 4 variables:
 #' \describe{
 #'   \item{nephrectomy}{Whether the kidney was surgically removed: 0 = no,
@@ -258,6 +300,12 @@
 #' hazard (Examples 3.4, 3.10, 3.11, 3.13 and 3.14), followed by the
 #' corresponding Weibull analysis (Examples 5.10, 6.1 and 6.4).
 #'
+#' @section Aliases:
+#' The data set is available under the aliases `d3.4`, `d3.10`, `d3.11`,
+#' `d3.13`, `d3.14`, `d5.10`, `d6.1`, `d6.4`; `dX.Y` is the alias for the data
+#' set used in Example X.Y of Collett (2023). See [dataset_by_exercise] for
+#' the complete index.
+#'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Example 3.4 (Table 3.6). Data from Lee and
 #'   Wang (2013).
@@ -275,6 +323,7 @@
 #' Times from insertion of a catheter to its removal following infection, for
 #' 13 kidney patients (Collett, 2023, Example 4.1).
 #'
+#' @aliases d4.1 d4.2 d4.3 d4.4 d4.6 d4.7 d4.10 d4.11 d4.12
 #' @format A data frame with 13 rows and 5 variables:
 #' \describe{
 #'   \item{patient}{Patient number (1-13).}
@@ -297,6 +346,12 @@
 #' deviance residuals and influence (Examples 4.1-4.4), a non-linear effect of
 #' age and a time-dependent effect of sex (Examples 4.10-4.12).
 #'
+#' @section Aliases:
+#' The data set is available under the aliases `d4.1`, `d4.2`, `d4.3`, `d4.4`,
+#' `d4.6`, `d4.7`, `d4.10`, `d4.11`, `d4.12`; `dX.Y` is the alias for the data
+#' set used in Example X.Y of Collett (2023). See [dataset_by_exercise] for
+#' the complete index.
+#'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Example 4.1 (Table 4.1). Data from McGilchrist
 #'   and Aisbett (1991).
@@ -311,6 +366,7 @@
 #' Artificial survival times of 37 patients classified by the levels of two
 #' two-level factors, A and B (Collett, 2023, Example 5.9).
 #'
+#' @aliases d5.9
 #' @format A data frame with 37 rows and 4 variables:
 #' \describe{
 #'   \item{a}{Level of factor A: 1 or 2.}
@@ -325,6 +381,11 @@
 #' between A and B, are more complicated, and are used to compare Weibull
 #' proportional hazards and accelerated failure time models fitted to the same
 #' data (Example 5.9).
+#'
+#' @section Aliases:
+#' The data set is available under the alias `d5.9`; `dX.Y` is the alias for
+#' the data set used in Example X.Y of Collett (2023). See
+#' [dataset_by_exercise] for the complete index.
 #'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Example 5.9 (Table 5.1).
@@ -342,6 +403,7 @@
 #' Survival times, in days, of 26 women with ovarian cancer randomised to one
 #' of two chemotherapy regimens (Collett, 2023, Example 5.11).
 #'
+#' @aliases d5.11 d5.12 d7.1 d7.2 d7.3 d7.4 d8.3
 #' @format A data frame with 26 rows and 7 variables:
 #' \describe{
 #'   \item{patient}{Patient number (1-26).}
@@ -366,6 +428,12 @@
 #' selection (Examples 5.11 and 5.12), for model checking of parametric models
 #' (Examples 7.1-7.4) and for a time-dependent covariate (Example 8.3).
 #'
+#' @section Aliases:
+#' The data set is available under the aliases `d5.11`, `d5.12`, `d7.1`,
+#' `d7.2`, `d7.3`, `d7.4`, `d8.3`; `dX.Y` is the alias for the data set used
+#' in Example X.Y of Collett (2023). See [dataset_by_exercise] for the
+#' complete index.
+#'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Example 5.11 (Table 5.6). Data from Edmunson
 #'   et al. (1979) via Therneau (1986).
@@ -381,6 +449,7 @@
 #' breast cancer from the German Breast Cancer Study Group (Collett, 2023,
 #' Example 6.5).
 #'
+#' @aliases d6.5 d6.6
 #' @format A data frame with 686 rows and 11 variables:
 #' \describe{
 #'   \item{id}{Patient number.}
@@ -406,6 +475,11 @@
 #' The example introduces flexible parametric (Royston-Parmar) models with a
 #' treatment effect and several prognostic variables (Examples 6.5 and 6.6).
 #'
+#' @section Aliases:
+#' The data set is available under the aliases `d6.5`, `d6.6`; `dX.Y` is the
+#' alias for the data set used in Example X.Y of Collett (2023). See
+#' [dataset_by_exercise] for the complete index.
+#'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Example 6.5 (Table 6.1). Data from Schumacher
 #'   et al. (1994) and Sauerbrei and Royston (1999).
@@ -424,6 +498,7 @@
 #' marrow transplant, with donor and recipient characteristics and an indicator
 #' of platelet recovery (Collett, 2023, Example 8.2).
 #'
+#' @aliases d8.2
 #' @format A data frame with 23 rows and 8 variables:
 #' \describe{
 #'   \item{patient}{Patient number (1-23).}
@@ -451,6 +526,11 @@
 #' expanded into the counting process format (Example 8.2, and Example 8.1
 #' introduces the format itself).
 #'
+#' @section Aliases:
+#' The data set is available under the alias `d8.2`; `dX.Y` is the alias for
+#' the data set used in Example X.Y of Collett (2023). See
+#' [dataset_by_exercise] for the complete index.
+#'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Example 8.2 (Table 8.2). Data from Klein and
 #'   Moeschberger (2005).
@@ -469,6 +549,7 @@
 #' treatment of cirrhosis of the liver, with baseline age and bilirubin level
 #' (Collett, 2023, Example 8.4).
 #'
+#' @aliases d8.4
 #' @format A data frame with 12 rows and 6 variables:
 #' \describe{
 #'   \item{patient}{Patient number (1-12).}
@@ -491,6 +572,11 @@
 #' `cirrhosis_cp` holds the survival data together with the time-dependent
 #' log(bilirubin) value in counting process format (one row per interval).
 #' See [cirrhosis_lbr] and [cirrhosis_cp].
+#'
+#' @section Aliases:
+#' The data set is available under the alias `d8.4`; `dX.Y` is the alias for
+#' the data set used in Example X.Y of Collett (2023). See
+#' [dataset_by_exercise] for the complete index.
 #'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Example 8.4 (Table 8.4). The hypothetical
@@ -525,6 +611,11 @@
 #' taking effect immediately after the reading. This file is the input to the
 #' counting process version of the data, [cirrhosis_cp]; the baseline values are
 #' in [cirrhosis].
+#'
+#' @section Aliases:
+#' Used in Example 8.4, but the alias `d8.4` is the baseline [cirrhosis]; this
+#' long-format form has no alias of its own. See [dataset_by_exercise] for the
+#' complete index.
 #'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Example 8.4 (Table 8.5).
@@ -565,6 +656,11 @@
 #' The baseline values are in [cirrhosis] and the repeated measurements in
 #' [cirrhosis_lbr].
 #'
+#' @section Aliases:
+#' Used in Example 8.4, but the alias `d8.4` is the baseline [cirrhosis]; this
+#' counting-process form has no alias of its own. See [dataset_by_exercise]
+#' for the complete index.
+#'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Example 8.4 (Tables 8.4 and 8.5).
 #'
@@ -582,6 +678,7 @@
 #' survival times for 256 patients who received an aortic valve replacement
 #' (Collett, 2023, Example 8.5).
 #'
+#' @aliases d8.5 d8.6 d8.7 d8.8 d8.9
 #' @format A data frame with 988 rows and 11 variables:
 #' \describe{
 #'   \item{id}{Patient number (1-256).}
@@ -609,6 +706,11 @@
 #' outcome (Examples 8.5-8.9). The full data set is available as `heart.valve`
 #' in the joineR package.
 #'
+#' @section Aliases:
+#' The data set is available under the aliases `d8.5`, `d8.6`, `d8.7`, `d8.8`,
+#' `d8.9`; `dX.Y` is the alias for the data set used in Example X.Y of Collett
+#' (2023). See [dataset_by_exercise] for the complete index.
+#'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Example 8.5 (Table 8.10). Data from Lim et al.
 #'   (2008).
@@ -623,6 +725,7 @@
 #' Interval-censored times to recurrence of an ulcer among 43 patients in a
 #' double-blind clinical trial of two treatments (Collett, 2023, Example 9.1).
 #'
+#' @aliases d9.1 d9.4 d9.5 d9.6 d9.7 d11.1
 #' @format A data frame with 43 rows and 6 variables:
 #' \describe{
 #'   \item{patient}{Patient number (1-43).}
@@ -649,6 +752,11 @@
 #' the restricted mean survival time computed from interval-censored data
 #' (Example 11.1). The full multinational study is described by Whitehead
 #' (1989); the data here are the Belgian subset.
+#'
+#' @section Aliases:
+#' The data set is available under the aliases `d9.1`, `d9.4`, `d9.5`, `d9.6`,
+#' `d9.7`, `d11.1`; `dX.Y` is the alias for the data set used in Example X.Y
+#' of Collett (2023). See [dataset_by_exercise] for the complete index.
 #'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Example 9.1 (Tables 9.1 and 9.2). Data from
@@ -688,6 +796,10 @@
 #' time-dependent variable, and a comparison with a Weibull proportional
 #' hazards model.
 #'
+#' @section Aliases:
+#' This data set is not used in a numbered example, so it has no `dX.Y` alias.
+#' See [dataset_by_exercise] for the complete index.
+#'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Appendix B.2 (Table B.2). Data from Andrews
 #'   and Herzberg (1985).
@@ -706,6 +818,7 @@
 #' rats, treated with a retinoid or a control, in recurrent-event form (Collett,
 #' 2023, Example 13.2).
 #'
+#' @aliases d13.2
 #' @format A data frame with 254 rows and 4 variables:
 #' \describe{
 #'   \item{rat}{Rat number (1-48).}
@@ -730,6 +843,11 @@
 #' process format (Example 13.2; see also [cirrhosis_cp] for a simpler
 #' counting process illustration).
 #'
+#' @section Aliases:
+#' The data set is available under the alias `d13.2`; `dX.Y` is the alias for
+#' the data set used in Example X.Y of Collett (2023). See
+#' [dataset_by_exercise] for the complete index.
+#'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Example 13.2 (Table 13.2). Data from Gail,
 #'   Santner and Brown (1980).
@@ -745,6 +863,7 @@
 #' randomised trial of tamoxifen alone versus tamoxifen plus radiotherapy
 #' (Collett, 2023, Example 13.3).
 #'
+#' @aliases d13.3
 #' @format A data frame with 641 rows and 18 variables:
 #' \describe{
 #'   \item{id}{Patient identifier.}
@@ -781,6 +900,11 @@
 #' event types, the data are rearranged into one row per possible event per
 #' woman before fitting the model (Example 13.3).
 #'
+#' @section Aliases:
+#' The data set is available under the alias `d13.3`; `dX.Y` is the alias for
+#' the data set used in Example X.Y of Collett (2023). See
+#' [dataset_by_exercise] for the complete index.
+#'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Example 13.3 (Table 13.5). Data from Fyles et
 #'   al. (2004) and Pintilie (2006).
@@ -797,6 +921,7 @@
 #' with times to platelet recovery and to relapse or death (Collett, 2023,
 #' Example 13.4).
 #'
+#' @aliases d13.4
 #' @format A data frame with 2204 rows and 9 variables:
 #' \describe{
 #'   \item{id}{Patient identifier.}
@@ -827,6 +952,11 @@
 #' data are expanded into one row per possible transition per patient
 #' (Example 13.4).
 #'
+#' @section Aliases:
+#' The data set is available under the alias `d13.4`; `dX.Y` is the alias for
+#' the data set used in Example X.Y of Collett (2023). See
+#' [dataset_by_exercise] for the complete index.
+#'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Example 13.4 (Table 13.9). Data from the EBMT
 #'   Registry, see Putter, Fiocco and Geskus (2007).
@@ -841,6 +971,7 @@
 #' Graft survival times of 1761 adult liver transplant recipients, with the
 #' cause of graft failure (Collett, 2023, Example 12.1).
 #'
+#' @aliases d12.1 d12.2 d12.3 d12.4 d12.5 d12.6
 #' @format A data frame with 1761 rows and 7 variables:
 #' \describe{
 #'   \item{patient}{Patient number (1-1761).}
@@ -871,6 +1002,12 @@
 #' the subdistribution approach (Examples 12.1-12.6). See [liver_wait] for the
 #' waiting-list data from the same registry.
 #'
+#' @section Aliases:
+#' The data set is available under the aliases `d12.1`, `d12.2`, `d12.3`,
+#' `d12.4`, `d12.5`, `d12.6`; `dX.Y` is the alias for the data set used in
+#' Example X.Y of Collett (2023). See [dataset_by_exercise] for the complete
+#' index.
+#'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Example 12.1 (Table 12.1). Data from the UK
 #'   Transplant Registry.
@@ -889,6 +1026,7 @@
 #' Survival times and causes of death for 181 irradiated mice, reared in a
 #' standard or a germ-free environment (Collett, 2023, Example 12.7).
 #'
+#' @aliases d12.7
 #' @format A data frame with 181 rows and 3 variables:
 #' \describe{
 #'   \item{environment}{Rearing environment: 1 = standard, 2 = germ-free.}
@@ -908,6 +1046,11 @@
 #' The data illustrate estimation of the cumulative incidence function for each
 #' cause and cause-specific Cox regression (Example 12.7).
 #'
+#' @section Aliases:
+#' The data set is available under the alias `d12.7`; `dX.Y` is the alias for
+#' the data set used in Example X.Y of Collett (2023). See
+#' [dataset_by_exercise] for the complete index.
+#'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Example 12.7 (Table 12.7). Data first
 #'   described by Hoel (1972).
@@ -923,6 +1066,7 @@
 #' a donor may have been transplanted into two different recipients (Collett,
 #' 2023, Example 10.4).
 #'
+#' @aliases d10.4
 #' @format A data frame with 434 rows and 7 variables:
 #' \describe{
 #'   \item{patient}{Patient number (1-434).}
@@ -947,6 +1091,11 @@
 #' See [kidney_centres] for transplant survival in eight centres, a
 #' centre-level analogue of the same problem.
 #'
+#' @section Aliases:
+#' The data set is available under the alias `d10.4`; `dX.Y` is the alias for
+#' the data set used in Example X.Y of Collett (2023). See
+#' [dataset_by_exercise] for the complete index.
+#'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Example 10.4 (Table 10.5). Data from the UK
 #'   Transplant Registry.
@@ -961,6 +1110,7 @@
 #' Transplant survival times of 1439 kidney recipients in eight UK transplant
 #' centres (Collett, 2023, Example 11.4).
 #'
+#' @aliases d11.4 d11.5 d11.6 d11.7 d11.8
 #' @format A data frame with 1439 rows and 9 variables:
 #' \describe{
 #'   \item{patient}{Patient identifier.}
@@ -985,6 +1135,11 @@
 #' unadjusted and risk-adjusted through a Cox model, and to estimate
 #' centre-specific rates with fixed and random effects (Examples 11.4-11.8).
 #'
+#' @section Aliases:
+#' The data set is available under the aliases `d11.4`, `d11.5`, `d11.6`,
+#' `d11.7`, `d11.8`; `dX.Y` is the alias for the data set used in Example X.Y
+#' of Collett (2023). See [dataset_by_exercise] for the complete index.
+#'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Example 11.4 (Table 11.4). Data from the UK
 #'   Transplant Registry.
@@ -1003,6 +1158,7 @@
 #' Survival times from registration for a lung transplant for 196 UK patients
 #' (Collett, 2023, Example 10.3).
 #'
+#' @aliases d10.3
 #' @format A data frame with 196 rows and 7 variables:
 #' \describe{
 #'   \item{patient}{Patient identifier.}
@@ -1027,6 +1183,11 @@
 #' lognormal frailty term (Example 10.3). See [kidney] for a shared frailty
 #' example and [liver_wait] for a similar waiting-list cohort.
 #'
+#' @section Aliases:
+#' The data set is available under the alias `d10.3`; `dX.Y` is the alias for
+#' the data set used in Example X.Y of Collett (2023). See
+#' [dataset_by_exercise] for the complete index.
+#'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Example 10.3 (Table 10.2). Data from the UK
 #'   Transplant Registry.
@@ -1045,6 +1206,7 @@
 #' cancer, randomised to chemotherapy alone or chemotherapy plus radiotherapy
 #' (Collett, 2023, Example 11.2).
 #'
+#' @aliases d11.2 d11.3
 #' @format A data frame with 90 rows and 4 variables:
 #' \describe{
 #'   \item{patient}{Patient number (1-90).}
@@ -1064,6 +1226,11 @@
 #' the log-cumulative hazard plot, the restricted mean survival time and
 #' time-dependent effects (Examples 11.2 and 11.3).
 #'
+#' @section Aliases:
+#' The data set is available under the aliases `d11.2`, `d11.3`; `dX.Y` is the
+#' alias for the data set used in Example X.Y of Collett (2023). See
+#' [dataset_by_exercise] for the complete index.
+#'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Example 11.2 (Table 11.2). Data from Stablein
 #'   and Koutrouvelis (1985).
@@ -1079,6 +1246,7 @@
 #' residential detoxification programme, in the HELP study (Collett, 2023,
 #' Example 16.7).
 #'
+#' @aliases d16.7
 #' @format A data frame with 447 rows and 7 variables:
 #' \describe{
 #'   \item{subject}{Patient identifier.}
@@ -1102,6 +1270,11 @@
 #' The example is the running illustration of Bayesian survival analysis: a
 #' Bayesian Weibull model and a piecewise exponential model (Example 16.7).
 #'
+#' @section Aliases:
+#' The data set is available under the alias `d16.7`; `dX.Y` is the alias for
+#' the data set used in Example X.Y of Collett (2023). See
+#' [dataset_by_exercise] for the complete index.
+#'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Example 16.7 (Tables 16.1 and 16.2). Data from
 #'   Samet et al. (2003); see also the mosaicData package.
@@ -1116,6 +1289,7 @@
 #' Time from registration to death on the waiting list for 281 adults with
 #' primary biliary cirrhosis (Collett, 2023, Example 14.1).
 #'
+#' @aliases d14.1 d14.3
 #' @format A data frame with 281 rows and 7 variables:
 #' \describe{
 #'   \item{patient}{Patient identifier.}
@@ -1142,6 +1316,11 @@
 #'
 #' See [liver] for the post-transplant graft survival data from the same
 #' registry.
+#'
+#' @section Aliases:
+#' The data set is available under the aliases `d14.1`, `d14.3`; `dX.Y` is the
+#' alias for the data set used in Example X.Y of Collett (2023). See
+#' [dataset_by_exercise] for the complete index.
 #'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Example 14.1 (Table 14.1). Data from the UK
@@ -1186,6 +1365,10 @@
 #' adequacy of the preferred model. See [bmt_leukaemia] (a different study of
 #' 23 patients) and [bmt_outcome] (EBMT registry data).
 #'
+#' @section Aliases:
+#' This data set is not used in a numbered example, so it has no `dX.Y` alias.
+#' See [dataset_by_exercise] for the complete index.
+#'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Appendix B.4 (Table B.4). Data from Bagot et
 #'   al. (1988) and Altman (1991).
@@ -1204,6 +1387,7 @@
 #' randomised to prednisolone or to an untreated control group (Collett, 2023,
 #' Appendix B.1).
 #'
+#' @aliases d15.1 d15.2 d15.3
 #' @format A data frame with 44 rows and 3 variables:
 #' \describe{
 #'   \item{treatment}{Treatment: 1 = prednisolone, 2 = control.}
@@ -1220,6 +1404,11 @@
 #' roughly 400 patients (Examples 15.1-15.3). The appendix also suggests
 #' survival curves by treatment, the log-rank and Wilcoxon tests, Cox and
 #' Weibull models and a log-cumulative hazard plot.
+#'
+#' @section Aliases:
+#' The data set is available under the aliases `d15.1`, `d15.2`, `d15.3`;
+#' `dX.Y` is the alias for the data set used in Example X.Y of Collett (2023).
+#' See [dataset_by_exercise] for the complete index.
 #'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Appendix B.1 (Table B.1) and Examples
@@ -1256,6 +1445,10 @@
 #' length, a test of whether the coefficients of weight and length differ
 #' between age groups, and an assessment of whether non-linear functions of
 #' weight and length are needed.
+#'
+#' @section Aliases:
+#' This data set is not used in a numbered example, so it has no `dX.Y` alias.
+#' See [dataset_by_exercise] for the complete index.
 #'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Appendix B.3 (Table B.3). Data from Hand et
@@ -1308,6 +1501,10 @@
 #' rates, and an inverse probability of censoring weighting analysis for
 #' dependent censoring. The infection data are also available, in a larger
 #' form, as `cgd` in the survival package.
+#'
+#' @section Aliases:
+#' This data set is not used in a numbered example, so it has no `dX.Y` alias.
+#' See [dataset_by_exercise] for the complete index.
 #'
 #' @source Collett, D. (2023) *Modelling Survival Data in Medical Research*,
 #'   4th ed. Chapman & Hall/CRC, Appendix B.5. Data described by Therneau and
@@ -1379,6 +1576,10 @@
 #' so that the object matches the other data sets in the package. Otherwise the
 #' file is used as distributed.
 #'
+#' @section Aliases:
+#' This course data set is not used in a numbered example, so it has no `dX.Y`
+#' alias. See [dataset_by_exercise] for the complete index.
+#'
 #' @source The file `scottish_mbc_cohort.xlsx` in the `onco-stats` repository of
 #'   the Edinburgh Cancer Informatics group,
 #'   <https://github.com/Edinburgh-Cancer-Informatics/onco-stats/tree/main/docs/data>,
@@ -1395,3 +1596,64 @@
 #'   data = scottish_mbc_cohort
 #' )
 "scottish_mbc_cohort"
+
+#' Data sets by Collett (2023) example
+#'
+#' An index of the data sets in the package, one row for each combination of a
+#' data set and a worked example in Collett (2023) that uses it. Each such
+#' combination also defines an alias `dX.Y`, where `X.Y` is the number of the
+#' example, and the alias is a copy of the data set. A data set that is used in
+#' several examples therefore has several aliases.
+#'
+#' @format A data frame with one row per data set and example, with columns:
+#' \describe{
+#'   \item{dataset}{Name of the data set in the package.}
+#'   \item{dataset_title}{Descriptive title of the data set, as on its help
+#'     page.}
+#'   \item{alias}{Alias of the data set for this example, `dX.Y`, or `NA` for
+#'     data sets that are not used in a numbered example.}
+#'   \item{example}{Number of the example in Collett (2023), such as `"3.7"`,
+#'     or `NA`.}
+#'   \item{chapter}{Number of the chapter that contains the example, or `NA`.}
+#'   \item{chapter_title}{Title of that chapter, or `NA`.}
+#'   \item{example_title}{Title of the example as it appears in the book, or
+#'     `NA`.}
+#'   \item{n_rows}{Number of rows in the data set.}
+#'   \item{n_variables}{Number of columns in the data set.}
+#'   \item{note}{A note for data sets that are not used in a numbered example,
+#'     for example that they come from an appendix of the book or from the
+#'     course material.}
+#' }
+#'
+#' @details
+#' The index was compiled from the `Example X.Y` headings of the 4th edition.
+#' The aliases are the data sets themselves, saved under the name `dX.Y`, so
+#' `d3.7` is the data used in Example 3.7 (the `myeloma` data) and `d8.4` is
+#' the baseline cirrhosis data. Use [dataset_by_exercise] to look up which
+#' data set an example uses, and `?d3.7` to open the help page of that data
+#' set.
+#'
+#' Four data sets from the appendices of the book (`bladder`, `ducks`, `bmt`
+#' and `cgd`) and the synthetic `scottish_mbc_cohort` are not used in a
+#' numbered example. They have no alias and their `example` is `NA`; the
+#' `note` column says where they come from. The cirrhosis study is the only
+#' example with more than one data set in the package: `cirrhosis` is the
+#' baseline form and has the alias `d8.4`, while `cirrhosis_lbr` and
+#' `cirrhosis_cp` are the long and counting-process forms used in the same
+#' example and have no alias of their own.
+#'
+#' The table is generated by `data-raw/dataset_by_exercise.R`; re-run that
+#' script after adding a data set or changing the example mapping.
+#'
+#' @source The worked examples in Collett, D. (2023) *Modelling Survival Data
+#'   in Medical Research*, 4th ed. Chapman & Hall/CRC.
+#'
+#' @seealso [iud], [breast], [myeloma] and the other data sets; the package
+#'   vignette `vignette("datasets-by-exercise")` presents the same index.
+#'
+#' @examples
+#' head(dataset_by_exercise)
+#' subset(dataset_by_exercise, dataset == "myeloma")
+#' # The alias is a copy of the data set
+#' identical(d3.7, myeloma)
+"dataset_by_exercise"

@@ -3,6 +3,7 @@
 \docType{data}
 \name{cirrhosis}
 \alias{cirrhosis}
+\alias{d8.4}
 \title{Data from a cirrhosis study (baseline)}
 \format{
 A data frame with 12 rows and 6 variables:
@@ -42,6 +43,13 @@ repeated log(bilirubin) measurements in long format (one row per visit) and
 log(bilirubin) value in counting process format (one row per interval).
 See \link{cirrhosis_lbr} and \link{cirrhosis_cp}.
 }
+\section{Aliases}{
+
+The data set is available under the alias \code{d8.4}; \code{dX.Y} is the alias for
+the data set used in Example X.Y of Collett (2023). See
+\link{dataset_by_exercise} for the complete index.
+}
+
 \examples{
 str(cirrhosis)
 survival::coxph(

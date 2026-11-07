@@ -3,6 +3,12 @@
 \docType{data}
 \name{ulcer}
 \alias{ulcer}
+\alias{d9.1}
+\alias{d9.4}
+\alias{d9.5}
+\alias{d9.6}
+\alias{d9.7}
+\alias{d11.1}
 \title{Recurrence of an ulcer}
 \format{
 A data frame with 43 rows and 6 variables:
@@ -44,6 +50,13 @@ the restricted mean survival time computed from interval-censored data
 (Example 11.1). The full multinational study is described by Whitehead
 (1989); the data here are the Belgian subset.
 }
+\section{Aliases}{
+
+The data set is available under the aliases \code{d9.1}, \code{d9.4}, \code{d9.5}, \code{d9.6},
+\code{d9.7}, \code{d11.1}; \code{dX.Y} is the alias for the data set used in Example X.Y
+of Collett (2023). See \link{dataset_by_exercise} for the complete index.
+}
+
 \examples{
 str(ulcer)
 table(ulcer$time, ulcer$result)

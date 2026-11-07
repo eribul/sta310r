@@ -3,6 +3,8 @@
 \docType{data}
 \name{melanoma}
 \alias{melanoma}
+\alias{d2.15}
+\alias{d2.16}
 \title{Survival times of patients with melanoma}
 \format{
 A data frame with 30 rows and 4 variables:
@@ -33,6 +35,13 @@ The tumour was removed surgically before randomisation. The data are used to
 illustrate the log-rank test for comparing two treatment groups within each
 age stratum (Examples 2.15 and 2.16) and the log-rank test for trend.
 }
+\section{Aliases}{
+
+The data set is available under the aliases \code{d2.15}, \code{d2.16}; \code{dX.Y} is the
+alias for the data set used in Example X.Y of Collett (2023). See
+\link{dataset_by_exercise} for the complete index.
+}
+
 \examples{
 str(melanoma)
 survival::survdiff(

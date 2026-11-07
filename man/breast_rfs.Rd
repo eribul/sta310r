@@ -3,6 +3,8 @@
 \docType{data}
 \name{breast_rfs}
 \alias{breast_rfs}
+\alias{d6.5}
+\alias{d6.6}
 \title{Recurrence-free survival in breast cancer patients}
 \format{
 A data frame with 686 rows and 11 variables:
@@ -43,6 +45,13 @@ recurrence of the cancer or death, and there are 299 events.
 The example introduces flexible parametric (Royston-Parmar) models with a
 treatment effect and several prognostic variables (Examples 6.5 and 6.6).
 }
+\section{Aliases}{
+
+The data set is available under the aliases \code{d6.5}, \code{d6.6}; \code{dX.Y} is the
+alias for the data set used in Example X.Y of Collett (2023). See
+\link{dataset_by_exercise} for the complete index.
+}
+
 \examples{
 str(breast_rfs)
 survival::coxph(

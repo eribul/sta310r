@@ -32,6 +32,13 @@ taking effect immediately after the reading. This file is the input to the
 counting process version of the data, \link{cirrhosis_cp}; the baseline values are
 in \link{cirrhosis}.
 }
+\section{Aliases}{
+
+Used in Example 8.4, but the alias \code{d8.4} is the baseline \link{cirrhosis}; this
+long-format form has no alias of its own. See \link{dataset_by_exercise} for the
+complete index.
+}
+
 \examples{
 str(cirrhosis_lbr)
 head(cirrhosis_lbr)

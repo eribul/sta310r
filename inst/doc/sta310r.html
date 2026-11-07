@@ -383,18 +383,59 @@ each of them has a help page with the study background, the variable
 codings and references to the relevant chapter and examples in Collett
 (2023).</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">data</span>(<span class="at">package =</span> <span class="st">&quot;sta310r&quot;</span>)<span class="sc">$</span>results[, <span class="st">&quot;Item&quot;</span>]</span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co">#&gt;  [1] &quot;aortic&quot;                 &quot;bladder&quot;                &quot;bmt&quot;                   </span></span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#&gt;  [4] &quot;bmt_leukaemia&quot;          &quot;bmt_outcome&quot;            &quot;breast&quot;                </span></span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt;  [7] &quot;breast_rfs&quot;             &quot;cgd&quot;                    &quot;cirrhosis&quot;             </span></span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt; [10] &quot;cirrhosis_cp&quot;           &quot;cirrhosis_lbr&quot;          &quot;dialysis&quot;              </span></span>
-<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt; [13] &quot;ducks&quot;                  &quot;gastric&quot;                &quot;help&quot;                  </span></span>
-<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt; [16] &quot;hepatitis&quot;              &quot;hyper&quot;                  &quot;iud&quot;                   </span></span>
-<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt; [19] &quot;kidney&quot;                 &quot;kidney_centres&quot;         &quot;liver&quot;                 </span></span>
-<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt; [22] &quot;liver_wait&quot;             &quot;lung_transplant&quot;        &quot;melanoma&quot;              </span></span>
-<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt; [25] &quot;mice&quot;                   &quot;myeloma&quot;                &quot;numerical_illustration&quot;</span></span>
-<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt; [28] &quot;ovarian&quot;                &quot;prostate&quot;               &quot;pulmonary&quot;             </span></span>
-<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#&gt; [31] &quot;rats&quot;                   &quot;scottish_mbc_cohort&quot;    &quot;tamoxifen&quot;             </span></span>
-<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co">#&gt; [34] &quot;ulcer&quot;</span></span></code></pre></div>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co">#&gt;   [1] &quot;aortic&quot;                 &quot;bladder&quot;                &quot;bmt&quot;                   </span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#&gt;   [4] &quot;bmt_leukaemia&quot;          &quot;bmt_outcome&quot;            &quot;breast&quot;                </span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt;   [7] &quot;breast_rfs&quot;             &quot;cgd&quot;                    &quot;cirrhosis&quot;             </span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt;  [10] &quot;cirrhosis_cp&quot;           &quot;cirrhosis_lbr&quot;          &quot;d1.1&quot;                  </span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt;  [13] &quot;d1.2&quot;                   &quot;d1.3&quot;                   &quot;d1.4&quot;                  </span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt;  [16] &quot;d10.1&quot;                  &quot;d10.2&quot;                  &quot;d10.3&quot;                 </span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt;  [19] &quot;d10.4&quot;                  &quot;d11.1&quot;                  &quot;d11.2&quot;                 </span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt;  [22] &quot;d11.3&quot;                  &quot;d11.4&quot;                  &quot;d11.5&quot;                 </span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt;  [25] &quot;d11.6&quot;                  &quot;d11.7&quot;                  &quot;d11.8&quot;                 </span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt;  [28] &quot;d12.1&quot;                  &quot;d12.2&quot;                  &quot;d12.3&quot;                 </span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#&gt;  [31] &quot;d12.4&quot;                  &quot;d12.5&quot;                  &quot;d12.6&quot;                 </span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co">#&gt;  [34] &quot;d12.7&quot;                  &quot;d13.2&quot;                  &quot;d13.3&quot;                 </span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co">#&gt;  [37] &quot;d13.4&quot;                  &quot;d14.1&quot;                  &quot;d14.3&quot;                 </span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co">#&gt;  [40] &quot;d15.1&quot;                  &quot;d15.2&quot;                  &quot;d15.3&quot;                 </span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co">#&gt;  [43] &quot;d16.1&quot;                  &quot;d16.2&quot;                  &quot;d16.3&quot;                 </span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co">#&gt;  [46] &quot;d16.4&quot;                  &quot;d16.5&quot;                  &quot;d16.6&quot;                 </span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="co">#&gt;  [49] &quot;d16.7&quot;                  &quot;d2.1&quot;                   &quot;d2.10&quot;                 </span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="co">#&gt;  [52] &quot;d2.11&quot;                  &quot;d2.12&quot;                  &quot;d2.13&quot;                 </span></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="co">#&gt;  [55] &quot;d2.14&quot;                  &quot;d2.15&quot;                  &quot;d2.16&quot;                 </span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="co">#&gt;  [58] &quot;d2.2&quot;                   &quot;d2.3&quot;                   &quot;d2.4&quot;                  </span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="co">#&gt;  [61] &quot;d2.5&quot;                   &quot;d2.6&quot;                   &quot;d2.7&quot;                  </span></span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a><span class="co">#&gt;  [64] &quot;d2.8&quot;                   &quot;d2.9&quot;                   &quot;d3.1&quot;                  </span></span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="co">#&gt;  [67] &quot;d3.10&quot;                  &quot;d3.11&quot;                  &quot;d3.12&quot;                 </span></span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="co">#&gt;  [70] &quot;d3.13&quot;                  &quot;d3.14&quot;                  &quot;d3.15&quot;                 </span></span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="co">#&gt;  [73] &quot;d3.16&quot;                  &quot;d3.17&quot;                  &quot;d3.19&quot;                 </span></span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a><span class="co">#&gt;  [76] &quot;d3.2&quot;                   &quot;d3.20&quot;                  &quot;d3.3&quot;                  </span></span>
+<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a><span class="co">#&gt;  [79] &quot;d3.4&quot;                   &quot;d3.5&quot;                   &quot;d3.6&quot;                  </span></span>
+<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a><span class="co">#&gt;  [82] &quot;d3.7&quot;                   &quot;d3.8&quot;                   &quot;d3.9&quot;                  </span></span>
+<span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a><span class="co">#&gt;  [85] &quot;d4.1&quot;                   &quot;d4.10&quot;                  &quot;d4.11&quot;                 </span></span>
+<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a><span class="co">#&gt;  [88] &quot;d4.12&quot;                  &quot;d4.2&quot;                   &quot;d4.3&quot;                  </span></span>
+<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a><span class="co">#&gt;  [91] &quot;d4.4&quot;                   &quot;d4.5&quot;                   &quot;d4.6&quot;                  </span></span>
+<span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a><span class="co">#&gt;  [94] &quot;d4.7&quot;                   &quot;d4.8&quot;                   &quot;d4.9&quot;                  </span></span>
+<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a><span class="co">#&gt;  [97] &quot;d5.1&quot;                   &quot;d5.10&quot;                  &quot;d5.11&quot;                 </span></span>
+<span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a><span class="co">#&gt; [100] &quot;d5.12&quot;                  &quot;d5.13&quot;                  &quot;d5.14&quot;                 </span></span>
+<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a><span class="co">#&gt; [103] &quot;d5.15&quot;                  &quot;d5.16&quot;                  &quot;d5.17&quot;                 </span></span>
+<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a><span class="co">#&gt; [106] &quot;d5.2&quot;                   &quot;d5.3&quot;                   &quot;d5.4&quot;                  </span></span>
+<span id="cb2-38"><a href="#cb2-38" tabindex="-1"></a><span class="co">#&gt; [109] &quot;d5.5&quot;                   &quot;d5.6&quot;                   &quot;d5.7&quot;                  </span></span>
+<span id="cb2-39"><a href="#cb2-39" tabindex="-1"></a><span class="co">#&gt; [112] &quot;d5.8&quot;                   &quot;d5.9&quot;                   &quot;d6.1&quot;                  </span></span>
+<span id="cb2-40"><a href="#cb2-40" tabindex="-1"></a><span class="co">#&gt; [115] &quot;d6.4&quot;                   &quot;d6.5&quot;                   &quot;d6.6&quot;                  </span></span>
+<span id="cb2-41"><a href="#cb2-41" tabindex="-1"></a><span class="co">#&gt; [118] &quot;d7.1&quot;                   &quot;d7.2&quot;                   &quot;d7.3&quot;                  </span></span>
+<span id="cb2-42"><a href="#cb2-42" tabindex="-1"></a><span class="co">#&gt; [121] &quot;d7.4&quot;                   &quot;d8.2&quot;                   &quot;d8.3&quot;                  </span></span>
+<span id="cb2-43"><a href="#cb2-43" tabindex="-1"></a><span class="co">#&gt; [124] &quot;d8.4&quot;                   &quot;d8.5&quot;                   &quot;d8.6&quot;                  </span></span>
+<span id="cb2-44"><a href="#cb2-44" tabindex="-1"></a><span class="co">#&gt; [127] &quot;d8.7&quot;                   &quot;d8.8&quot;                   &quot;d8.9&quot;                  </span></span>
+<span id="cb2-45"><a href="#cb2-45" tabindex="-1"></a><span class="co">#&gt; [130] &quot;d9.1&quot;                   &quot;d9.4&quot;                   &quot;d9.5&quot;                  </span></span>
+<span id="cb2-46"><a href="#cb2-46" tabindex="-1"></a><span class="co">#&gt; [133] &quot;d9.6&quot;                   &quot;d9.7&quot;                   &quot;dataset_by_exercise&quot;   </span></span>
+<span id="cb2-47"><a href="#cb2-47" tabindex="-1"></a><span class="co">#&gt; [136] &quot;dialysis&quot;               &quot;ducks&quot;                  &quot;gastric&quot;               </span></span>
+<span id="cb2-48"><a href="#cb2-48" tabindex="-1"></a><span class="co">#&gt; [139] &quot;help&quot;                   &quot;hepatitis&quot;              &quot;hyper&quot;                 </span></span>
+<span id="cb2-49"><a href="#cb2-49" tabindex="-1"></a><span class="co">#&gt; [142] &quot;iud&quot;                    &quot;kidney&quot;                 &quot;kidney_centres&quot;        </span></span>
+<span id="cb2-50"><a href="#cb2-50" tabindex="-1"></a><span class="co">#&gt; [145] &quot;liver&quot;                  &quot;liver_wait&quot;             &quot;lung_transplant&quot;       </span></span>
+<span id="cb2-51"><a href="#cb2-51" tabindex="-1"></a><span class="co">#&gt; [148] &quot;melanoma&quot;               &quot;mice&quot;                   &quot;myeloma&quot;               </span></span>
+<span id="cb2-52"><a href="#cb2-52" tabindex="-1"></a><span class="co">#&gt; [151] &quot;numerical_illustration&quot; &quot;ovarian&quot;                &quot;prostate&quot;              </span></span>
+<span id="cb2-53"><a href="#cb2-53" tabindex="-1"></a><span class="co">#&gt; [154] &quot;pulmonary&quot;              &quot;rats&quot;                   &quot;scottish_mbc_cohort&quot;   </span></span>
+<span id="cb2-54"><a href="#cb2-54" tabindex="-1"></a><span class="co">#&gt; [157] &quot;tamoxifen&quot;              &quot;ulcer&quot;</span></span></code></pre></div>
 <p>The data sets used most often in the lectures are <code>iud</code>,
 <code>breast</code>, <code>myeloma</code>, <code>ovarian</code>,
 <code>liver</code> and <code>rats</code>. As an example,

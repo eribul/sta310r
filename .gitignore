@@ -2,3 +2,6 @@
 /Meta/
 /docs/
 README.html
+**/.codewhale/*
+!**/.codewhale/constitution.json
+.deepseek/

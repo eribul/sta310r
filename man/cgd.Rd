@@ -52,6 +52,12 @@ rates, and an inverse probability of censoring weighting analysis for
 dependent censoring. The infection data are also available, in a larger
 form, as \code{cgd} in the survival package.
 }
+\section{Aliases}{
+
+This data set is not used in a numbered example, so it has no \code{dX.Y} alias.
+See \link{dataset_by_exercise} for the complete index.
+}
+
 \examples{
 str(cgd)
 survival::coxph(survival::Surv(time, status) ~ treat + age + sex, data = cgd)

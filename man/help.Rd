@@ -3,6 +3,7 @@
 \docType{data}
 \name{help}
 \alias{help}
+\alias{d16.7}
 \title{Health evaluation and linkage to primary care}
 \format{
 A data frame with 447 rows and 7 variables:
@@ -41,6 +42,13 @@ and there are 167 events. The file is the complete-case version of the
 The example is the running illustration of Bayesian survival analysis: a
 Bayesian Weibull model and a piecewise exponential model (Example 16.7).
 }
+\section{Aliases}{
+
+The data set is available under the alias \code{d16.7}; \code{dX.Y} is the alias for
+the data set used in Example X.Y of Collett (2023). See
+\link{dataset_by_exercise} for the complete index.
+}
+
 \examples{
 str(help)
 survival::survfit(survival::Surv(days, status) ~ linkage, data = help)

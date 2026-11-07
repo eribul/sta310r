@@ -3,6 +3,22 @@
 \docType{data}
 \name{myeloma}
 \alias{myeloma}
+\alias{d1.3}
+\alias{d2.2}
+\alias{d2.6}
+\alias{d3.2}
+\alias{d3.5}
+\alias{d3.7}
+\alias{d3.8}
+\alias{d3.9}
+\alias{d3.15}
+\alias{d3.17}
+\alias{d3.19}
+\alias{d3.20}
+\alias{d4.5}
+\alias{d4.8}
+\alias{d4.9}
+\alias{d5.16}
 \title{Survival of multiple myeloma patients}
 \format{
 A data frame with 48 rows and 10 variables:
@@ -45,6 +61,15 @@ interaction (Examples 3.2-3.20), model checking and influence diagnostics
 (Examples 4.5, 4.8 and 4.9) and a Weibull model for a prognostic index
 (Example 5.16).
 }
+\section{Aliases}{
+
+The data set is available under the aliases \code{d1.3}, \code{d2.2}, \code{d2.6}, \code{d3.2},
+\code{d3.5}, \code{d3.7}, \code{d3.8}, \code{d3.9}, \code{d3.15}, \code{d3.17}, \code{d3.19}, \code{d3.20}, \code{d4.5},
+\code{d4.8}, \code{d4.9}, \code{d5.16}; \code{dX.Y} is the alias for the data set used in
+Example X.Y of Collett (2023). See \link{dataset_by_exercise} for the complete
+index.
+}
+
 \examples{
 str(myeloma)
 survival::coxph(

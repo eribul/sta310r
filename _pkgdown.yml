@@ -16,6 +16,12 @@ articles:
     A walk-through of the data sets and the teaching functions.
   contents:
   - sta310r
+- title: Data set index
+  desc: >
+    The data sets linked to the Collett (2023) examples that use them, with
+    the `dX.Y` aliases.
+  contents:
+  - datasets-by-exercise
 
 reference:
 - title: Teaching functions
@@ -33,6 +39,12 @@ reference:
   - power_logrank
   - power_logrank_sim
   - cif_cause_specific
+- title: Data set index
+  desc: >
+    The data sets linked to the Collett (2023) examples that use them, and
+    the aliases `dX.Y` for the example numbers.
+  contents:
+  - dataset_by_exercise
 - title: Data sets
   desc: >
     The data sets distributed with Collett (2023), with the original column

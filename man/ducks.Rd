@@ -39,6 +39,12 @@ length, a test of whether the coefficients of weight and length differ
 between age groups, and an assessment of whether non-linear functions of
 weight and length are needed.
 }
+\section{Aliases}{
+
+This data set is not used in a numbered example, so it has no \code{dX.Y} alias.
+See \link{dataset_by_exercise} for the complete index.
+}
+
 \examples{
 str(ducks)
 survival::coxph(

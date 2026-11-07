@@ -3,6 +3,7 @@
 \docType{data}
 \name{pulmonary}
 \alias{pulmonary}
+\alias{d2.1}
 \title{Pulmonary metastasis in patients with osteosarcoma}
 \format{
 A data frame with 11 rows and 1 variable:
@@ -30,6 +31,13 @@ months are 1.000, 0.909, 0.455, 0.273 and 0.091, and S(t) is zero after 17
 months. The example is used in the book to introduce the empirical survivor
 function before censoring is considered.
 }
+\section{Aliases}{
+
+The data set is available under the alias \code{d2.1}; \code{dX.Y} is the alias for
+the data set used in Example X.Y of Collett (2023). See
+\link{dataset_by_exercise} for the complete index.
+}
+
 \examples{
 str(pulmonary)
 table(pulmonary$time)

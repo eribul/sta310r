@@ -3,6 +3,13 @@
 \docType{data}
 \name{ovarian}
 \alias{ovarian}
+\alias{d5.11}
+\alias{d5.12}
+\alias{d7.1}
+\alias{d7.2}
+\alias{d7.3}
+\alias{d7.4}
+\alias{d8.3}
 \title{Chemotherapy in ovarian cancer patients}
 \format{
 A data frame with 26 rows and 7 variables:
@@ -41,6 +48,14 @@ The data are used for Weibull proportional hazards models and variable
 selection (Examples 5.11 and 5.12), for model checking of parametric models
 (Examples 7.1-7.4) and for a time-dependent covariate (Example 8.3).
 }
+\section{Aliases}{
+
+The data set is available under the aliases \code{d5.11}, \code{d5.12}, \code{d7.1},
+\code{d7.2}, \code{d7.3}, \code{d7.4}, \code{d8.3}; \code{dX.Y} is the alias for the data set used
+in Example X.Y of Collett (2023). See \link{dataset_by_exercise} for the
+complete index.
+}
+
 \examples{
 str(ovarian)
 survival::survfit(survival::Surv(time, status) ~ treat, data = ovarian)

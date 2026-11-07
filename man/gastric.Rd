@@ -3,6 +3,8 @@
 \docType{data}
 \name{gastric}
 \alias{gastric}
+\alias{d11.2}
+\alias{d11.3}
 \title{Survival of patients with gastric cancer}
 \format{
 A data frame with 90 rows and 4 variables:
@@ -37,6 +39,13 @@ is not tenable and the data are used to motivate non-proportional hazards:
 the log-cumulative hazard plot, the restricted mean survival time and
 time-dependent effects (Examples 11.2 and 11.3).
 }
+\section{Aliases}{
+
+The data set is available under the aliases \code{d11.2}, \code{d11.3}; \code{dX.Y} is the
+alias for the data set used in Example X.Y of Collett (2023). See
+\link{dataset_by_exercise} for the complete index.
+}
+
 \examples{
 str(gastric)
 survival::survfit(survival::Surv(time, status) ~ treat, data = gastric)

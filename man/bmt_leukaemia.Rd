@@ -3,6 +3,7 @@
 \docType{data}
 \name{bmt_leukaemia}
 \alias{bmt_leukaemia}
+\alias{d8.2}
 \title{Bone marrow transplantation in the treatment of leukaemia}
 \format{
 A data frame with 23 rows and 8 variables:
@@ -45,6 +46,13 @@ platelet recovery changes from 0 to 1 at \code{ptime}, so the survival data are
 expanded into the counting process format (Example 8.2, and Example 8.1
 introduces the format itself).
 }
+\section{Aliases}{
+
+The data set is available under the alias \code{d8.2}; \code{dX.Y} is the alias for
+the data set used in Example X.Y of Collett (2023). See
+\link{dataset_by_exercise} for the complete index.
+}
+
 \examples{
 str(bmt_leukaemia)
 survival::coxph(

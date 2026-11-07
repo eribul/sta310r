@@ -3,6 +3,11 @@
 \docType{data}
 \name{prostate}
 \alias{prostate}
+\alias{d1.4}
+\alias{d3.6}
+\alias{d3.12}
+\alias{d3.16}
+\alias{d5.15}
 \title{Comparison of two treatments for prostatic cancer}
 \format{
 A data frame with 38 rows and 8 variables:
@@ -45,6 +50,13 @@ likelihood and of the estimated hazard ratios (Examples 3.6, 3.12, 3.16 and
 5.15), and the fitted Cox model is re-used for an accelerated failure time
 comparison (Example 5.15).
 }
+\section{Aliases}{
+
+The data set is available under the aliases \code{d1.4}, \code{d3.6}, \code{d3.12},
+\code{d3.16}, \code{d5.15}; \code{dX.Y} is the alias for the data set used in Example X.Y
+of Collett (2023). See \link{dataset_by_exercise} for the complete index.
+}
+
 \examples{
 str(prostate)
 survival::coxph(

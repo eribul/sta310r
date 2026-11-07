@@ -3,6 +3,7 @@
 \docType{data}
 \name{rats}
 \alias{rats}
+\alias{d13.2}
 \title{Recurrence of mammary tumours in female rats}
 \format{
 A data frame with 254 rows and 4 variables:
@@ -42,6 +43,13 @@ Andersen-Gill, PWP and WLW models, with the data expanded into counting
 process format (Example 13.2; see also \link{cirrhosis_cp} for a simpler
 counting process illustration).
 }
+\section{Aliases}{
+
+The data set is available under the alias \code{d13.2}; \code{dX.Y} is the alias for
+the data set used in Example X.Y of Collett (2023). See
+\link{dataset_by_exercise} for the complete index.
+}
+
 \examples{
 str(rats)
 table(rats$treatment)

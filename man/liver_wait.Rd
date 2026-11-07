@@ -3,6 +3,8 @@
 \docType{data}
 \name{liver_wait}
 \alias{liver_wait}
+\alias{d14.1}
+\alias{d14.3}
 \title{Time to death while waiting for a liver transplant}
 \format{
 A data frame with 281 rows and 7 variables:
@@ -44,6 +46,13 @@ survival time.
 See \link{liver} for the post-transplant graft survival data from the same
 registry.
 }
+\section{Aliases}{
+
+The data set is available under the aliases \code{d14.1}, \code{d14.3}; \code{dX.Y} is the
+alias for the data set used in Example X.Y of Collett (2023). See
+\link{dataset_by_exercise} for the complete index.
+}
+
 \examples{
 str(liver_wait)
 survival::coxph(

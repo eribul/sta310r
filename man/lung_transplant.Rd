@@ -3,6 +3,7 @@
 \docType{data}
 \name{lung_transplant}
 \alias{lung_transplant}
+\alias{d10.3}
 \title{Survival of patients registered for a lung transplant}
 \format{
 A data frame with 196 rows and 7 variables:
@@ -38,9 +39,16 @@ The disease codings above follow the values in the distributed file (they
 can be checked against Table 10.2 of the book).
 
 The example compares a Weibull model with and without an individual
-lognormal frailty term (Example 10.3). See \link[survival:kidney]{kidney} for a shared frailty
+lognormal frailty term (Example 10.3). See \link{kidney} for a shared frailty
 example and \link{liver_wait} for a similar waiting-list cohort.
 }
+\section{Aliases}{
+
+The data set is available under the alias \code{d10.3}; \code{dX.Y} is the alias for
+the data set used in Example X.Y of Collett (2023). See
+\link{dataset_by_exercise} for the complete index.
+}
+
 \examples{
 str(lung_transplant)
 survival::coxph(

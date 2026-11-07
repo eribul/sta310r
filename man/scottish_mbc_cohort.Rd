@@ -71,6 +71,12 @@ slightly different form: \code{status} is an integer and \code{diagnosis_date} a
 so that the object matches the other data sets in the package. Otherwise the
 file is used as distributed.
 }
+\section{Aliases}{
+
+This course data set is not used in a numbered example, so it has no \code{dX.Y}
+alias. See \link{dataset_by_exercise} for the complete index.
+}
+
 \examples{
 str(scottish_mbc_cohort)
 survival::survfit(
