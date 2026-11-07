@@ -45,7 +45,18 @@ the data set used in Example X.Y of Collett (2023). See
 }
 
 \examples{
-str(mice)
-table(mice$environment, mice$causeofdeath)
+# Collett (2023), Chapter 17 style -----------------------------------
+# Example 12.7: three competing causes of death
+# (1 = thymic lymphoma, 2 = reticulum cell sarcoma, 3 = other causes)
+ci_mice <- cmprsk::cuminc(mice$time, mice$causeofdeath, mice$environment)
+plot(ci_mice, curvlab = c("Standard", "Germ-free"), xlab = "Time (days)")
+
+# Modern tools --------------------------------------------------------
+if (requireNamespace("tidycmprsk", quietly = TRUE)) {
+  tidycmprsk::cuminc(
+    survival::Surv(time, factor(causeofdeath)) ~ environment,
+    data = mice
+  )
+}
 }
 \keyword{datasets}

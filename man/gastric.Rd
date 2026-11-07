@@ -47,7 +47,28 @@ alias for the data set used in Example X.Y of Collett (2023). See
 }
 
 \examples{
-str(gastric)
-survival::survfit(survival::Surv(time, status) ~ treat, data = gastric)
+# Collett (2023), Chapter 17 style -----------------------------------
+# Examples 11.2 and 11.3: evidence against proportional hazards
+survival::cox.zph(survival::coxph(survival::Surv(time, status) ~ treat, data = gastric))
+
+# A treatment effect that differs between time periods
+gastric_cp <- survival::survSplit(
+  gastric,
+  cut = c(360, 720, 1080),
+  end = "time", event = "status", start = "tstart",
+  episode = "period"
+)
+survival::coxph(
+  survival::Surv(tstart, time, status) ~ treat + treat:strata(period),
+  data = gastric_cp
+)
+
+# Modern tools --------------------------------------------------------
+# The restricted mean survival time summarises the same non-proportional effect
+rmst <- summary(
+  survival::survfit(survival::Surv(time, status) ~ treat, data = gastric),
+  rmean = 1000
+)
+rmst$table[, c("rmean", "se(rmean)")]
 }
 \keyword{datasets}

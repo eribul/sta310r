@@ -64,7 +64,35 @@ of Collett (2023). See \link{dataset_by_exercise} for the complete index.
 }
 
 \examples{
-str(iud)
+# Collett (2023), Chapter 17 style -----------------------------------
+# Example 1.1: times to discontinuation of an IUD
 survival::survfit(survival::Surv(time, status) ~ 1, data = iud)
+
+# Examples 2.3-2.5 and 2.7-2.10: product-limit estimate and the median
+km_iud <- survival::survfit(survival::Surv(time, status) ~ 1, data = iud)
+summary(km_iud, times = c(12, 24, 48))
+quantile(km_iud, probs = c(0.25, 0.5, 0.75))
+
+# Examples 5.1-5.4: exponential, Weibull and log-logistic models
+survival::survreg(survival::Surv(time, status) ~ 1, data = iud, dist = "exponential")
+survival::survreg(survival::Surv(time, status) ~ 1, data = iud, dist = "weibull")
+survival::survreg(survival::Surv(time, status) ~ 1, data = iud, dist = "loglogistic")
+
+# Examples 16.1-16.3: conjugate gamma posterior for the exponential rate
+# (a vague Gamma(0.001, 0.001) prior, as in the book)
+a1 <- 0.001 + sum(iud$status)
+b1 <- 0.001 + sum(iud$time)
+c(mean = a1 / b1, stats::qgamma(c(0.025, 0.975), a1, b1))
+# For a non-conjugate model Chapter 17 uses rstanarm::stan_surv().
+
+# Modern tools --------------------------------------------------------
+if (requireNamespace("ggsurvfit", quietly = TRUE)) {
+  ggsurvfit::survfit2(survival::Surv(time, status) ~ 1, data = iud) |>
+    ggsurvfit::ggsurvfit() +
+    ggsurvfit::add_confidence_interval()
+}
+if (requireNamespace("flexsurv", quietly = TRUE)) {
+  flexsurv::flexsurvreg(survival::Surv(time, status) ~ 1, data = iud, dist = "weibull")
+}
 }
 \keyword{datasets}

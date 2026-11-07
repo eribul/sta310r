@@ -58,7 +58,15 @@ The data set is available under the aliases \code{d8.5}, \code{d8.6}, \code{d8.7
 }
 
 \examples{
-str(aortic)
-length(unique(aortic$id))
+# Collett (2023), Chapter 17 style -----------------------------------
+# Examples 8.5-8.9: LVMI as a time-dependent covariate, built with tmerge()
+base <- aortic[!duplicated(aortic$id), c("id", "futime", "status", "age", "sex")]
+long <- aortic[, c("id", "time", "lvmi")]
+cp <- survival::tmerge(base, base, id = id, endpt = event(futime, status))
+cp <- survival::tmerge(cp, long, id = id, lvmi = tdc(time, lvmi))
+survival::coxph(
+  survival::Surv(tstart, tstop, endpt) ~ lvmi + age + sex,
+  data = cp
+)
 }
 \keyword{datasets}

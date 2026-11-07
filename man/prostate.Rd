@@ -58,10 +58,29 @@ of Collett (2023). See \link{dataset_by_exercise} for the complete index.
 }
 
 \examples{
-str(prostate)
-survival::coxph(
+# Collett (2023), Chapter 17 style -----------------------------------
+# Example 1.4: the trial data
+survival::survfit(survival::Surv(time, status) ~ treatment, data = prostate)
+
+# Examples 3.6, 3.12 and 3.16: Cox model for treatment and prognostic variables
+fit_prostate <- survival::coxph(
   survival::Surv(time, status) ~ treatment + age + shb + size + index,
   data = prostate
 )
+summary(fit_prostate)
+
+# Example 5.15: the corresponding Weibull accelerated failure time model
+survival::survreg(
+  survival::Surv(time, status) ~ treatment + age + shb + size + index,
+  data = prostate, dist = "weibull"
+)
+
+# Modern tools --------------------------------------------------------
+if (requireNamespace("flexsurv", quietly = TRUE)) {
+  flexsurv::flexsurvreg(
+    survival::Surv(time, status) ~ treatment + age + shb + size + index,
+    data = prostate, dist = "weibull"
+  )
+}
 }
 \keyword{datasets}

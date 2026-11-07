@@ -46,10 +46,19 @@ See \link{dataset_by_exercise} for the complete index.
 }
 
 \examples{
-str(ducks)
+# Collett (2023), Appendix B.3 (no numbered example) ------------------
+# Chapter 17 style: proportional hazards model for age, weight and length
 survival::coxph(
   survival::Surv(time, status) ~ age + weight + length,
   data = ducks
 )
+
+# Modern tools --------------------------------------------------------
+if (requireNamespace("broom", quietly = TRUE)) {
+  broom::tidy(
+    survival::coxph(survival::Surv(time, status) ~ age + weight + length, data = ducks),
+    exponentiate = TRUE, conf.int = TRUE
+  )
+}
 }
 \keyword{datasets}

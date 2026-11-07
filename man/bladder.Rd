@@ -48,10 +48,22 @@ See \link{dataset_by_exercise} for the complete index.
 }
 
 \examples{
-str(bladder)
+# Collett (2023), Appendix B.2 (no numbered example) ------------------
+# Chapter 17 style: Cox model for the time to the first recurrence
 survival::coxph(
-  survival::Surv(time, status) ~ init + size + treat,
+  survival::Surv(time, status) ~ init + size + factor(treat),
   data = bladder
 )
+
+# Modern tools --------------------------------------------------------
+if (requireNamespace("broom", quietly = TRUE)) {
+  broom::tidy(
+    survival::coxph(
+      survival::Surv(time, status) ~ init + size + factor(treat),
+      data = bladder
+    ),
+    exponentiate = TRUE, conf.int = TRUE
+  )
+}
 }
 \keyword{datasets}

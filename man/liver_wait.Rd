@@ -54,10 +54,25 @@ alias for the data set used in Example X.Y of Collett (2023). See
 }
 
 \examples{
-str(liver_wait)
+# Collett (2023), Chapter 17 style -----------------------------------
+# Examples 14.1 and 14.3: dependent censoring (transplant) modelled with
+# inverse probability of censoring weights
+liver_wait$cens <- 1 - liver_wait$status
+cens_fit <- survival::survreg(
+  survival::Surv(time, cens) ~ age + gender + bmi + ukeld,
+  data = liver_wait
+)
+lp <- cens_fit$linear.predictors
+sigma <- cens_fit$scale
+
+# Probability of still being uncensored at each observed time
+survival_uncensored <- exp(-exp((log(liver_wait$time) - lp) / sigma))
+weights <- 1 / survival_uncensored
+summary(weights)
+
 survival::coxph(
   survival::Surv(time, status) ~ age + gender + bmi + ukeld,
-  data = liver_wait
+  data = liver_wait, weights = weights
 )
 }
 \keyword{datasets}

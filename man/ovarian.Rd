@@ -57,7 +57,30 @@ complete index.
 }
 
 \examples{
-str(ovarian)
-survival::survfit(survival::Surv(time, status) ~ treat, data = ovarian)
+# Collett (2023), Chapter 17 style -----------------------------------
+# Examples 5.11 and 5.12: Weibull proportional hazards model
+fit_ovarian <- survival::survreg(
+  survival::Surv(time, status) ~ treat + age,
+  data = ovarian, dist = "weibull"
+)
+summary(fit_ovarian)
+
+# Examples 7.1-7.4: residual checks for the parametric model
+head(stats::residuals(fit_ovarian, type = "deviance"))
+
+# Example 8.3: a time-dependent effect of treatment
+survival::coxph(
+  survival::Surv(time, status) ~ treat + tt(treat),
+  data = ovarian,
+  tt = function(x, t, ...) x * log(t)
+)
+
+# Modern tools --------------------------------------------------------
+if (requireNamespace("flexsurv", quietly = TRUE)) {
+  flexsurv::flexsurvreg(
+    survival::Surv(time, status) ~ treat + age,
+    data = ovarian, dist = "weibull"
+  )
+}
 }
 \keyword{datasets}

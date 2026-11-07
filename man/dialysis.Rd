@@ -57,7 +57,32 @@ the complete index.
 }
 
 \examples{
-str(dialysis)
-survival::coxph(survival::Surv(time, status) ~ age + sex, data = dialysis)
+# Collett (2023), Chapter 17 style -----------------------------------
+# Examples 4.1-4.4: Cox model and the model-checking residuals
+fit_dialysis <- survival::coxph(
+  survival::Surv(time, status) ~ age + sex,
+  data = dialysis
+)
+summary(fit_dialysis)
+head(stats::residuals(fit_dialysis, type = "martingale"))
+head(stats::residuals(fit_dialysis, type = "dfbeta"))
+
+# Examples 4.10 and 4.11: a non-linear effect of age
+survival::coxph(
+  survival::Surv(time, status) ~ age + I(age^2) + sex,
+  data = dialysis
+)
+
+# Example 4.12: a time-varying coefficient for sex
+survival::coxph(
+  survival::Surv(time, status) ~ age + sex + tt(sex),
+  data = dialysis,
+  tt = function(x, t, ...) x * t
+)
+
+# Modern tools --------------------------------------------------------
+if (requireNamespace("rms", quietly = TRUE)) {
+  rms::cph(survival::Surv(time, status) ~ age + sex, data = dialysis, x = TRUE, y = TRUE)
+}
 }
 \keyword{datasets}

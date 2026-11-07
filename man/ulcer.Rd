@@ -58,7 +58,25 @@ of Collett (2023). See \link{dataset_by_exercise} for the complete index.
 }
 
 \examples{
-str(ulcer)
-table(ulcer$time, ulcer$result)
+# Collett (2023), Chapter 17 style -----------------------------------
+# Examples 9.1 and 9.4: interval-censored recurrence times
+# (Table 9.2 of the book gives the interval for each visit and result)
+ulcer$left  <- ifelse(ulcer$result == 2, ifelse(ulcer$time <= 6, 0, 6), ulcer$time)
+ulcer$right <- ifelse(ulcer$result == 2, ulcer$time, Inf)
+survival::Surv(ulcer$left, ulcer$right, type = "interval2")[1:5]
+# Chapter 17 fits the Turnbull estimate with icfit() in the interval package;
+# icenReg provides the same estimator.
+icenReg::ic_np(cbind(ulcer$left, ulcer$right))
+
+# Examples 9.5-9.7: a proportional hazards model for interval-censored data
+icenReg::ic_sp(
+  survival::Surv(left, right, type = "interval2") ~ treatment,
+  data = ulcer
+)
+
+# Modern tools --------------------------------------------------------
+if (requireNamespace("icenReg", quietly = TRUE)) {
+  plot(icenReg::ic_np(cbind(ulcer$left, ulcer$right)))
+}
 }
 \keyword{datasets}

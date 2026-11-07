@@ -62,11 +62,26 @@ index.
 }
 
 \examples{
-str(liver)
-table(liver$cof)
-survival::survfit(
-  survival::Surv(time, factor(cof)) ~ 1,
-  data = liver
+# Collett (2023), Chapter 17 style -----------------------------------
+# Examples 12.1-12.6: cumulative incidence by cause of graft failure
+# (cof: 1 = rejection, 2 = thrombosis, 3 = recurrent disease, 4 = other)
+ci <- cmprsk::cuminc(liver$time, liver$cof, liver$disease)
+plot(ci, curvlab = c("PBC", "PSC", "ALD"), xlab = "Time (days)")
+
+# A Fine-Gray model for one cause of failure (cause 2, thrombosis)
+cmprsk::crr(
+  liver$time, liver$cof,
+  cov1 = as.matrix(liver[c("age", "gender")]),
+  failcode = 2
 )
+
+# Modern tools --------------------------------------------------------
+if (requireNamespace("tidycmprsk", quietly = TRUE)) {
+  tidycmprsk::cuminc(survival::Surv(time, factor(cof)) ~ disease, data = liver)
+  tidycmprsk::crr(
+    survival::Surv(time, factor(cof)) ~ age + gender,
+    data = liver, failcode = "2"
+  )
+}
 }
 \keyword{datasets}

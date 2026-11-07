@@ -68,7 +68,32 @@ the alias for the data set used in Example X.Y of Collett (2023). See
 }
 
 \examples{
-str(breast)
+# Collett (2023), Chapter 17 style -----------------------------------
+# Example 1.2: survival by HPA staining (1 = negative, 2 = positive)
 survival::survfit(survival::Surv(time, status) ~ stain, data = breast)
+
+# Examples 2.11-2.14: log-rank and Peto-Peto tests
+survival::survdiff(survival::Surv(time, status) ~ stain, data = breast)
+survival::survdiff(survival::Surv(time, status) ~ stain, data = breast, rho = 1)
+
+# Examples 3.1 and 3.3: Cox model with the staining indicator
+fit_breast <- survival::coxph(survival::Surv(time, status) ~ stain, data = breast)
+summary(fit_breast)
+
+# Examples 5.5-5.8, 5.13, 5.14 and 5.17: Weibull models
+survival::survreg(survival::Surv(time, status) ~ stain, data = breast, dist = "weibull")
+
+# Modern tools --------------------------------------------------------
+if (requireNamespace("ggsurvfit", quietly = TRUE)) {
+  ggsurvfit::survfit2(survival::Surv(time, status) ~ stain, data = breast) |>
+    ggsurvfit::ggsurvfit() |>
+    ggsurvfit::add_risktable()
+}
+if (requireNamespace("broom", quietly = TRUE)) {
+  broom::tidy(fit_breast, exponentiate = TRUE, conf.int = TRUE)
+}
+if (requireNamespace("flexsurv", quietly = TRUE)) {
+  flexsurv::flexsurvreg(survival::Surv(time, status) ~ stain, data = breast, dist = "weibull")
+}
 }
 \keyword{datasets}

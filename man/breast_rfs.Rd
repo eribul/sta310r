@@ -53,10 +53,21 @@ alias for the data set used in Example X.Y of Collett (2023). See
 }
 
 \examples{
-str(breast_rfs)
-survival::coxph(
-  survival::Surv(time, status) ~ treat + age + men + size + grade + nodes,
-  data = breast_rfs
+# Collett (2023), Chapter 17 style -----------------------------------
+# Examples 6.5 and 6.6: log-logistic (proportional odds) model
+survival::survreg(
+  survival::Surv(time, status) ~ treat + age + men + size + grade +
+    nodes + prog + oest,
+  data = breast_rfs, dist = "loglogistic"
 )
+
+# Modern tools --------------------------------------------------------
+if (requireNamespace("flexsurv", quietly = TRUE)) {
+  flexsurv::flexsurvspline(
+    survival::Surv(time, status) ~ treat + age + men + size + grade +
+      nodes + prog + oest,
+    data = breast_rfs, k = 1
+  )
+}
 }
 \keyword{datasets}

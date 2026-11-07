@@ -51,10 +51,16 @@ the data set used in Example X.Y of Collett (2023). See
 }
 
 \examples{
-str(cirrhosis)
+# Collett (2023), Chapter 17 style -----------------------------------
+# Example 8.4: the baseline model
 survival::coxph(
   survival::Surv(time, status) ~ age + lbr + treat,
   data = cirrhosis
 )
+
+# Example 8.4: log(bilirubin) as a time-dependent covariate
+# (two patients have a zero-length interval, hence the filter)
+cp <- subset(cirrhosis_cp, stop > start)
+survival::coxph(survival::Surv(start, stop, status) ~ lbrt + age, data = cp)
 }
 \keyword{datasets}

@@ -57,7 +57,27 @@ the data set used in Example X.Y of Collett (2023). See
 }
 
 \examples{
-str(bmt_outcome)
-table(bmt_outcome$leukaemia, bmt_outcome$age)
+# Collett (2023), Chapter 17 style -----------------------------------
+# Example 13.4: the two endpoints of the three-state model
+# 1 -> 2: platelet recovery
+survival::coxph(
+  survival::Surv(ptime, pcens) ~ leukaemia + age + match + tcell,
+  data = bmt_outcome
+)
+# 1 -> 3: relapse or death before recovery
+survival::coxph(
+  survival::Surv(rdtime, rdcens) ~ leukaemia + age + match + tcell,
+  data = bmt_outcome
+)
+
+# Modern tools --------------------------------------------------------
+# Transition-specific hazards are fitted by stratifying on the transition
+if (requireNamespace("mstate", quietly = TRUE)) {
+  tmat <- mstate::transMat(
+    list(c(2, 3), 3, c()),
+    names = c("transplant", "recovery", "relapse")
+  )
+  tmat
+}
 }
 \keyword{datasets}

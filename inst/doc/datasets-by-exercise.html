@@ -352,6 +352,8 @@ example</a></li>
 numbered example</a></li>
 <li><a href="#using-the-index-in-r" id="toc-using-the-index-in-r">Using
 the index in R</a></li>
+<li><a href="#reproducing-the-books-analyses" id="toc-reproducing-the-books-analyses">Reproducing the book’s
+analyses</a></li>
 </ul>
 </div>
 
@@ -1748,6 +1750,32 @@ are listed with the same example but without an alias.</p>
 or the example mapping changes, update that script and re-run it; it
 recreates both <code>dataset_by_exercise</code> and the
 <code>dX.Y</code> aliases.</p>
+</div>
+<div id="reproducing-the-books-analyses" class="section level2">
+<h2>Reproducing the book’s analyses</h2>
+<p>The help page of every data set shows how the analyses in Collett
+(2023) are carried out in R, with a comment for each example number.
+Each page has two parts:</p>
+<ul>
+<li><strong>Collett (2023), Chapter 17 style</strong> uses the functions
+and packages of the book’s own R chapter:
+<code>survival::survfit()</code>, <code>survival::coxph()</code>,
+<code>survival::survdiff()</code>, <code>survival::survreg()</code>,
+<code>survival::cox.zph()</code>, <code>survival::tmerge()</code>,
+<code>survival::survSplit()</code>, <code>penalized::penalized()</code>,
+<code>eha::pchreg()</code> and <code>cmprsk::cuminc()</code> /
+<code>cmprsk::crr()</code>.</li>
+<li><strong>Modern tools</strong> repeats the same analysis with newer
+packages: <code>ggsurvfit</code>, <code>flexsurv</code>,
+<code>coxme</code>, <code>icenReg</code>, <code>tidycmprsk</code>,
+<code>broom</code>, <code>rms</code> and <code>glmnet</code>.</li>
+</ul>
+<p>For example, <code>?gastric</code> shows the piecewise treatment
+effect of Examples 11.2 and 11.3, and <code>?iud</code> shows the
+conjugate Bayesian analysis of Examples 16.1 to 16.3 alongside the
+parametric models of Examples 5.1 to 5.4. Where the book uses a package
+that is not a dependency of this package, the help page says so in a
+comment and uses a runnable equivalent.</p>
 </div>
 
 

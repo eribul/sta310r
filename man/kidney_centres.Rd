@@ -54,11 +54,27 @@ of Collett (2023). See \link{dataset_by_exercise} for the complete index.
 }
 
 \examples{
-str(kidney_centres)
-table(kidney_centres$centre)
+# Collett (2023), Chapter 17 style -----------------------------------
+# Examples 11.4-11.8: comparison of transplant centres
 survival::coxph(
-  survival::Surv(tsurv, tcens) ~ dage + dtype + rage + diab + cit,
+  survival::Surv(tsurv, tcens) ~ strata(centre) + dage + dtype + rage + diab + cit,
   data = kidney_centres
 )
+
+# A random (frailty) effect for centre instead of stratification
+survival::coxph(
+  survival::Surv(tsurv, tcens) ~ dage + dtype + rage + diab + cit +
+    frailty(centre, distribution = "gamma"),
+  data = kidney_centres
+)
+
+# Modern tools --------------------------------------------------------
+if (requireNamespace("coxme", quietly = TRUE)) {
+  coxme::coxme(
+    survival::Surv(tsurv, tcens) ~ dage + dtype + rage + diab + cit +
+      (1 | centre),
+    data = kidney_centres
+  )
+}
 }
 \keyword{datasets}

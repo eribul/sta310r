@@ -63,8 +63,31 @@ the data set used in Example X.Y of Collett (2023). See
 }
 
 \examples{
-str(tamoxifen)
-table(tamoxifen$treat)
-survival::survfit(survival::Surv(tsurv, ts) ~ treat, data = tamoxifen)
+# Collett (2023), Chapter 17 style -----------------------------------
+# Example 13.3: four event types, each analysed as a cause-specific hazard
+# local relapse
+survival::coxph(survival::Surv(lsurv, ls) ~ treat + age + size + hr, data = tamoxifen)
+# axillary relapse
+survival::coxph(survival::Surv(asurv, as) ~ treat + age + size + hr, data = tamoxifen)
+# distant relapse
+survival::coxph(survival::Surv(dsurv, ds) ~ treat + age + size + hr, data = tamoxifen)
+# second malignancy
+survival::coxph(survival::Surv(msurv, ms) ~ treat + age + size + hr, data = tamoxifen)
+
+# Modern tools --------------------------------------------------------
+# A competing-risk view of the first event of any of the four types
+if (requireNamespace("tidycmprsk", quietly = TRUE)) {
+  first <- data.frame(
+    time = pmin(tamoxifen$lsurv, tamoxifen$asurv, tamoxifen$dsurv, tamoxifen$msurv),
+    treat = tamoxifen$treat
+  )
+  first$cause <- factor(
+    c("local", "axillary", "distant", "second")[
+      apply(cbind(tamoxifen$lsurv, tamoxifen$asurv, tamoxifen$dsurv, tamoxifen$msurv),
+            1, which.min)
+    ]
+  )
+  tidycmprsk::cuminc(survival::Surv(time, cause) ~ treat, data = first)
+}
 }
 \keyword{datasets}

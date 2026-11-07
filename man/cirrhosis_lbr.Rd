@@ -40,7 +40,16 @@ complete index.
 }
 
 \examples{
-str(cirrhosis_lbr)
+# Collett (2023), Chapter 17 style -----------------------------------
+# Example 8.4: the repeated log(bilirubin) measurements in long format
 head(cirrhosis_lbr)
+
+# These are the measurements from which the time-dependent covariate lbrt
+# in cirrhosis_cp is built: the value at each visit applies until the next.
+merge(
+  cirrhosis[c("patient", "time", "status")],
+  cirrhosis_lbr,
+  by = "patient", suffixes = c("_surv", "_visit")
+) |> head()
 }
 \keyword{datasets}

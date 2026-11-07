@@ -46,7 +46,27 @@ See \link{dataset_by_exercise} for the complete index.
 }
 
 \examples{
-str(hepatitis)
+# Collett (2023), Chapter 17 style -----------------------------------
+# Examples 15.1-15.3: number of events for the log-rank test
+# Schoenfeld's formula, as in Equation 15.1
+hr <- 0.57
+alpha <- 0.05
+power <- 0.8
+(stats::qnorm(1 - alpha / 2) + stats::qnorm(power))^2 /
+  (0.25 * log(hr)^2)
+
+# The survival times themselves are used for the exponential model
 survival::survfit(survival::Surv(time, status) ~ treatment, data = hepatitis)
+
+# Modern tools --------------------------------------------------------
+# The same calculation, and its inverse, from this package
+n_events_logrank(hr, alpha = alpha, power = power)
+power_logrank(d = 140, hr = hr)
+if (requireNamespace("flexsurv", quietly = TRUE)) {
+  flexsurv::flexsurvreg(
+    survival::Surv(time, status) ~ treatment,
+    data = hepatitis, dist = "exponential"
+  )
+}
 }
 \keyword{datasets}

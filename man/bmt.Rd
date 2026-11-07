@@ -50,10 +50,25 @@ See \link{dataset_by_exercise} for the complete index.
 }
 
 \examples{
-str(bmt)
+# Collett (2023), Appendix B.4 (no numbered example) ------------------
+# Chapter 17 style: Weibull accelerated failure time model
+survival::survreg(
+  survival::Surv(time, status) ~ rage + dage + factor(type) + gvhd,
+  data = bmt, dist = "weibull"
+)
+
+# The corresponding Cox model
 survival::coxph(
   survival::Surv(time, status) ~ rage + dage + factor(type) + gvhd,
   data = bmt
 )
+
+# Modern tools --------------------------------------------------------
+if (requireNamespace("flexsurv", quietly = TRUE)) {
+  flexsurv::flexsurvreg(
+    survival::Surv(time, status) ~ rage + dage + factor(type) + gvhd,
+    data = bmt, dist = "weibull"
+  )
+}
 }
 \keyword{datasets}

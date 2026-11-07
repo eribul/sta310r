@@ -11,6 +11,14 @@
   set.
 * Added the vignette "Data sets by exercise", which presents the index, and an
   overview of it in the README.
+* The examples on the help page of every data set now reproduce the analyses
+  that Collett (2023) presents with that data set, with a comment for each
+  example number. Each page has two parts: first the code of Chapter 17 (the
+  `survival` package, `penalized`, `eha`, `cmprsk`, and so on), then the same
+  analysis with more recent tools (`ggsurvfit`, `flexsurv`, `coxme`, `icenReg`,
+  `tidycmprsk`, `broom`, `rms`, `glmnet`). Data sets that are not used in a
+  numbered example show the analyses suggested for the appendix or, for
+  `scottish_mbc_cohort`, the modern tools only.
 
 # sta310r 0.1.0
 

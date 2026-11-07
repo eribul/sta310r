@@ -39,7 +39,14 @@ the data set used in Example X.Y of Collett (2023). See
 }
 
 \examples{
-str(pulmonary)
-table(pulmonary$time)
+# Collett (2023), Chapter 17 style -----------------------------------
+# Example 2.1: no censoring, so Surv() needs only the time
+survival::survfit(survival::Surv(time) ~ 1, data = pulmonary)
+
+# Modern tools --------------------------------------------------------
+if (requireNamespace("ggsurvfit", quietly = TRUE)) {
+  ggsurvfit::survfit2(survival::Surv(time) ~ 1, data = pulmonary) |>
+    ggsurvfit::ggsurvfit()
+}
 }
 \keyword{datasets}

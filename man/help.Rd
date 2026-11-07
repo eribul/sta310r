@@ -50,7 +50,21 @@ the data set used in Example X.Y of Collett (2023). See
 }
 
 \examples{
-str(help)
-survival::survfit(survival::Surv(days, status) ~ linkage, data = help)
+# Collett (2023), Chapter 17 style -----------------------------------
+# Example 16.7: a Bayesian Weibull and piecewise exponential model
+# Chapter 17 fits these with rstanarm::stan_surv(); the maximum likelihood
+# counterparts below give the same point estimates of the hazard ratios.
+survival::survreg(
+  survival::Surv(days, status) ~ age + gender + housing + linkage,
+  data = sta310r::help, dist = "weibull"
+)
+
+# Modern tools --------------------------------------------------------
+if (requireNamespace("flexsurv", quietly = TRUE)) {
+  flexsurv::flexsurvreg(
+    survival::Surv(days, status) ~ age + gender + housing + linkage,
+    data = sta310r::help, dist = "weibull"
+  )
+}
 }
 \keyword{datasets}

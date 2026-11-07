@@ -50,10 +50,13 @@ for the complete index.
 }
 
 \examples{
-str(cirrhosis_cp)
-survival::coxph(
-  survival::Surv(start, stop, status) ~ lbrt + age,
-  data = cirrhosis_cp
-)
+# Collett (2023), Chapter 17 style -----------------------------------
+# Example 8.4: counting process form of the cirrhosis study
+# (patient 5 and patient 8 have a zero-length interval, hence the filter)
+cp <- subset(cirrhosis_cp, stop > start)
+survival::coxph(survival::Surv(start, stop, status) ~ lbrt + age, data = cp)
+
+# Without the time-dependent covariate, for comparison with the baseline data
+survival::coxph(survival::Surv(start, stop, status) ~ treat + age, data = cp)
 }
 \keyword{datasets}

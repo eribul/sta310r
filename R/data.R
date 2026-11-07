@@ -50,8 +50,36 @@
 #'   Health Organization (1987).
 #'
 #' @examples
-#' str(iud)
+#' # Collett (2023), Chapter 17 style -----------------------------------
+#' # Example 1.1: times to discontinuation of an IUD
 #' survival::survfit(survival::Surv(time, status) ~ 1, data = iud)
+#'
+#' # Examples 2.3-2.5 and 2.7-2.10: product-limit estimate and the median
+#' km_iud <- survival::survfit(survival::Surv(time, status) ~ 1, data = iud)
+#' summary(km_iud, times = c(12, 24, 48))
+#' quantile(km_iud, probs = c(0.25, 0.5, 0.75))
+#'
+#' # Examples 5.1-5.4: exponential, Weibull and log-logistic models
+#' survival::survreg(survival::Surv(time, status) ~ 1, data = iud, dist = "exponential")
+#' survival::survreg(survival::Surv(time, status) ~ 1, data = iud, dist = "weibull")
+#' survival::survreg(survival::Surv(time, status) ~ 1, data = iud, dist = "loglogistic")
+#'
+#' # Examples 16.1-16.3: conjugate gamma posterior for the exponential rate
+#' # (a vague Gamma(0.001, 0.001) prior, as in the book)
+#' a1 <- 0.001 + sum(iud$status)
+#' b1 <- 0.001 + sum(iud$time)
+#' c(mean = a1 / b1, stats::qgamma(c(0.025, 0.975), a1, b1))
+#' # For a non-conjugate model Chapter 17 uses rstanarm::stan_surv().
+#'
+#' # Modern tools --------------------------------------------------------
+#' if (requireNamespace("ggsurvfit", quietly = TRUE)) {
+#'   ggsurvfit::survfit2(survival::Surv(time, status) ~ 1, data = iud) |>
+#'     ggsurvfit::ggsurvfit() +
+#'     ggsurvfit::add_confidence_interval()
+#' }
+#' if (requireNamespace("flexsurv", quietly = TRUE)) {
+#'   flexsurv::flexsurvreg(survival::Surv(time, status) ~ 1, data = iud, dist = "weibull")
+#' }
 "iud"
 
 #' Prognosis for women with breast cancer
@@ -94,8 +122,33 @@
 #'   Brooks (1987).
 #'
 #' @examples
-#' str(breast)
+#' # Collett (2023), Chapter 17 style -----------------------------------
+#' # Example 1.2: survival by HPA staining (1 = negative, 2 = positive)
 #' survival::survfit(survival::Surv(time, status) ~ stain, data = breast)
+#'
+#' # Examples 2.11-2.14: log-rank and Peto-Peto tests
+#' survival::survdiff(survival::Surv(time, status) ~ stain, data = breast)
+#' survival::survdiff(survival::Surv(time, status) ~ stain, data = breast, rho = 1)
+#'
+#' # Examples 3.1 and 3.3: Cox model with the staining indicator
+#' fit_breast <- survival::coxph(survival::Surv(time, status) ~ stain, data = breast)
+#' summary(fit_breast)
+#'
+#' # Examples 5.5-5.8, 5.13, 5.14 and 5.17: Weibull models
+#' survival::survreg(survival::Surv(time, status) ~ stain, data = breast, dist = "weibull")
+#'
+#' # Modern tools --------------------------------------------------------
+#' if (requireNamespace("ggsurvfit", quietly = TRUE)) {
+#'   ggsurvfit::survfit2(survival::Surv(time, status) ~ stain, data = breast) |>
+#'     ggsurvfit::ggsurvfit() |>
+#'     ggsurvfit::add_risktable()
+#' }
+#' if (requireNamespace("broom", quietly = TRUE)) {
+#'   broom::tidy(fit_breast, exponentiate = TRUE, conf.int = TRUE)
+#' }
+#' if (requireNamespace("flexsurv", quietly = TRUE)) {
+#'   flexsurv::flexsurvreg(survival::Surv(time, status) ~ stain, data = breast, dist = "weibull")
+#' }
 "breast"
 
 #' Survival of multiple myeloma patients
@@ -144,11 +197,55 @@
 #'   Center of the University of West Virginia, USA.
 #'
 #' @examples
-#' str(myeloma)
-#' survival::coxph(
+#' # Collett (2023), Chapter 17 style -----------------------------------
+#' # Examples 2.2 and 2.6: the survivor function for a single sample
+#' survival::survfit(survival::Surv(time, status) ~ 1, data = myeloma)
+#'
+#' # Examples 3.2, 3.5, 3.8, 3.9, 3.15, 3.17, 3.19 and 3.20: Cox model
+#' fit_myeloma <- survival::coxph(
 #'   survival::Surv(time, status) ~ age + sex + bun + ca + hb + pcells + protein,
 #'   data = myeloma
 #' )
+#' summary(fit_myeloma)
+#'
+#' # Example 3.7: lasso variable selection (the book uses the penalized package)
+#' # The fitting routine prints its progress; it is captured here so that the
+#' # selected coefficients are easy to read.
+#' progress <- utils::capture.output(
+#'   lass <- penalized::penalized(
+#'     survival::Surv(myeloma$time, myeloma$status),
+#'     penalized = ~ age + sex + bun + ca + hb + pcells + protein,
+#'     lambda1 = 30,
+#'     data = myeloma
+#'   )
+#' )
+#' round(lass@penalized, 3)
+#'
+#' # Examples 4.5, 4.8 and 4.9: residuals and the proportional hazards assumption
+#' head(stats::residuals(fit_myeloma, type = "martingale"))
+#' survival::cox.zph(fit_myeloma)
+#'
+#' # Example 5.16: Weibull model with a prognostic index
+#' survival::survreg(
+#'   survival::Surv(time, status) ~ age + bun + hb,
+#'   data = myeloma, dist = "weibull"
+#' )
+#'
+#' # Modern tools --------------------------------------------------------
+#' if (requireNamespace("broom", quietly = TRUE)) {
+#'   broom::tidy(fit_myeloma, exponentiate = TRUE, conf.int = TRUE)
+#' }
+#' if (requireNamespace("glmnet", quietly = TRUE)) {
+#'   x <- as.matrix(myeloma[c("age", "sex", "bun", "ca", "hb", "pcells", "protein")])
+#'   cv <- glmnet::cv.glmnet(x, survival::Surv(myeloma$time, myeloma$status), family = "cox")
+#'   stats::coef(cv, s = "lambda.min")
+#' }
+#' if (requireNamespace("rms", quietly = TRUE)) {
+#'   rms::cph(
+#'     survival::Surv(time, status) ~ age + sex + bun + ca + hb + pcells + protein,
+#'     data = myeloma, x = TRUE, y = TRUE
+#'   )
+#' }
 "myeloma"
 
 #' Comparison of two treatments for prostatic cancer
@@ -195,11 +292,30 @@
 #'   given in Andrews and Herzberg (1985).
 #'
 #' @examples
-#' str(prostate)
-#' survival::coxph(
+#' # Collett (2023), Chapter 17 style -----------------------------------
+#' # Example 1.4: the trial data
+#' survival::survfit(survival::Surv(time, status) ~ treatment, data = prostate)
+#'
+#' # Examples 3.6, 3.12 and 3.16: Cox model for treatment and prognostic variables
+#' fit_prostate <- survival::coxph(
 #'   survival::Surv(time, status) ~ treatment + age + shb + size + index,
 #'   data = prostate
 #' )
+#' summary(fit_prostate)
+#'
+#' # Example 5.15: the corresponding Weibull accelerated failure time model
+#' survival::survreg(
+#'   survival::Surv(time, status) ~ treatment + age + shb + size + index,
+#'   data = prostate, dist = "weibull"
+#' )
+#'
+#' # Modern tools --------------------------------------------------------
+#' if (requireNamespace("flexsurv", quietly = TRUE)) {
+#'   flexsurv::flexsurvreg(
+#'     survival::Surv(time, status) ~ treatment + age + shb + size + index,
+#'     data = prostate, dist = "weibull"
+#'   )
+#' }
 "prostate"
 
 #' Pulmonary metastasis in patients with osteosarcoma
@@ -231,8 +347,15 @@
 #'   (1970).
 #'
 #' @examples
-#' str(pulmonary)
-#' table(pulmonary$time)
+#' # Collett (2023), Chapter 17 style -----------------------------------
+#' # Example 2.1: no censoring, so Surv() needs only the time
+#' survival::survfit(survival::Surv(time) ~ 1, data = pulmonary)
+#'
+#' # Modern tools --------------------------------------------------------
+#' if (requireNamespace("ggsurvfit", quietly = TRUE)) {
+#'   ggsurvfit::survfit2(survival::Surv(time) ~ 1, data = pulmonary) |>
+#'     ggsurvfit::ggsurvfit()
+#' }
 "pulmonary"
 
 #' Survival times of patients with melanoma
@@ -267,11 +390,25 @@
 #'   Lee and Wang (2013).
 #'
 #' @examples
-#' str(melanoma)
-#' survival::survdiff(
-#'   survival::Surv(time, status) ~ treatment + survival::strata(age),
+#' # Collett (2023), Chapter 17 style -----------------------------------
+#' # Examples 2.15 and 2.16: log-rank test within each age stratum
+#' survival::survfit(
+#'   survival::Surv(time, status) ~ treatment + strata(age),
 #'   data = melanoma
 #' )
+#' survival::survdiff(
+#'   survival::Surv(time, status) ~ treatment + strata(age),
+#'   data = melanoma
+#' )
+#'
+#' # Modern tools --------------------------------------------------------
+#' if (requireNamespace("ggsurvfit", quietly = TRUE)) {
+#'   ggsurvfit::survfit2(
+#'     survival::Surv(time, status) ~ treatment + strata(age),
+#'     data = melanoma
+#'   ) |>
+#'     ggsurvfit::ggsurvfit()
+#' }
 "melanoma"
 
 #' Treatment of hypernephroma
@@ -311,11 +448,37 @@
 #'   Wang (2013).
 #'
 #' @examples
-#' str(hyper)
-#' survival::coxph(
-#'   survival::Surv(time, status) ~ factor(age) + nephrectomy,
+#' # Collett (2023), Chapter 17 style -----------------------------------
+#' # Examples 3.4, 3.10, 3.11, 3.13 and 3.14: Cox model with age group
+#' fit_hyper <- survival::coxph(
+#'   survival::Surv(time, status) ~ nephrectomy + factor(age),
 #'   data = hyper
 #' )
+#' summary(fit_hyper)
+#'
+#' # Example 5.10: the corresponding Weibull model
+#' survival::survreg(
+#'   survival::Surv(time, status) ~ nephrectomy + factor(age),
+#'   data = hyper, dist = "weibull"
+#' )
+#'
+#' # Examples 6.1 and 6.4: piecewise exponential baseline hazard
+#' # Chapter 17 fits this with phreg(dist = "pch", cuts = ...) in the eha package;
+#' # pchreg() is the current name of the same fit.
+#' eha::pchreg(
+#'   survival::Surv(time, status) ~ factor(age) + nephrectomy,
+#'   data = hyper,
+#'   cuts = c(5, 6, 8, 9, 10, 12, 14, 15, 17, 18, 21, 26, 35, 36, 38,
+#'            48, 52, 56, 68, 72, 84, 108, 115)
+#' )
+#'
+#' # Modern tools --------------------------------------------------------
+#' if (requireNamespace("flexsurv", quietly = TRUE)) {
+#'   flexsurv::flexsurvspline(
+#'     survival::Surv(time, status) ~ nephrectomy + factor(age),
+#'     data = hyper, k = 1
+#'   )
+#' }
 "hyper"
 
 #' Infection in patients on dialysis
@@ -357,8 +520,33 @@
 #'   and Aisbett (1991).
 #'
 #' @examples
-#' str(dialysis)
-#' survival::coxph(survival::Surv(time, status) ~ age + sex, data = dialysis)
+#' # Collett (2023), Chapter 17 style -----------------------------------
+#' # Examples 4.1-4.4: Cox model and the model-checking residuals
+#' fit_dialysis <- survival::coxph(
+#'   survival::Surv(time, status) ~ age + sex,
+#'   data = dialysis
+#' )
+#' summary(fit_dialysis)
+#' head(stats::residuals(fit_dialysis, type = "martingale"))
+#' head(stats::residuals(fit_dialysis, type = "dfbeta"))
+#'
+#' # Examples 4.10 and 4.11: a non-linear effect of age
+#' survival::coxph(
+#'   survival::Surv(time, status) ~ age + I(age^2) + sex,
+#'   data = dialysis
+#' )
+#'
+#' # Example 4.12: a time-varying coefficient for sex
+#' survival::coxph(
+#'   survival::Surv(time, status) ~ age + sex + tt(sex),
+#'   data = dialysis,
+#'   tt = function(x, t, ...) x * t
+#' )
+#'
+#' # Modern tools --------------------------------------------------------
+#' if (requireNamespace("rms", quietly = TRUE)) {
+#'   rms::cph(survival::Surv(time, status) ~ age + sex, data = dialysis, x = TRUE, y = TRUE)
+#' }
 "dialysis"
 
 #' A numerical illustration of two factors
@@ -391,11 +579,26 @@
 #'   4th ed. Chapman & Hall/CRC, Example 5.9 (Table 5.1).
 #'
 #' @examples
-#' str(numerical_illustration)
-#' survival::survfit(
-#'   survival::Surv(time, status) ~ factor(a),
+#' # Collett (2023), Chapter 17 style -----------------------------------
+#' # Example 5.9: Weibull models for two two-level factors and their interaction
+#' survival::survreg(
+#'   survival::Surv(time, status) ~ factor(a) * factor(b),
+#'   data = numerical_illustration, dist = "weibull"
+#' )
+#'
+#' # The proportional hazards form of the same model
+#' survival::coxph(
+#'   survival::Surv(time, status) ~ factor(a) * factor(b),
 #'   data = numerical_illustration
 #' )
+#'
+#' # Modern tools --------------------------------------------------------
+#' if (requireNamespace("flexsurv", quietly = TRUE)) {
+#'   flexsurv::flexsurvreg(
+#'     survival::Surv(time, status) ~ factor(a) * factor(b),
+#'     data = numerical_illustration, dist = "weibull"
+#'   )
+#' }
 "numerical_illustration"
 
 #' Chemotherapy in ovarian cancer patients
@@ -439,8 +642,31 @@
 #'   et al. (1979) via Therneau (1986).
 #'
 #' @examples
-#' str(ovarian)
-#' survival::survfit(survival::Surv(time, status) ~ treat, data = ovarian)
+#' # Collett (2023), Chapter 17 style -----------------------------------
+#' # Examples 5.11 and 5.12: Weibull proportional hazards model
+#' fit_ovarian <- survival::survreg(
+#'   survival::Surv(time, status) ~ treat + age,
+#'   data = ovarian, dist = "weibull"
+#' )
+#' summary(fit_ovarian)
+#'
+#' # Examples 7.1-7.4: residual checks for the parametric model
+#' head(stats::residuals(fit_ovarian, type = "deviance"))
+#'
+#' # Example 8.3: a time-dependent effect of treatment
+#' survival::coxph(
+#'   survival::Surv(time, status) ~ treat + tt(treat),
+#'   data = ovarian,
+#'   tt = function(x, t, ...) x * log(t)
+#' )
+#'
+#' # Modern tools --------------------------------------------------------
+#' if (requireNamespace("flexsurv", quietly = TRUE)) {
+#'   flexsurv::flexsurvreg(
+#'     survival::Surv(time, status) ~ treat + age,
+#'     data = ovarian, dist = "weibull"
+#'   )
+#' }
 "ovarian"
 
 #' Recurrence-free survival in breast cancer patients
@@ -485,11 +711,22 @@
 #'   et al. (1994) and Sauerbrei and Royston (1999).
 #'
 #' @examples
-#' str(breast_rfs)
-#' survival::coxph(
-#'   survival::Surv(time, status) ~ treat + age + men + size + grade + nodes,
-#'   data = breast_rfs
+#' # Collett (2023), Chapter 17 style -----------------------------------
+#' # Examples 6.5 and 6.6: log-logistic (proportional odds) model
+#' survival::survreg(
+#'   survival::Surv(time, status) ~ treat + age + men + size + grade +
+#'     nodes + prog + oest,
+#'   data = breast_rfs, dist = "loglogistic"
 #' )
+#'
+#' # Modern tools --------------------------------------------------------
+#' if (requireNamespace("flexsurv", quietly = TRUE)) {
+#'   flexsurv::flexsurvspline(
+#'     survival::Surv(time, status) ~ treat + age + men + size + grade +
+#'       nodes + prog + oest,
+#'     data = breast_rfs, k = 1
+#'   )
+#' }
 "breast_rfs"
 
 #' Bone marrow transplantation in the treatment of leukaemia
@@ -536,10 +773,15 @@
 #'   Moeschberger (2005).
 #'
 #' @examples
-#' str(bmt_leukaemia)
+#' # Collett (2023), Chapter 17 style -----------------------------------
+#' # Example 8.2: platelet recovery as a time-dependent covariate
+#' base <- bmt_leukaemia[, c("patient", "time", "status", "group", "page", "dage")]
+#' recovery <- subset(bmt_leukaemia, precovery == 1)[, c("patient", "ptime")]
+#' cp <- survival::tmerge(base, base, id = patient, endpt = event(time, status))
+#' cp <- survival::tmerge(cp, recovery, id = patient, preg = tdc(ptime))
 #' survival::coxph(
-#'   survival::Surv(time, status) ~ factor(group) + page + dage,
-#'   data = bmt_leukaemia
+#'   survival::Surv(tstart, tstop, endpt) ~ preg + factor(group) + page + dage,
+#'   data = cp
 #' )
 "bmt_leukaemia"
 
@@ -584,11 +826,17 @@
 #'   and Grambsch (2000).
 #'
 #' @examples
-#' str(cirrhosis)
+#' # Collett (2023), Chapter 17 style -----------------------------------
+#' # Example 8.4: the baseline model
 #' survival::coxph(
 #'   survival::Surv(time, status) ~ age + lbr + treat,
 #'   data = cirrhosis
 #' )
+#'
+#' # Example 8.4: log(bilirubin) as a time-dependent covariate
+#' # (two patients have a zero-length interval, hence the filter)
+#' cp <- subset(cirrhosis_cp, stop > start)
+#' survival::coxph(survival::Surv(start, stop, status) ~ lbrt + age, data = cp)
 "cirrhosis"
 
 #' Data from a cirrhosis study (log-bilirubin data)
@@ -621,8 +869,17 @@
 #'   4th ed. Chapman & Hall/CRC, Example 8.4 (Table 8.5).
 #'
 #' @examples
-#' str(cirrhosis_lbr)
+#' # Collett (2023), Chapter 17 style -----------------------------------
+#' # Example 8.4: the repeated log(bilirubin) measurements in long format
 #' head(cirrhosis_lbr)
+#'
+#' # These are the measurements from which the time-dependent covariate lbrt
+#' # in cirrhosis_cp is built: the value at each visit applies until the next.
+#' merge(
+#'   cirrhosis[c("patient", "time", "status")],
+#'   cirrhosis_lbr,
+#'   by = "patient", suffixes = c("_surv", "_visit")
+#' ) |> head()
 "cirrhosis_lbr"
 
 #' Data from a cirrhosis study (counting process format)
@@ -665,11 +922,14 @@
 #'   4th ed. Chapman & Hall/CRC, Example 8.4 (Tables 8.4 and 8.5).
 #'
 #' @examples
-#' str(cirrhosis_cp)
-#' survival::coxph(
-#'   survival::Surv(start, stop, status) ~ lbrt + age,
-#'   data = cirrhosis_cp
-#' )
+#' # Collett (2023), Chapter 17 style -----------------------------------
+#' # Example 8.4: counting process form of the cirrhosis study
+#' # (patient 5 and patient 8 have a zero-length interval, hence the filter)
+#' cp <- subset(cirrhosis_cp, stop > start)
+#' survival::coxph(survival::Surv(start, stop, status) ~ lbrt + age, data = cp)
+#'
+#' # Without the time-dependent covariate, for comparison with the baseline data
+#' survival::coxph(survival::Surv(start, stop, status) ~ treat + age, data = cp)
 "cirrhosis_cp"
 
 #' Survival following aortic valve replacement
@@ -716,8 +976,16 @@
 #'   (2008).
 #'
 #' @examples
-#' str(aortic)
-#' length(unique(aortic$id))
+#' # Collett (2023), Chapter 17 style -----------------------------------
+#' # Examples 8.5-8.9: LVMI as a time-dependent covariate, built with tmerge()
+#' base <- aortic[!duplicated(aortic$id), c("id", "futime", "status", "age", "sex")]
+#' long <- aortic[, c("id", "time", "lvmi")]
+#' cp <- survival::tmerge(base, base, id = id, endpt = event(futime, status))
+#' cp <- survival::tmerge(cp, long, id = id, lvmi = tdc(time, lvmi))
+#' survival::coxph(
+#'   survival::Surv(tstart, tstop, endpt) ~ lvmi + age + sex,
+#'   data = cp
+#' )
 "aortic"
 
 #' Recurrence of an ulcer
@@ -763,8 +1031,26 @@
 #'   Whitehead (1989).
 #'
 #' @examples
-#' str(ulcer)
-#' table(ulcer$time, ulcer$result)
+#' # Collett (2023), Chapter 17 style -----------------------------------
+#' # Examples 9.1 and 9.4: interval-censored recurrence times
+#' # (Table 9.2 of the book gives the interval for each visit and result)
+#' ulcer$left  <- ifelse(ulcer$result == 2, ifelse(ulcer$time <= 6, 0, 6), ulcer$time)
+#' ulcer$right <- ifelse(ulcer$result == 2, ulcer$time, Inf)
+#' survival::Surv(ulcer$left, ulcer$right, type = "interval2")[1:5]
+#' # Chapter 17 fits the Turnbull estimate with icfit() in the interval package;
+#' # icenReg provides the same estimator.
+#' icenReg::ic_np(cbind(ulcer$left, ulcer$right))
+#'
+#' # Examples 9.5-9.7: a proportional hazards model for interval-censored data
+#' icenReg::ic_sp(
+#'   survival::Surv(left, right, type = "interval2") ~ treatment,
+#'   data = ulcer
+#' )
+#'
+#' # Modern tools --------------------------------------------------------
+#' if (requireNamespace("icenReg", quietly = TRUE)) {
+#'   plot(icenReg::ic_np(cbind(ulcer$left, ulcer$right)))
+#' }
 "ulcer"
 
 #' Recurrence of bladder cancer
@@ -805,11 +1091,23 @@
 #'   and Herzberg (1985).
 #'
 #' @examples
-#' str(bladder)
+#' # Collett (2023), Appendix B.2 (no numbered example) ------------------
+#' # Chapter 17 style: Cox model for the time to the first recurrence
 #' survival::coxph(
-#'   survival::Surv(time, status) ~ init + size + treat,
+#'   survival::Surv(time, status) ~ init + size + factor(treat),
 #'   data = bladder
 #' )
+#'
+#' # Modern tools --------------------------------------------------------
+#' if (requireNamespace("broom", quietly = TRUE)) {
+#'   broom::tidy(
+#'     survival::coxph(
+#'       survival::Surv(time, status) ~ init + size + factor(treat),
+#'       data = bladder
+#'     ),
+#'     exponentiate = TRUE, conf.int = TRUE
+#'   )
+#' }
 "bladder"
 
 #' Recurrence of mammary tumours in female rats
@@ -853,8 +1151,23 @@
 #'   Santner and Brown (1980).
 #'
 #' @examples
-#' str(rats)
-#' table(rats$treatment)
+#' # Collett (2023), Chapter 17 style -----------------------------------
+#' # Example 13.2: recurrent tumours; Andersen-Gill model with robust SEs
+#' # The start of each interval is the previous tumour time for that rat.
+#' rats <- rats[order(rats$rat, rats$time), ]
+#' rats$start <- unlist(lapply(split(rats$time, rats$rat), function(t) c(0, t[-length(t)])))
+#' survival::coxph(
+#'   survival::Surv(start, time, status) ~ treatment + cluster(rat),
+#'   data = rats
+#' )
+#'
+#' # Modern tools --------------------------------------------------------
+#' # The Prentice-Williams-Peterson model stratifies by the number of prior events
+#' rats$event_number <- unlist(lapply(split(rats$rat, rats$rat), seq_along))
+#' survival::coxph(
+#'   survival::Surv(start, time, status) ~ treatment + strata(event_number),
+#'   data = rats
+#' )
 "rats"
 
 #' Clinical trial of tamoxifen in breast cancer patients
@@ -910,9 +1223,32 @@
 #'   al. (2004) and Pintilie (2006).
 #'
 #' @examples
-#' str(tamoxifen)
-#' table(tamoxifen$treat)
-#' survival::survfit(survival::Surv(tsurv, ts) ~ treat, data = tamoxifen)
+#' # Collett (2023), Chapter 17 style -----------------------------------
+#' # Example 13.3: four event types, each analysed as a cause-specific hazard
+#' # local relapse
+#' survival::coxph(survival::Surv(lsurv, ls) ~ treat + age + size + hr, data = tamoxifen)
+#' # axillary relapse
+#' survival::coxph(survival::Surv(asurv, as) ~ treat + age + size + hr, data = tamoxifen)
+#' # distant relapse
+#' survival::coxph(survival::Surv(dsurv, ds) ~ treat + age + size + hr, data = tamoxifen)
+#' # second malignancy
+#' survival::coxph(survival::Surv(msurv, ms) ~ treat + age + size + hr, data = tamoxifen)
+#'
+#' # Modern tools --------------------------------------------------------
+#' # A competing-risk view of the first event of any of the four types
+#' if (requireNamespace("tidycmprsk", quietly = TRUE)) {
+#'   first <- data.frame(
+#'     time = pmin(tamoxifen$lsurv, tamoxifen$asurv, tamoxifen$dsurv, tamoxifen$msurv),
+#'     treat = tamoxifen$treat
+#'   )
+#'   first$cause <- factor(
+#'     c("local", "axillary", "distant", "second")[
+#'       apply(cbind(tamoxifen$lsurv, tamoxifen$asurv, tamoxifen$dsurv, tamoxifen$msurv),
+#'             1, which.min)
+#'     ]
+#'   )
+#'   tidycmprsk::cuminc(survival::Surv(time, cause) ~ treat, data = first)
+#' }
 "tamoxifen"
 
 #' Patient outcome following bone marrow transplantation
@@ -962,8 +1298,28 @@
 #'   Registry, see Putter, Fiocco and Geskus (2007).
 #'
 #' @examples
-#' str(bmt_outcome)
-#' table(bmt_outcome$leukaemia, bmt_outcome$age)
+#' # Collett (2023), Chapter 17 style -----------------------------------
+#' # Example 13.4: the two endpoints of the three-state model
+#' # 1 -> 2: platelet recovery
+#' survival::coxph(
+#'   survival::Surv(ptime, pcens) ~ leukaemia + age + match + tcell,
+#'   data = bmt_outcome
+#' )
+#' # 1 -> 3: relapse or death before recovery
+#' survival::coxph(
+#'   survival::Surv(rdtime, rdcens) ~ leukaemia + age + match + tcell,
+#'   data = bmt_outcome
+#' )
+#'
+#' # Modern tools --------------------------------------------------------
+#' # Transition-specific hazards are fitted by stratifying on the transition
+#' if (requireNamespace("mstate", quietly = TRUE)) {
+#'   tmat <- mstate::transMat(
+#'     list(c(2, 3), 3, c()),
+#'     names = c("transplant", "recovery", "relapse")
+#'   )
+#'   tmat
+#' }
 "bmt_outcome"
 
 #' Survival of liver transplant recipients
@@ -1013,12 +1369,27 @@
 #'   Transplant Registry.
 #'
 #' @examples
-#' str(liver)
-#' table(liver$cof)
-#' survival::survfit(
-#'   survival::Surv(time, factor(cof)) ~ 1,
-#'   data = liver
+#' # Collett (2023), Chapter 17 style -----------------------------------
+#' # Examples 12.1-12.6: cumulative incidence by cause of graft failure
+#' # (cof: 1 = rejection, 2 = thrombosis, 3 = recurrent disease, 4 = other)
+#' ci <- cmprsk::cuminc(liver$time, liver$cof, liver$disease)
+#' plot(ci, curvlab = c("PBC", "PSC", "ALD"), xlab = "Time (days)")
+#'
+#' # A Fine-Gray model for one cause of failure (cause 2, thrombosis)
+#' cmprsk::crr(
+#'   liver$time, liver$cof,
+#'   cov1 = as.matrix(liver[c("age", "gender")]),
+#'   failcode = 2
 #' )
+#'
+#' # Modern tools --------------------------------------------------------
+#' if (requireNamespace("tidycmprsk", quietly = TRUE)) {
+#'   tidycmprsk::cuminc(survival::Surv(time, factor(cof)) ~ disease, data = liver)
+#'   tidycmprsk::crr(
+#'     survival::Surv(time, factor(cof)) ~ age + gender,
+#'     data = liver, failcode = "2"
+#'   )
+#' }
 "liver"
 
 #' Survival of laboratory mice with competing causes of death
@@ -1056,8 +1427,19 @@
 #'   described by Hoel (1972).
 #'
 #' @examples
-#' str(mice)
-#' table(mice$environment, mice$causeofdeath)
+#' # Collett (2023), Chapter 17 style -----------------------------------
+#' # Example 12.7: three competing causes of death
+#' # (1 = thymic lymphoma, 2 = reticulum cell sarcoma, 3 = other causes)
+#' ci_mice <- cmprsk::cuminc(mice$time, mice$causeofdeath, mice$environment)
+#' plot(ci_mice, curvlab = c("Standard", "Germ-free"), xlab = "Time (days)")
+#'
+#' # Modern tools --------------------------------------------------------
+#' if (requireNamespace("tidycmprsk", quietly = TRUE)) {
+#'   tidycmprsk::cuminc(
+#'     survival::Surv(time, factor(causeofdeath)) ~ environment,
+#'     data = mice
+#'   )
+#' }
 "mice"
 
 #' Survival following kidney transplantation
@@ -1101,8 +1483,21 @@
 #'   Transplant Registry.
 #'
 #' @examples
-#' str(kidney)
-#' length(unique(kidney$donor))
+#' # Collett (2023), Chapter 17 style -----------------------------------
+#' # Example 10.4: shared gamma frailty for kidneys from the same donor
+#' survival::coxph(
+#'   survival::Surv(time, status) ~ age + cit + diabetes +
+#'     frailty(donor, distribution = "gamma"),
+#'   data = kidney
+#' )
+#'
+#' # Modern tools --------------------------------------------------------
+#' if (requireNamespace("coxme", quietly = TRUE)) {
+#'   coxme::coxme(
+#'     survival::Surv(time, status) ~ age + cit + diabetes + (1 | donor),
+#'     data = kidney
+#'   )
+#' }
 "kidney"
 
 #' Comparisons between kidney transplant centres
@@ -1145,12 +1540,28 @@
 #'   Transplant Registry.
 #'
 #' @examples
-#' str(kidney_centres)
-#' table(kidney_centres$centre)
+#' # Collett (2023), Chapter 17 style -----------------------------------
+#' # Examples 11.4-11.8: comparison of transplant centres
 #' survival::coxph(
-#'   survival::Surv(tsurv, tcens) ~ dage + dtype + rage + diab + cit,
+#'   survival::Surv(tsurv, tcens) ~ strata(centre) + dage + dtype + rage + diab + cit,
 #'   data = kidney_centres
 #' )
+#'
+#' # A random (frailty) effect for centre instead of stratification
+#' survival::coxph(
+#'   survival::Surv(tsurv, tcens) ~ dage + dtype + rage + diab + cit +
+#'     frailty(centre, distribution = "gamma"),
+#'   data = kidney_centres
+#' )
+#'
+#' # Modern tools --------------------------------------------------------
+#' if (requireNamespace("coxme", quietly = TRUE)) {
+#'   coxme::coxme(
+#'     survival::Surv(tsurv, tcens) ~ dage + dtype + rage + diab + cit +
+#'       (1 | centre),
+#'     data = kidney_centres
+#'   )
+#' }
 "kidney_centres"
 
 #' Survival of patients registered for a lung transplant
@@ -1193,11 +1604,22 @@
 #'   Transplant Registry.
 #'
 #' @examples
-#' str(lung_transplant)
+#' # Collett (2023), Chapter 17 style -----------------------------------
+#' # Example 10.3: an individual gamma frailty for each patient
 #' survival::coxph(
-#'   survival::Surv(time, status) ~ age + gender + bmi + factor(disease),
+#'   survival::Surv(time, status) ~ age + bmi + factor(gender) + factor(disease) +
+#'     frailty(patient, distribution = "gamma"),
 #'   data = lung_transplant
 #' )
+#'
+#' # Modern tools --------------------------------------------------------
+#' if (requireNamespace("coxme", quietly = TRUE)) {
+#'   coxme::coxme(
+#'     survival::Surv(time, status) ~ age + bmi + factor(gender) +
+#'       factor(disease) + (1 | patient),
+#'     data = lung_transplant
+#'   )
+#' }
 "lung_transplant"
 
 #' Survival of patients with gastric cancer
@@ -1236,8 +1658,29 @@
 #'   and Koutrouvelis (1985).
 #'
 #' @examples
-#' str(gastric)
-#' survival::survfit(survival::Surv(time, status) ~ treat, data = gastric)
+#' # Collett (2023), Chapter 17 style -----------------------------------
+#' # Examples 11.2 and 11.3: evidence against proportional hazards
+#' survival::cox.zph(survival::coxph(survival::Surv(time, status) ~ treat, data = gastric))
+#'
+#' # A treatment effect that differs between time periods
+#' gastric_cp <- survival::survSplit(
+#'   gastric,
+#'   cut = c(360, 720, 1080),
+#'   end = "time", event = "status", start = "tstart",
+#'   episode = "period"
+#' )
+#' survival::coxph(
+#'   survival::Surv(tstart, time, status) ~ treat + treat:strata(period),
+#'   data = gastric_cp
+#' )
+#'
+#' # Modern tools --------------------------------------------------------
+#' # The restricted mean survival time summarises the same non-proportional effect
+#' rmst <- summary(
+#'   survival::survfit(survival::Surv(time, status) ~ treat, data = gastric),
+#'   rmean = 1000
+#' )
+#' rmst$table[, c("rmean", "se(rmean)")]
 "gastric"
 
 #' Health evaluation and linkage to primary care
@@ -1280,8 +1723,22 @@
 #'   Samet et al. (2003); see also the mosaicData package.
 #'
 #' @examples
-#' str(help)
-#' survival::survfit(survival::Surv(days, status) ~ linkage, data = help)
+#' # Collett (2023), Chapter 17 style -----------------------------------
+#' # Example 16.7: a Bayesian Weibull and piecewise exponential model
+#' # Chapter 17 fits these with rstanarm::stan_surv(); the maximum likelihood
+#' # counterparts below give the same point estimates of the hazard ratios.
+#' survival::survreg(
+#'   survival::Surv(days, status) ~ age + gender + housing + linkage,
+#'   data = sta310r::help, dist = "weibull"
+#' )
+#'
+#' # Modern tools --------------------------------------------------------
+#' if (requireNamespace("flexsurv", quietly = TRUE)) {
+#'   flexsurv::flexsurvreg(
+#'     survival::Surv(days, status) ~ age + gender + housing + linkage,
+#'     data = sta310r::help, dist = "weibull"
+#'   )
+#' }
 "help"
 
 #' Time to death while waiting for a liver transplant
@@ -1327,10 +1784,25 @@
 #'   Transplant Registry.
 #'
 #' @examples
-#' str(liver_wait)
+#' # Collett (2023), Chapter 17 style -----------------------------------
+#' # Examples 14.1 and 14.3: dependent censoring (transplant) modelled with
+#' # inverse probability of censoring weights
+#' liver_wait$cens <- 1 - liver_wait$status
+#' cens_fit <- survival::survreg(
+#'   survival::Surv(time, cens) ~ age + gender + bmi + ukeld,
+#'   data = liver_wait
+#' )
+#' lp <- cens_fit$linear.predictors
+#' sigma <- cens_fit$scale
+#'
+#' # Probability of still being uncensored at each observed time
+#' survival_uncensored <- exp(-exp((log(liver_wait$time) - lp) / sigma))
+#' weights <- 1 / survival_uncensored
+#' summary(weights)
+#'
 #' survival::coxph(
 #'   survival::Surv(time, status) ~ age + gender + bmi + ukeld,
-#'   data = liver_wait
+#'   data = liver_wait, weights = weights
 #' )
 "liver_wait"
 
@@ -1374,11 +1846,26 @@
 #'   al. (1988) and Altman (1991).
 #'
 #' @examples
-#' str(bmt)
+#' # Collett (2023), Appendix B.4 (no numbered example) ------------------
+#' # Chapter 17 style: Weibull accelerated failure time model
+#' survival::survreg(
+#'   survival::Surv(time, status) ~ rage + dage + factor(type) + gvhd,
+#'   data = bmt, dist = "weibull"
+#' )
+#'
+#' # The corresponding Cox model
 #' survival::coxph(
 #'   survival::Surv(time, status) ~ rage + dage + factor(type) + gvhd,
 #'   data = bmt
 #' )
+#'
+#' # Modern tools --------------------------------------------------------
+#' if (requireNamespace("flexsurv", quietly = TRUE)) {
+#'   flexsurv::flexsurvreg(
+#'     survival::Surv(time, status) ~ rage + dage + factor(type) + gvhd,
+#'     data = bmt, dist = "weibull"
+#'   )
+#' }
 "bmt"
 
 #' Chronic active hepatitis
@@ -1415,8 +1902,28 @@
 #'   15.1-15.3. Data from Kirk et al. (1980) via Pocock (1983).
 #'
 #' @examples
-#' str(hepatitis)
+#' # Collett (2023), Chapter 17 style -----------------------------------
+#' # Examples 15.1-15.3: number of events for the log-rank test
+#' # Schoenfeld's formula, as in Equation 15.1
+#' hr <- 0.57
+#' alpha <- 0.05
+#' power <- 0.8
+#' (stats::qnorm(1 - alpha / 2) + stats::qnorm(power))^2 /
+#'   (0.25 * log(hr)^2)
+#'
+#' # The survival times themselves are used for the exponential model
 #' survival::survfit(survival::Surv(time, status) ~ treatment, data = hepatitis)
+#'
+#' # Modern tools --------------------------------------------------------
+#' # The same calculation, and its inverse, from this package
+#' n_events_logrank(hr, alpha = alpha, power = power)
+#' power_logrank(d = 140, hr = hr)
+#' if (requireNamespace("flexsurv", quietly = TRUE)) {
+#'   flexsurv::flexsurvreg(
+#'     survival::Surv(time, status) ~ treatment,
+#'     data = hepatitis, dist = "exponential"
+#'   )
+#' }
 "hepatitis"
 
 #' Survival of black ducks
@@ -1455,11 +1962,20 @@
 #'   al. (1994); the study was conducted by the US Fish and Wildlife Service.
 #'
 #' @examples
-#' str(ducks)
+#' # Collett (2023), Appendix B.3 (no numbered example) ------------------
+#' # Chapter 17 style: proportional hazards model for age, weight and length
 #' survival::coxph(
 #'   survival::Surv(time, status) ~ age + weight + length,
 #'   data = ducks
 #' )
+#'
+#' # Modern tools --------------------------------------------------------
+#' if (requireNamespace("broom", quietly = TRUE)) {
+#'   broom::tidy(
+#'     survival::coxph(survival::Surv(time, status) ~ age + weight + length, data = ducks),
+#'     exponentiate = TRUE, conf.int = TRUE
+#'   )
+#' }
 "ducks"
 
 #' Chronic granulomatous disease
@@ -1511,8 +2027,26 @@
 #'   Grambsch (2000); the trial was carried out by Genentech, Inc.
 #'
 #' @examples
-#' str(cgd)
-#' survival::coxph(survival::Surv(time, status) ~ treat + age + sex, data = cgd)
+#' # Collett (2023), Appendix B.5 (no numbered example) ------------------
+#' # Chapter 17 style: Cox model for the first serious infection
+#' survival::coxph(
+#'   survival::Surv(time, status) ~ factor(treat) + age + sex + height + weight,
+#'   data = cgd
+#' )
+#'
+#' # A shared frailty for trial centre
+#' survival::coxph(
+#'   survival::Surv(time, status) ~ factor(treat) + age + frailty(centre),
+#'   data = cgd
+#' )
+#'
+#' # Modern tools --------------------------------------------------------
+#' if (requireNamespace("coxme", quietly = TRUE)) {
+#'   coxme::coxme(
+#'     survival::Surv(time, status) ~ factor(treat) + age + (1 | centre),
+#'     data = cgd
+#'   )
+#' }
 "cgd"
 
 # Data set that does not come from the book ---------------------------------
@@ -1590,11 +2124,33 @@
 #'   which documents the same cohort and the simulation that generated it.
 #'
 #' @examples
-#' str(scottish_mbc_cohort)
+#' # Not from Collett (2023) ---------------------------------------------
+#' # The synthetic Scottish metastatic breast cancer cohort used in the
+#' # first computer exercise; see the vignette cs1-survival-analysis.
 #' survival::survfit(
 #'   survival::Surv(observed_time, status) ~ hormone_receptor,
 #'   data = scottish_mbc_cohort
 #' )
+#'
+#' # Modern tools --------------------------------------------------------
+#' if (requireNamespace("ggsurvfit", quietly = TRUE)) {
+#'   ggsurvfit::survfit2(
+#'     survival::Surv(observed_time, status) ~ hormone_receptor,
+#'     data = scottish_mbc_cohort
+#'   ) |>
+#'     ggsurvfit::ggsurvfit() |>
+#'     ggsurvfit::add_risktable()
+#' }
+#' if (requireNamespace("broom", quietly = TRUE)) {
+#'   broom::tidy(
+#'     survival::coxph(
+#'       survival::Surv(observed_time, status) ~ age_at_diagnosis +
+#'         factor(hormone_receptor) + factor(ecog_ps),
+#'       data = scottish_mbc_cohort
+#'     ),
+#'     exponentiate = TRUE, conf.int = TRUE
+#'   )
+#' }
 "scottish_mbc_cohort"
 
 #' Data sets by Collett (2023) example

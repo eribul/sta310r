@@ -51,7 +51,22 @@ the data set used in Example X.Y of Collett (2023). See
 }
 
 \examples{
-str(rats)
-table(rats$treatment)
+# Collett (2023), Chapter 17 style -----------------------------------
+# Example 13.2: recurrent tumours; Andersen-Gill model with robust SEs
+# The start of each interval is the previous tumour time for that rat.
+rats <- rats[order(rats$rat, rats$time), ]
+rats$start <- unlist(lapply(split(rats$time, rats$rat), function(t) c(0, t[-length(t)])))
+survival::coxph(
+  survival::Surv(start, time, status) ~ treatment + cluster(rat),
+  data = rats
+)
+
+# Modern tools --------------------------------------------------------
+# The Prentice-Williams-Peterson model stratifies by the number of prior events
+rats$event_number <- unlist(lapply(split(rats$rat, rats$rat), seq_along))
+survival::coxph(
+  survival::Surv(start, time, status) ~ treatment + strata(event_number),
+  data = rats
+)
 }
 \keyword{datasets}

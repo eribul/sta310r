@@ -71,10 +71,54 @@ index.
 }
 
 \examples{
-str(myeloma)
-survival::coxph(
+# Collett (2023), Chapter 17 style -----------------------------------
+# Examples 2.2 and 2.6: the survivor function for a single sample
+survival::survfit(survival::Surv(time, status) ~ 1, data = myeloma)
+
+# Examples 3.2, 3.5, 3.8, 3.9, 3.15, 3.17, 3.19 and 3.20: Cox model
+fit_myeloma <- survival::coxph(
   survival::Surv(time, status) ~ age + sex + bun + ca + hb + pcells + protein,
   data = myeloma
 )
+summary(fit_myeloma)
+
+# Example 3.7: lasso variable selection (the book uses the penalized package)
+# The fitting routine prints its progress; it is captured here so that the
+# selected coefficients are easy to read.
+progress <- utils::capture.output(
+  lass <- penalized::penalized(
+    survival::Surv(myeloma$time, myeloma$status),
+    penalized = ~ age + sex + bun + ca + hb + pcells + protein,
+    lambda1 = 30,
+    data = myeloma
+  )
+)
+round(lass@penalized, 3)
+
+# Examples 4.5, 4.8 and 4.9: residuals and the proportional hazards assumption
+head(stats::residuals(fit_myeloma, type = "martingale"))
+survival::cox.zph(fit_myeloma)
+
+# Example 5.16: Weibull model with a prognostic index
+survival::survreg(
+  survival::Surv(time, status) ~ age + bun + hb,
+  data = myeloma, dist = "weibull"
+)
+
+# Modern tools --------------------------------------------------------
+if (requireNamespace("broom", quietly = TRUE)) {
+  broom::tidy(fit_myeloma, exponentiate = TRUE, conf.int = TRUE)
+}
+if (requireNamespace("glmnet", quietly = TRUE)) {
+  x <- as.matrix(myeloma[c("age", "sex", "bun", "ca", "hb", "pcells", "protein")])
+  cv <- glmnet::cv.glmnet(x, survival::Surv(myeloma$time, myeloma$status), family = "cox")
+  stats::coef(cv, s = "lambda.min")
+}
+if (requireNamespace("rms", quietly = TRUE)) {
+  rms::cph(
+    survival::Surv(time, status) ~ age + sex + bun + ca + hb + pcells + protein,
+    data = myeloma, x = TRUE, y = TRUE
+  )
+}
 }
 \keyword{datasets}

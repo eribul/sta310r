@@ -54,10 +54,15 @@ the data set used in Example X.Y of Collett (2023). See
 }
 
 \examples{
-str(bmt_leukaemia)
+# Collett (2023), Chapter 17 style -----------------------------------
+# Example 8.2: platelet recovery as a time-dependent covariate
+base <- bmt_leukaemia[, c("patient", "time", "status", "group", "page", "dage")]
+recovery <- subset(bmt_leukaemia, precovery == 1)[, c("patient", "ptime")]
+cp <- survival::tmerge(base, base, id = patient, endpt = event(time, status))
+cp <- survival::tmerge(cp, recovery, id = patient, preg = tdc(ptime))
 survival::coxph(
-  survival::Surv(time, status) ~ factor(group) + page + dage,
-  data = bmt_leukaemia
+  survival::Surv(tstart, tstop, endpt) ~ preg + factor(group) + page + dage,
+  data = cp
 )
 }
 \keyword{datasets}

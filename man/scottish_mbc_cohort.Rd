@@ -78,10 +78,32 @@ alias. See \link{dataset_by_exercise} for the complete index.
 }
 
 \examples{
-str(scottish_mbc_cohort)
+# Not from Collett (2023) ---------------------------------------------
+# The synthetic Scottish metastatic breast cancer cohort used in the
+# first computer exercise; see the vignette cs1-survival-analysis.
 survival::survfit(
   survival::Surv(observed_time, status) ~ hormone_receptor,
   data = scottish_mbc_cohort
 )
+
+# Modern tools --------------------------------------------------------
+if (requireNamespace("ggsurvfit", quietly = TRUE)) {
+  ggsurvfit::survfit2(
+    survival::Surv(observed_time, status) ~ hormone_receptor,
+    data = scottish_mbc_cohort
+  ) |>
+    ggsurvfit::ggsurvfit() |>
+    ggsurvfit::add_risktable()
+}
+if (requireNamespace("broom", quietly = TRUE)) {
+  broom::tidy(
+    survival::coxph(
+      survival::Surv(observed_time, status) ~ age_at_diagnosis +
+        factor(hormone_receptor) + factor(ecog_ps),
+      data = scottish_mbc_cohort
+    ),
+    exponentiate = TRUE, conf.int = TRUE
+  )
+}
 }
 \keyword{datasets}

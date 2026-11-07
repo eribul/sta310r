@@ -59,7 +59,25 @@ See \link{dataset_by_exercise} for the complete index.
 }
 
 \examples{
-str(cgd)
-survival::coxph(survival::Surv(time, status) ~ treat + age + sex, data = cgd)
+# Collett (2023), Appendix B.5 (no numbered example) ------------------
+# Chapter 17 style: Cox model for the first serious infection
+survival::coxph(
+  survival::Surv(time, status) ~ factor(treat) + age + sex + height + weight,
+  data = cgd
+)
+
+# A shared frailty for trial centre
+survival::coxph(
+  survival::Surv(time, status) ~ factor(treat) + age + frailty(centre),
+  data = cgd
+)
+
+# Modern tools --------------------------------------------------------
+if (requireNamespace("coxme", quietly = TRUE)) {
+  coxme::coxme(
+    survival::Surv(time, status) ~ factor(treat) + age + (1 | centre),
+    data = cgd
+  )
+}
 }
 \keyword{datasets}

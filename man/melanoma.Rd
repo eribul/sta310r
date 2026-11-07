@@ -43,10 +43,24 @@ alias for the data set used in Example X.Y of Collett (2023). See
 }
 
 \examples{
-str(melanoma)
-survival::survdiff(
-  survival::Surv(time, status) ~ treatment + survival::strata(age),
+# Collett (2023), Chapter 17 style -----------------------------------
+# Examples 2.15 and 2.16: log-rank test within each age stratum
+survival::survfit(
+  survival::Surv(time, status) ~ treatment + strata(age),
   data = melanoma
 )
+survival::survdiff(
+  survival::Surv(time, status) ~ treatment + strata(age),
+  data = melanoma
+)
+
+# Modern tools --------------------------------------------------------
+if (requireNamespace("ggsurvfit", quietly = TRUE)) {
+  ggsurvfit::survfit2(
+    survival::Surv(time, status) ~ treatment + strata(age),
+    data = melanoma
+  ) |>
+    ggsurvfit::ggsurvfit()
+}
 }
 \keyword{datasets}

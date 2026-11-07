@@ -54,10 +54,36 @@ the complete index.
 }
 
 \examples{
-str(hyper)
-survival::coxph(
-  survival::Surv(time, status) ~ factor(age) + nephrectomy,
+# Collett (2023), Chapter 17 style -----------------------------------
+# Examples 3.4, 3.10, 3.11, 3.13 and 3.14: Cox model with age group
+fit_hyper <- survival::coxph(
+  survival::Surv(time, status) ~ nephrectomy + factor(age),
   data = hyper
 )
+summary(fit_hyper)
+
+# Example 5.10: the corresponding Weibull model
+survival::survreg(
+  survival::Surv(time, status) ~ nephrectomy + factor(age),
+  data = hyper, dist = "weibull"
+)
+
+# Examples 6.1 and 6.4: piecewise exponential baseline hazard
+# Chapter 17 fits this with phreg(dist = "pch", cuts = ...) in the eha package;
+# pchreg() is the current name of the same fit.
+eha::pchreg(
+  survival::Surv(time, status) ~ factor(age) + nephrectomy,
+  data = hyper,
+  cuts = c(5, 6, 8, 9, 10, 12, 14, 15, 17, 18, 21, 26, 35, 36, 38,
+           48, 52, 56, 68, 72, 84, 108, 115)
+)
+
+# Modern tools --------------------------------------------------------
+if (requireNamespace("flexsurv", quietly = TRUE)) {
+  flexsurv::flexsurvspline(
+    survival::Surv(time, status) ~ nephrectomy + factor(age),
+    data = hyper, k = 1
+  )
+}
 }
 \keyword{datasets}

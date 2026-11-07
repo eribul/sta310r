@@ -90,13 +90,26 @@ on a hidden global state.
 
 - Roxygen with `list(markdown = TRUE)`: full prose, `@details`, `@references`
   to Collett (2023) chapter/example, and runnable `@examples` for every export.
+- Each data set's `@examples` has two labelled blocks: first
+  `# Collett (2023), Chapter 17 style` with the book's own functions
+  (`survival`, `penalized`, `eha`, `cmprsk`, ...), then `# Modern tools` with
+  newer packages (`ggsurvfit`, `flexsurv`, `coxme`, `icenReg`, `tidycmprsk`,
+  `broom`, `rms`, `glmnet`). Every block starts with a comment naming the
+  example it belongs to. Keep every line runnable: `R CMD check` executes them.
+- **Never call `library(survival)` inside examples or tests.** Six data sets
+  share their names with `survival` (`bladder`, `cgd`, `kidney`, `myeloma`,
+  `ovarian`, `rats`); attaching `survival` silently replaces them. Use
+  `survival::coxph(survival::Surv(...) ~ ...)` instead.
+- Examples that plot must not leave an `Rplots.pdf` in the package root; that
+  becomes a `R CMD check` NOTE. Run examples from a temporary directory.
 - Every file opens with a banner comment `# Section title ----`.
 - Validation blocks come first and use `stop("...", call. = FALSE)` with
   backticked argument names; shared validators are `check_*()` helpers in
   `R/power.R`.
 - Suggested packages (`ggplot2`, `tidyverse`, ...) are guarded with
   `requireNamespace(..., quietly = TRUE)` and a clear `stop()`; never add them
-  to `Imports` for a plotting convenience.
+  to `Imports` for a plotting convenience. `coxme`, `eha`, `glmnet` and
+  `penalized` are in `Suggests` only because the data-set examples use them.
 - NSE column names used in `aes()`/subsetting must be added to the
   `globalVariables(c(...))` call in `R/sta310r-package.R`.
 - Data frame returns set `row.names = NULL`; multi-return metadata goes in

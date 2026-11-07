@@ -50,10 +50,21 @@ the data set used in Example X.Y of Collett (2023). See
 }
 
 \examples{
-str(lung_transplant)
+# Collett (2023), Chapter 17 style -----------------------------------
+# Example 10.3: an individual gamma frailty for each patient
 survival::coxph(
-  survival::Surv(time, status) ~ age + gender + bmi + factor(disease),
+  survival::Surv(time, status) ~ age + bmi + factor(gender) + factor(disease) +
+    frailty(patient, distribution = "gamma"),
   data = lung_transplant
 )
+
+# Modern tools --------------------------------------------------------
+if (requireNamespace("coxme", quietly = TRUE)) {
+  coxme::coxme(
+    survival::Surv(time, status) ~ age + bmi + factor(gender) +
+      factor(disease) + (1 | patient),
+    data = lung_transplant
+  )
+}
 }
 \keyword{datasets}
