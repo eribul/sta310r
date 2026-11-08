@@ -5,3 +5,6 @@ README.html
 **/.codewhale/*
 !**/.codewhale/constitution.json
 .deepseek/
+
+/.quarto/
+**/*.quarto_ipynb

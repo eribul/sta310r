@@ -17,84 +17,47 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 Survival Data in Medical Research* (4th edition), together with a small set of
 teaching functions that implement the estimators used in the STA310 course at
 the University of Gothenburg from first principles. The estimators are written
-so that the individual steps can be inspected in the lectures and computer
-exercises, and they agree with the established implementations in `survival` to
-within numerical tolerance.
+so that the individual steps can be inspected in the computer
+exercises, and they agree with the established implementations in [survival](https://github.com/therneau/survival) to within numerical tolerance.
 
 ## Installation
 
 ```{r, eval = FALSE}
-devtools::install_github("eribul/sta310r")
+pak::pak("eribul/sta310r")
 ```
 
-That install does not build the vignettes, so the package ships them as pre-built
-HTML files: `vignette(package = "sta310r")`, `vignette("cs1-survival-analysis")`
-and `browseVignettes("sta310r")` work without pandoc and without the packages
-listed under `Suggests`. To rebuild them from source instead, pass
-`build_vignettes = TRUE`:
+## Name conflicts
 
-```{r, eval = FALSE}
-devtools::install_github(
-  "eribul/sta310r",
-  build_vignettes = TRUE,
-  dependencies = TRUE
-)
-```
+The package includes six data sets with names also used by the `survival` package, for data
+sets that are not the same:
 
-The vignettes are also available as HTML at
-<https://eribul.github.io/sta310r/articles/>.
+- `bladder`
+- `cgd`
+- `kidney`
+- `myeloma`
+- `ovarian`
+- `rats` 
 
-## Data sets
+Attach `sta310r` last (`library(sta310r)` AFTER `library(survival)`), or use `sta310r::xxx` explicitly if both packages are attached. You may also just refer to the datasets by their aliases as described below.
 
-All 33 data sets from the book are available under the object names used in the
-course material, with the original column names, and each of them has a help
-page with the background of the study, the coded variables and the relevant
-examples in Collett (2023):
-
-```{r}
-library(sta310r)
-items <- data(package = "sta310r")$results[, "Item"]
-items[!grepl("^d[0-9]+[.][0-9]+$", items) & items != "dataset_by_exercise"]
-```
-
-The package also ships `scottish_mbc_cohort`, the synthetic Scottish metastatic
-breast cancer cohort used in the first computer exercise. It is **not** from the
-book: it comes from the teaching material of the Edinburgh Cancer Informatics
-group, and that is what its help page documents (`?scottish_mbc_cohort`).
-
-Note that six of the names are also used by the `survival` package, for data
-sets that are not the same: `bladder`, `cgd`, `kidney`, `myeloma`, `ovarian` and
-`rats`. Attach `sta310r` last, or use `sta310r::myeloma`, if both packages are
-attached.
-
-```{r}
-iud
-```
-
-## Data sets by exercise
+## Data sets by example
 
 Each data set that is used in a worked example of Collett (2023) has an alias
 `dX.Y`, where `X.Y` is the number of the example. For example, `d3.7` is the
 `myeloma` data used in Example 3.7, and `d8.4` is the baseline cirrhosis data.
 The aliases are ordinary data objects: `d3.7` works after `library(sta310r)`, and
-`?d3.7` opens the help page of the data set. The complete mapping, with one row
-per data set and example, is the `dataset_by_exercise` data set. This is an
-overview by data set; the full table is in
+`?d3.7` opens the help page of the data set. See
 `vignette("datasets-by-exercise")`.
 
+Note that 2 data sets are used in example 8.4 (hence no aliases used there). 
+
 ```{r}
-index <- dataset_by_exercise
-by_dataset <- do.call(rbind, lapply(split(index, index$dataset), function(x) {
-  used <- x[!is.na(x$alias), , drop = FALSE]
-  data.frame(
-    data_set = x$dataset[1],
-    aliases = if (nrow(used)) paste(used$alias, collapse = ", ") else "—",
-    examples = if (nrow(used)) paste(used$example, collapse = ", ") else "—"
-  )
-}))
-by_dataset <- by_dataset[order(by_dataset$data_set), ]
-rownames(by_dataset) <- NULL
-knitr::kable(by_dataset, col.names = c("Data set", "Aliases", "Examples"))
+library(sta310r)
+dataset_by_exercise |>
+  dplyr::filter(!is.na(chapter)) |>
+  dplyr::mutate(chapter = paste(chapter, chapter_title, sep = ". ")) |>
+  dplyr::select(chapter, example, alias, dataset, n_rows, n_variables) |>
+  gt::gt(groupname_col = "chapter", id = "datasets-by-example")
 ```
 
 ## Teaching functions
@@ -115,8 +78,7 @@ knitr::kable(by_dataset, col.names = c("Data set", "Aliases", "Examples"))
 function and its standard error at each event time:
 
 ```{r}
-km <- km_estimate(iud$time, iud$status)
-km
+km_estimate(iud$time, iud$status)
 ```
 
 `cox_fit()` reproduces `survival::coxph()` on the same data:
@@ -126,19 +88,3 @@ fit <- cox_fit(myeloma$time, myeloma$status, myeloma[, c("age", "bun")])
 ref <- survival::coxph(survival::Surv(time, status) ~ age + bun, data = myeloma)
 cbind(cox_fit = coef(fit), coxph = coef(ref))
 ```
-
-See `vignette("sta310r")` for a walk-through of the data sets and the teaching
-functions, `vignette("datasets-by-exercise")` for the complete data set index
-and `vignette("cs1-survival-analysis")` for the first computer exercise. The
-solutions are a separate document, `vignette("cs1-solutions")`, with the same
-question numbering as the exercise. All of them are HTML documents. The same
-material, with a complete reference index, is online at
-<https://eribul.github.io/sta310r/>.
-
-## Course material
-
-The lectures, exercises and labs that use this package are kept in a separate,
-private repository. Collett (2023) is the textbook for the course:
-
-> Collett, D. (2023) *Modelling Survival Data in Medical Research*, 4th ed.
-> Chapman & Hall/CRC.
