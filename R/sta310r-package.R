@@ -1,10 +1,10 @@
-# Package-level documentation and shared declarations ---------------------
+# Package-level documentation -------------------------------------------------
 
-#' sta310r: Data sets and teaching functions for the survival analysis course
+#' sta310r: Data sets for the survival analysis course
 #'
 #' The `sta310r` package collects the data sets that accompany Collett (2023),
-#' *Modelling Survival Data in Medical Research* (4th edition), and a small set
-#' of teaching functions used in the STA310 lectures and computer exercises.
+#' *Modelling Survival Data in Medical Research* (4th edition), and the
+#' computer exercises used in the STA310 course at the University of Gothenburg.
 #'
 #' @section Data sets:
 #' All 33 data sets distributed with the book are available with their original
@@ -18,35 +18,14 @@
 #' breast cancer cohort used in the computer exercise on survival analysis. It
 #' does not come from the book and is documented with its own source.
 #'
-#' @section Teaching functions:
-#' The functions below implement estimators from first principles so that the
-#' steps in the lectures can be reproduced and inspected, rather than to
-#' replace the established implementations in `survival` and related packages.
-#'
-#' * [km_estimate()] and [plot_km()]: the Kaplan-Meier estimator with
-#'   Greenwood standard errors.
-#' * [cox_fit()]: Cox regression fitted by Newton-Raphson.
-#' * [emp_hazard()]: empirical (piecewise constant) hazard estimates.
-#' * [n_events_logrank()], [power_logrank()] and [power_logrank_sim()]:
-#'   sample size, power and simulation for the log-rank test.
-#' * [cif_cause_specific()]: cumulative incidence functions from cause-specific
-#'   Cox models.
+#' @section Computer exercises:
+#' The package ships the computer exercises as vignettes. Use
+#' `vignette("cs1-survival-data")` for the questions and
+#' `vignette("cs1-solutions")` for the same document with the solutions.
 #'
 #' @references
 #' Collett, D. (2023) *Modelling Survival Data in Medical Research*, 4th ed.
 #' Chapman & Hall/CRC.
 #'
-#' @importFrom utils globalVariables
 #' @keywords internal
 "_PACKAGE"
-
-globalVariables(c(
-  "time",
-  "survival",
-  "lower",
-  "upper",
-  "xmin",
-  "xmax",
-  "ymin",
-  "ymax"
-))

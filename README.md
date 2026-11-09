@@ -10,13 +10,9 @@ documentation](https://img.shields.io/badge/docs-eribul.github.io%2Fsta310r-blue
 
 `sta310r` collects the data sets that accompany Collett (2023),
 *Modelling Survival Data in Medical Research* (4th edition), together
-with a small set of teaching functions that implement the estimators
-used in the STA310 course at the University of Gothenburg from first
-principles. The estimators are written so that the individual steps can
-be inspected in the computer exercises, and they agree with the
-established implementations in
-[survival](https://github.com/therneau/survival) to within numerical
-tolerance.
+with the computer exercises used in the STA310 course at the University
+of Gothenburg. The package focuses on the data sets, their documentation
+and the exercise vignettes.
 
 ## Installation
 
@@ -1145,45 +1141,13 @@ dataset_by_exercise |>
   &#10;</table>
 </div>
 
-## Teaching functions
+## Computer exercises
 
-- `km_estimate()` and `plot_km()`: the Kaplan-Meier estimator with
-  Greenwood standard errors, and a plot of it.
-- `cox_fit()`: Cox regression fitted by Newton-Raphson, with Breslow or
-  Efron handling of ties.
-- `emp_hazard()`: empirical, piecewise constant hazard estimates.
-- `n_events_logrank()`, `power_logrank()` and `power_logrank_sim()`:
-  sample size, power and simulation for the log-rank test.
-- `cif_cause_specific()`: cumulative incidence functions from
-  cause-specific Cox models.
-
-## Example
-
-`km_estimate()` returns the risk sets, the events and censorings, the
-survivor function and its standard error at each event time:
+The course exercises are shipped as vignettes. The first exercise covers
+censoring, the survivor and hazard functions, Kaplan–Meier, Nelson–Aalen
+and the log-rank family:
 
 ``` r
-km_estimate(iud$time, iud$status)
-#>    time n_risk n_event n_censor  survival  std_error      lower     upper
-#> 1     0     18       0        0 1.0000000 0.00000000 1.00000000 1.0000000
-#> 2    10     18       1        0 0.9444444 0.05399030 0.83862541 1.0000000
-#> 3    19     15       1        0 0.8814815 0.07898919 0.72666551 1.0000000
-#> 4    30     13       1        0 0.8136752 0.09777700 0.62203581 1.0000000
-#> 5    36     12       1        0 0.7458689 0.11067019 0.52895935 0.9627785
-#> 6    59      8       1        0 0.6526353 0.13031975 0.39721332 0.9080573
-#> 7    75      7       1        0 0.5594017 0.14116728 0.28271893 0.8360845
-#> 8    93      6       1        0 0.4661681 0.14519912 0.18158304 0.7507531
-#> 9    97      5       1        0 0.3729345 0.14299297 0.09267341 0.6531955
-#> 10  107      3       1        2 0.2486230 0.13924720 0.00000000 0.5215425
-```
-
-`cox_fit()` reproduces `survival::coxph()` on the same data:
-
-``` r
-fit <- cox_fit(myeloma$time, myeloma$status, myeloma[, c("age", "bun")])
-ref <- survival::coxph(survival::Surv(time, status) ~ age + bun, data = myeloma)
-cbind(cox_fit = coef(fit), coxph = coef(ref))
-#>           cox_fit         coxph
-#> age -0.0001542319 -0.0001542319
-#> bun  0.0201535963  0.0201535963
+vignette("cs1-survival-data")
+vignette("cs1-solutions")
 ```

@@ -1915,9 +1915,6 @@
 #' survival::survfit(survival::Surv(time, status) ~ treatment, data = hepatitis)
 #'
 #' # Modern tools --------------------------------------------------------
-#' # The same calculation, and its inverse, from this package
-#' n_events_logrank(hr, alpha = alpha, power = power)
-#' power_logrank(d = 140, hr = hr)
 #' if (requireNamespace("flexsurv", quietly = TRUE)) {
 #'   flexsurv::flexsurvreg(
 #'     survival::Surv(time, status) ~ treatment,
@@ -2126,7 +2123,7 @@
 #' @examples
 #' # Not from Collett (2023) ---------------------------------------------
 #' # The synthetic Scottish metastatic breast cancer cohort used in the
-#' # first computer exercise; see the vignette cs1-survival-analysis.
+#' # first computer exercise; see the vignette cs1-survival-data.
 #' survival::survfit(
 #'   survival::Surv(observed_time, status) ~ hormone_receptor,
 #'   data = scottish_mbc_cohort

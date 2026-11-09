@@ -4,11 +4,11 @@
 \name{sta310r-package}
 \alias{sta310r}
 \alias{sta310r-package}
-\title{sta310r: Data sets and teaching functions for the survival analysis course}
+\title{sta310r: Data sets for the survival analysis course}
 \description{
 The \code{sta310r} package collects the data sets that accompany Collett (2023),
-\emph{Modelling Survival Data in Medical Research} (4th edition), and a small set
-of teaching functions used in the STA310 lectures and computer exercises.
+\emph{Modelling Survival Data in Medical Research} (4th edition), and the
+computer exercises used in the STA310 course at the University of Gothenburg.
 }
 \section{Data sets}{
 
@@ -24,21 +24,11 @@ breast cancer cohort used in the computer exercise on survival analysis. It
 does not come from the book and is documented with its own source.
 }
 
-\section{Teaching functions}{
+\section{Computer exercises}{
 
-The functions below implement estimators from first principles so that the
-steps in the lectures can be reproduced and inspected, rather than to
-replace the established implementations in \code{survival} and related packages.
-\itemize{
-\item \code{\link[=km_estimate]{km_estimate()}} and \code{\link[=plot_km]{plot_km()}}: the Kaplan-Meier estimator with
-Greenwood standard errors.
-\item \code{\link[=cox_fit]{cox_fit()}}: Cox regression fitted by Newton-Raphson.
-\item \code{\link[=emp_hazard]{emp_hazard()}}: empirical (piecewise constant) hazard estimates.
-\item \code{\link[=n_events_logrank]{n_events_logrank()}}, \code{\link[=power_logrank]{power_logrank()}} and \code{\link[=power_logrank_sim]{power_logrank_sim()}}:
-sample size, power and simulation for the log-rank test.
-\item \code{\link[=cif_cause_specific]{cif_cause_specific()}}: cumulative incidence functions from cause-specific
-Cox models.
-}
+The package ships the computer exercises as vignettes. Use
+\code{vignette("cs1-survival-data")} for the questions and
+\code{vignette("cs1-solutions")} for the same document with the solutions.
 }
 
 \references{

@@ -80,7 +80,7 @@ alias. See \link{dataset_by_exercise} for the complete index.
 \examples{
 # Not from Collett (2023) ---------------------------------------------
 # The synthetic Scottish metastatic breast cancer cohort used in the
-# first computer exercise; see the vignette cs1-survival-analysis.
+# first computer exercise; see the vignette cs1-survival-data.
 survival::survfit(
   survival::Surv(observed_time, status) ~ hormone_receptor,
   data = scottish_mbc_cohort

@@ -1,5 +1,17 @@
 # sta310r (development version)
 
+* Added a new pair of vignettes, "Computer exercise 1: Describing and
+  comparing survival data" and its solutions, restricted to Chapters 1–2 of
+  Collett (2023). The exercise covers censoring, the survivor/hazard/cumulative
+  hazard functions, the empirical, Kaplan–Meier and Nelson–Aalen estimators,
+  Greenwood intervals, hazard estimation, and the log-rank, Wilcoxon,
+  Peto–Peto, stratified and trend tests. The life table is not covered. The
+  exercise uses only data sets included in the package and does not cover Cox
+  regression. The exercise and solutions are generated from a single source
+  file; the `show_solutions` parameter controls whether the solution is
+  included immediately after each question.
+* Removed the teaching functions and their documentation and tests. The
+  package now focuses on the data sets and the computer exercises.
 * Added `dataset_by_exercise`, an index that links every data set to the worked
   examples of Collett (2023) that use it, with the example number, chapter,
   example title and the data set dimensions.
@@ -22,8 +34,8 @@
 
 # sta310r 0.1.0
 
-* First release: the data sets from Collett (2023) and the teaching functions
-  used in the STA310 lectures and computer exercises.
+* First release: the data sets from Collett (2023) and the computer exercises
+  used in the STA310 course.
 * Added the `scottish_mbc_cohort` data set, the synthetic Scottish metastatic
   breast cancer cohort that is used in the first computer exercise. It does not
   come from Collett (2023); its help page gives the source and licence.
@@ -34,8 +46,4 @@
 * The vignettes are shipped as pre-built HTML in `inst/doc/`, so
   `vignette(package = "sta310r")` works also when the package is installed
   without building vignettes (`dev/refresh-vignettes.sh` updates them).
-* Added unit tests for all exported functions and for the structure of the data
-  sets.
-* `plot_km()` draws the confidence band as a step function, so that it follows
-  the horizontal segments of the estimate instead of being interpolated between
-  event times.
+* Added unit tests for the structure of the data sets.

@@ -59,9 +59,6 @@ power <- 0.8
 survival::survfit(survival::Surv(time, status) ~ treatment, data = hepatitis)
 
 # Modern tools --------------------------------------------------------
-# The same calculation, and its inverse, from this package
-n_events_logrank(hr, alpha = alpha, power = power)
-power_logrank(d = 140, hr = hr)
 if (requireNamespace("flexsurv", quietly = TRUE)) {
   flexsurv::flexsurvreg(
     survival::Surv(time, status) ~ treatment,

@@ -6,14 +6,15 @@ template:
 articles:
 - title: Computer exercise 1
   desc: >
-    The exercise and its solutions, in two separate documents that share the
-    same numbering.
+    Chapters 1–2 only: censoring, survivor and hazard functions, Kaplan–Meier,
+    Nelson–Aalen, percentiles and the log-rank family. The exercise and its
+    solutions are two separate documents that share the same numbering.
   contents:
-  - cs1-survival-analysis
+  - cs1-survival-data
   - cs1-solutions
 - title: Getting started
   desc: >
-    A walk-through of the data sets and the teaching functions.
+    A walk-through of the data sets.
   contents:
   - sta310r
 - title: Data set index
@@ -24,21 +25,6 @@ articles:
   - datasets-by-exercise
 
 reference:
-- title: Teaching functions
-  desc: >
-    Estimators from the STA310 lectures, implemented from first principles so
-    that every step can be inspected.
-  contents:
-  - km_estimate
-  - plot_km
-  - cox_fit
-  - cox_fit-methods
-  - print.sta310r_cox
-  - emp_hazard
-  - n_events_logrank
-  - power_logrank
-  - power_logrank_sim
-  - cif_cause_specific
 - title: Data set index
   desc: >
     The data sets linked to the Collett (2023) examples that use them, and

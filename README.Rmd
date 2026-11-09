@@ -14,11 +14,9 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 <!-- badges: end -->
 
 `sta310r` collects the data sets that accompany Collett (2023), *Modelling
-Survival Data in Medical Research* (4th edition), together with a small set of
-teaching functions that implement the estimators used in the STA310 course at
-the University of Gothenburg from first principles. The estimators are written
-so that the individual steps can be inspected in the computer
-exercises, and they agree with the established implementations in [survival](https://github.com/therneau/survival) to within numerical tolerance.
+Survival Data in Medical Research* (4th edition), together with the computer
+exercises used in the STA310 course at the University of Gothenburg. The package
+focuses on the data sets, their documentation and the exercise vignettes.
 
 ## Installation
 
@@ -60,31 +58,13 @@ dataset_by_exercise |>
   gt::gt(groupname_col = "chapter", id = "datasets-by-example")
 ```
 
-## Teaching functions
+## Computer exercises
 
-* `km_estimate()` and `plot_km()`: the Kaplan-Meier estimator with Greenwood
-  standard errors, and a plot of it.
-* `cox_fit()`: Cox regression fitted by Newton-Raphson, with Breslow or Efron
-  handling of ties.
-* `emp_hazard()`: empirical, piecewise constant hazard estimates.
-* `n_events_logrank()`, `power_logrank()` and `power_logrank_sim()`: sample
-  size, power and simulation for the log-rank test.
-* `cif_cause_specific()`: cumulative incidence functions from cause-specific
-  Cox models.
+The course exercises are shipped as vignettes. The first exercise covers
+censoring, the survivor and hazard functions, Kaplan–Meier, Nelson–Aalen and the
+log-rank family:
 
-## Example
-
-`km_estimate()` returns the risk sets, the events and censorings, the survivor
-function and its standard error at each event time:
-
-```{r}
-km_estimate(iud$time, iud$status)
-```
-
-`cox_fit()` reproduces `survival::coxph()` on the same data:
-
-```{r}
-fit <- cox_fit(myeloma$time, myeloma$status, myeloma[, c("age", "bun")])
-ref <- survival::coxph(survival::Surv(time, status) ~ age + bun, data = myeloma)
-cbind(cox_fit = coef(fit), coxph = coef(ref))
+```{r, eval = FALSE}
+vignette("cs1-survival-data")
+vignette("cs1-solutions")
 ```

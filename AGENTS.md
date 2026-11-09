@@ -1,12 +1,10 @@
 # AGENTS.md
 
-`sta310r` is an R package: the data sets from Collett (2023), *Modelling
-Survival Data in Medical Research* (4th ed.), plus teaching estimators
-(Kaplan-Meier, Cox by Newton-Raphson, empirical hazard, log-rank power,
-cause-specific CIFs) written from first principles so students can inspect
-every step. Exported estimators must agree with `survival` to numerical
-tolerance — that agreement is the package's core contract and the main thing
-the tests enforce.
+`sta310r` is an R package that contains the data sets from Collett (2023),
+*Modelling Survival Data in Medical Research* (4th ed.), together with the
+computer exercises used in the STA310 course. The package now focuses on the
+data sets, their documentation and the exercise vignettes; it does not export
+teaching estimators.
 
 ## Build / Test / Lint
 
@@ -15,8 +13,8 @@ Rscript -e 'devtools::install_deps(dependencies = TRUE)'   # install deps
 Rscript -e 'devtools::load_all()'                          # load without install
 Rscript -e 'devtools::document()'                          # roxygen -> man/, NAMESPACE
 Rscript -e 'devtools::test()'                              # all tests
-Rscript -e 'devtools::test(filter = "cox-fit")'            # one test file
-Rscript -e 'testthat::test_file("tests/testthat/test-km.R")'  # one file, direct
+Rscript -e 'devtools::test(filter = "data")'               # one test file
+Rscript -e 'testthat::test_file("tests/testthat/test-data.R")'  # one file, direct
 Rscript -e 'devtools::check(args = c("--no-manual", "--as-cran"))'  # mirror CI
 Rscript data-raw/dataset_by_exercise.R                     # rebuild index + aliases
 R CMD build . && R CMD INSTALL sta310r_0.1.0.tar.gz        # package build
@@ -24,61 +22,49 @@ R CMD build . && R CMD INSTALL sta310r_0.1.0.tar.gz        # package build
 
 - No linter or formatter is configured (no `.lintr`, no `styler`); match the
   surrounding style by hand.
-- Snapshot tests live in `tests/testthat/_snaps/<test-file>.md`. Inspect with
-  `testthat::snapshot_review()` and accept with `testthat::snapshot_accept()`.
 - After editing `vignettes/*.Rmd`, regenerate the checked-in HTML:
   `dev/refresh-vignettes.sh` (needs `R CMD build`, which runs pandoc).
-- After editing `README.Rmd`: `Rscript -e 'devtools::build_readme()'` (loads the
-  development package; a plain `rmarkdown::render()` would use the installed
-  version).
+- After editing `README.Rmd`: `Rscript -e 'devtools::build_readme()'`.
 
 ## Architecture
 
-Two halves: lazy-loaded data (`data/*.rda`, `LazyData: true`) and standalone
-estimator functions in `R/`. No function calls another module's internals;
-`survival` is used only as the reference implementation and for
-`survfit()`/`survdiff()` inside `cif.R` and `power.R`.
+The package has two parts: lazy-loaded data (`data/*.rda`, `LazyData: true`) and
+the exercise vignettes. There is no estimator code in `R/`.
 
-- `R/sta310r-package.R` — `"_PACKAGE"` doc and the `globalVariables()` vector.
-- `R/data.R` — roxygen-only documentation for 34 data sets (no code; each block
-  ends with a bare quoted object name, e.g. `"iud"`).
-- `R/km.R` — `km_estimate()` (product-limit, Greenwood SE, `plain`/`log`/
-  `log-log` intervals) and `plot_km()` (ggplot2 step plot).
-- `R/cox-fit.R` — `cox_fit()` (Newton-Raphson, Breslow/Efron ties) returning a
-  `sta310r_cox` data frame with attributes, plus `print`/`coef`/`vcov`/
-  `logLik`/`nobs` methods.
-- `R/emp-hazard.R` — `emp_hazard()`, events per person-time on a fixed grid.
-- `R/power.R` — Schoenfeld `n_events_logrank()`, inverse `power_logrank()`,
-  simulation `power_logrank_sim()`, and the `check_*()` validators.
-- `R/cif.R` — `cif_cause_specific()`, integrating cause-specific hazards from
-  a named list of `survival::coxph()` fits.
+- `R/sta310r-package.R` — `"_PACKAGE"` documentation.
+- `R/data.R` — roxygen-only documentation for the data sets (no code; each
+  block ends with a bare quoted object name, e.g. `"iud"`).
 - `data-raw/` — scripts that write `data/*.rda`; not shipped.
   `dataset_by_exercise.R` builds the example index and the `dX.Y` aliases.
-- `vignettes/` — the single source of the four documents; `inst/doc/*.html`
-  is generated output that must be committed.
+- `vignettes/` — the source documents; `inst/doc/*.html` is generated output
+  that must be committed.
 
 Data flow: raw `.dat`/`.xlsx` -> `data-raw/*.R` -> `data/<name>.rda` (xz) ->
 available to users by name. `data-raw/dataset_by_exercise.R` then writes
 `data/dataset_by_exercise.rda` (the index of data sets by book example) and one
 `data/dX.Y.rda` per alias, each a copy of the corresponding data set.
-Estimators take plain vectors/data frames and compute directly; nothing depends
-on a hidden global state.
+
+The exercise source is `vignettes/cs1-survival-data.Rmd`. It contains the
+questions and, directly after each question, a gated solution block. The
+`show_solutions` parameter controls whether those blocks are included.
+`vignettes/cs1-solutions.Rmd` is a thin wrapper that knits the exercise source
+as a child with `show_solutions: true`. Both are real vignettes and are built by
+`R CMD build`.
 
 ## Key Files & Directories
 
-- `R/` — all package code; one file per estimator family.
+- `R/` — package documentation only (`data.R`, `sta310r-package.R`).
 - `man/`, `NAMESPACE` — generated by roxygen2; never edit by hand.
-- `data/` — committed `.rda` objects: the 34 data sets, the
-  `dataset_by_exercise` index, and one `dX.Y.rda` per alias (123 currently).
+- `data/` — committed `.rda` objects: the data sets, the
+  `dataset_by_exercise` index, and one `dX.Y.rda` per alias.
   `data-raw/data.R` reads `.dat` files from an external folder (default
   `../Data sets from Modelling Survival Data in Medical Research, 4th
   edition`, override with `STA310_DAT_DIR`); those sources are **not** in this
   repo, so the Collett data cannot be regenerated from a clean clone.
   `data-raw/scottish_mbc_cohort.R` is self-contained.
-- `tests/testthat/` — one `test-*.R` per source file plus `test-data.R`.
-- `vignettes/` and `inst/doc/` — sources and pre-built HTML.
-- `_pkgdown.yml` — site structure: every exported topic and every data set is
-  listed under `reference:`; new exports must be added there.
+- `tests/testthat/` — `test-data.R` checks the structure of the data sets.
+- `vignettes/` and `inst/doc/` — exercise sources and pre-built HTML.
+- `_pkgdown.yml` — site structure: every data set and vignette is listed there.
 - `.github/workflows/R-CMD-check.yaml` — tests, check, and the vignette
   freshness gate.
 - `.github/workflows/pkgdown.yaml` — builds and deploys the site to GitHub Pages
@@ -89,35 +75,29 @@ on a hidden global state.
 ## Coding Conventions
 
 - Roxygen with `list(markdown = TRUE)`: full prose, `@details`, `@references`
-  to Collett (2023) chapter/example, and runnable `@examples` for every export.
+  to Collett (2023) chapter/example, and runnable `@examples` for every data
+  set.
 - Each data set's `@examples` has two labelled blocks: first
   `# Collett (2023), Chapter 17 style` with the book's own functions
   (`survival`, `penalized`, `eha`, `cmprsk`, ...), then `# Modern tools` with
   newer packages (`ggsurvfit`, `flexsurv`, `coxme`, `icenReg`, `tidycmprsk`,
   `broom`, `rms`, `glmnet`). Every block starts with a comment naming the
   example it belongs to. Keep every line runnable: `R CMD check` executes them.
-- **Never call `library(survival)` inside examples or tests.** Six data sets
-  share their names with `survival` (`bladder`, `cgd`, `kidney`, `myeloma`,
-  `ovarian`, `rats`); attaching `survival` silently replaces them. Use
-  `survival::coxph(survival::Surv(...) ~ ...)` instead.
+- **Data-name collisions with `survival`**: `bladder`, `cgd`, `kidney`,
+  `myeloma`, `ovarian`, `rats` exist in both packages with different contents.
+  In data-set examples, use `survival::` prefixes and do not attach `survival`.
+  In the exercise vignettes, `survival` is attached on purpose; when a name
+  collides there, use the `sta310r::` prefix (for example
+  `sta310r::myeloma`).
 - Examples that plot must not leave an `Rplots.pdf` in the package root; that
   becomes a `R CMD check` NOTE. Run examples from a temporary directory.
 - Every file opens with a banner comment `# Section title ----`.
-- Validation blocks come first and use `stop("...", call. = FALSE)` with
-  backticked argument names; shared validators are `check_*()` helpers in
-  `R/power.R`.
-- Suggested packages (`ggplot2`, `tidyverse`, ...) are guarded with
-  `requireNamespace(..., quietly = TRUE)` and a clear `stop()`; never add them
-  to `Imports` for a plotting convenience. `coxme`, `eha`, `glmnet` and
-  `penalized` are in `Suggests` only because the data-set examples use them.
-- NSE column names used in `aes()`/subsetting must be added to the
-  `globalVariables(c(...))` call in `R/sta310r-package.R`.
-- Data frame returns set `row.names = NULL`; multi-return metadata goes in
-  attributes (`attr(out, "converged")`, `attr(cif, "survival")`).
-- Tests: testthat edition 3. Cross-validate against `survival`
-  (`expect_equal(..., tolerance = 1e-8)`), assert structure with
-  `expect_named()`/`expect_identical()`, snapshot `print()` output and error
-  messages, and use `skip_if_not_installed()` for suggested packages.
+- Suggested packages used by examples are guarded with
+  `requireNamespace(..., quietly = TRUE)` where practical. `survival`,
+  `penalized`, `eha`, `glmnet`, `coxme`, `rms` and the other analysis packages
+  are in `Suggests` because the data-set examples use them.
+- Tests: testthat edition 3. Assert the structure of the data sets with
+  `expect_named()`/`expect_identical()` and check dimensions and codings.
 
 ## Git Workflow
 
@@ -143,25 +123,16 @@ on a hidden global state.
 
 ## Tips for AI Agents
 
-- **Name collisions with `survival`**: `bladder`, `cgd`, `kidney`, `myeloma`,
-  `ovarian`, `rats` exist in both packages with different contents. Inside the
-  package and vignettes, qualify explicitly (`sta310r::myeloma`) after
-  `library(sta310r)`.
-- Exported estimators are fixed external contracts: column names, attribute
-  names and `std_error` (SE of S(t), not of `-log S(t)`) are asserted by tests
-  and snapshots. Changing them is a breaking change.
-- `cox_fit()` takes an already-expanded numeric matrix (no intercept); factor
-  handling through `stats::model.matrix()` is the caller's job and the
-  constant-column check enforces it.
+- **Name collisions with `survival`**: qualify the course data with
+  `sta310r::` when `survival` is attached, or use `survival::` prefixes in
+  data-set examples where `survival` is not attached.
 - Adding a data set touches six places: `data-raw/` script, `data/<name>.rda`,
   roxygen block in `R/data.R` (with `@aliases dX.Y` for every example that
   uses it), the `examples`/`dataset_titles` mapping in
   `data-raw/dataset_by_exercise.R` (then re-run it), `tests/testthat/test-data.R`,
   and `_pkgdown.yml` (plus the README list).
-- Adding an exported function touches `R/`, roxygen `@export`,
-  `devtools::document()`, `_pkgdown.yml` `reference:`, and a new
-  `tests/testthat/test-<file>.R`.
 - `inst/doc/` and `man/` are generated; edit sources only. The vignette
   freshness gate is the most common avoidable CI failure.
-- Snapshots are platform-sensitive for printed floating point; prefer
-  `tolerance`-based assertions for numbers and snapshots for messages/`print()`.
+- The exercise source contains both questions and solutions. Keep the
+  `<!-- SOLUTION START -->` / `<!-- SOLUTION END -->` markers around each
+  solution block, and keep the `show_solutions` parameter working.

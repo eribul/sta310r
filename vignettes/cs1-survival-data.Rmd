@@ -1,0 +1,984 @@
+---
+title: "Computer exercise 1: Describing and comparing survival data"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+    fig_width: 7
+    fig_height: 5
+params:
+  show_solutions: false
+vignette: >
+  %\VignetteIndexEntry{Computer exercise 1: Describing and comparing survival data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE,
+  warning = FALSE
+)
+
+# Fixed seed for the permutation test and for reproducible table ids.
+set.seed(2026)
+
+# When the solutions vignette renders this file as a child, `params` is set by
+# the parent. The default is the question-only version.
+show_solutions <- isTRUE(params$show_solutions)
+
+# Remove the solution blocks from the final markdown when the parameter is
+# FALSE. Each solution is marked with HTML comments in the document body.
+knitr::knit_hooks$set(document = function(x) {
+  if (!show_solutions) {
+    lines <- unlist(strsplit(x, "\n", fixed = TRUE))
+    keep <- rep(TRUE, length(lines))
+    inside <- FALSE
+    for (i in seq_along(lines)) {
+      if (identical(lines[i], "<!-- SOLUTION START -->")) {
+        inside <- TRUE
+        keep[i] <- FALSE
+        next
+      }
+      if (identical(lines[i], "<!-- SOLUTION END -->")) {
+        inside <- FALSE
+        keep[i] <- FALSE
+        next
+      }
+      if (inside) keep[i] <- FALSE
+    }
+    x <- paste(lines[keep], collapse = "\n")
+  }
+  x
+})
+```
+
+<style>
+.callout-note {
+  border-left: 4px solid #0d6efd;
+  background: #f1f5fb;
+  padding: 0.75em 1em;
+  margin: 1em 0;
+}
+.callout-tip {
+  border-left: 4px solid #198754;
+  background: #f1f8f3;
+  padding: 0.75em 1em;
+  margin: 1em 0;
+}
+</style>
+
+::: {.callout-note}
+**About this computer exercise.**
+
+This exercise covers **Chapters 1 and 2** of Collett, *Modelling Survival
+Data in Medical Research* (4th ed.):
+
+:::
+
+## Data and software
+
+```{r}
+library(tidyverse)
+library(sta310r)
+library(survival)
+library(ggsurvfit)
+library(gtsummary)
+library(broom)
+```
+
+```{r solutions-support, include = FALSE}
+fmt <- function(x, digits = 2) {
+  formatC(x, format = "f", digits = digits)
+}
+
+fmt_p <- function(p) {
+  ifelse(p < 0.001, "< 0.001", formatC(p, format = "f", digits = 3))
+}
+
+pct <- function(x, digits = 0) {
+  paste0(formatC(100 * x, format = "f", digits = digits), " %")
+}
+
+surv_at <- function(fit, times) {
+  s <- summary(fit, times = times, extend = TRUE)
+  tibble::tibble(
+    time = s$time,
+    n.risk = s$n.risk,
+    S = s$surv,
+    se = s$std.err,
+    lower = s$lower,
+    upper = s$upper
+  )
+}
+
+km_iud <- survfit(Surv(time, status) ~ 1, data = iud)
+
+km_myeloma <- survfit(Surv(time, status) ~ 1, data = sta310r::myeloma)
+km_breast_overall <- survfit(Surv(time, status) ~ 1, data = breast)
+km_melanoma <- survfit(
+  Surv(time, status) ~ treatment + strata(age),
+  data = melanoma
+)
+
+iud_last <- max(iud$time)
+iud_before_last <- max(iud$time[iud$time < iud_last])
+iud_last_event <- max(iud$time[iud$status == 1 & iud$time < iud_last])
+```
+
+## 1. From a clinical question to a time-to-event data set
+
+A survival analysis starts with four decisions: the **time origin**, the
+**time scale**, the **event** and the **censoring mechanism**. These decisions
+are part of the estimand, not a technical detail. The help pages
+(`?iud`, `?breast`, `?prostate`, `?melanoma`, `?pulmonary`, and
+`?sta310r::myeloma`) give the background of each study.
+
+**1.** For each (or some) of the six data sets, identify
+
+(a) the time origin;
+(b) the time scale and its unit;
+(c) the event of interest;
+(d) what a censored observation means, and whether the censoring is
+administrative, due to loss to follow-up, or due to a competing event.
+
+Some help pages state the origin explicitly; where they do not, say what you
+would assume and why. You may answer in a table. Which data set has no censoring at all?
+
+<!-- SOLUTION START -->
+
+**Solution 1.**
+
+- **`pulmonary`** (`r nrow(pulmonary)` men, no censoring): time origin is not
+  stated explicitly in the example, but is
+  presumably diagnosis or the start of treatment of the pulmonary metastasis;
+  time scale is months; event is death.
+- **`iud`** (`r nrow(iud)` women): time origin is the first day of IUD use;
+  time scale is weeks; event is discontinuation because of menstrual bleeding.
+  The `r sum(iud$status == 0)` censored observations are women who stopped for
+  another reason, were lost to follow-up, or reached the two-year protocol
+  limit.
+- **`breast`** (`r nrow(breast)` women): time origin is surgery (mastectomy);
+  time scale is months; event is death from breast cancer. The
+  `r sum(breast$status == 0)` censored observations are women alive in July
+  1987, women who died from other causes, and losses to follow-up.
+- **`myeloma`** (`r nrow(sta310r::myeloma)` patients): time origin is diagnosis;
+  time scale is months; event is death from multiple myeloma.
+  `r sum(sta310r::myeloma$status == 0)` observations are censored at the end of
+  the study.
+- **`prostate`** (`r nrow(prostate)` men): time origin is randomisation; time
+  scale is months; event is death from prostatic cancer. The
+  `r sum(prostate$status == 0)` censored observations are deaths from other
+  causes, losses to follow-up, and administrative censoring at the end of
+  follow-up.
+- **`melanoma`** (`r nrow(melanoma)` patients): time origin is surgical removal
+  of the tumour followed by randomisation; time scale is months; event is
+  death. The `r sum(melanoma$status == 0)` censored observations are patients
+  alive at the end of follow-up.
+
+- **No censoring:** `pulmonary`.
+- **Median not estimable:** `prostate` and `melanoma`; in `breast`, the median
+  is estimable overall
+  (`r fmt(summary(km_breast_overall)$table["median"], 0)` months) but not in
+  the HPA-negative subgroup.
+- **A censored observation at the largest time:** `iud`, `breast`, `prostate`
+  and `melanoma`. In `iud` the largest time is `r max(iud$time)` weeks, where
+  there are `r sum(iud$status[iud$time == max(iud$time)] == 1)` event and
+  `r sum(iud$status[iud$time == max(iud$time)] == 0)` censorings; `myeloma`
+  has its largest observation at `r max(sta310r::myeloma$time)` months, which
+  is `r if (sta310r::myeloma$status[which.max(sta310r::myeloma$time)] == 1) "a death" else "censored"`.
+
+<!-- SOLUTION END -->
+
+**2.** The `prostate` data set has only 6 deaths among 38 men (84 % censored).
+
+(a) What can still be estimated from these data, and what becomes very
+uncertain?
+(b) The Kaplan–Meier output reports a median of `NA` but a lower 95 % limit of
+69 months. Why is the median not estimable even though a lower limit is
+reported?
+
+```{r}
+(km_prostate <- survfit(Surv(time, status) ~ 1, data = prostate))
+```
+
+(c) What would you report instead of a median?
+(d) What happens to the Kaplan–Meier curve after the last death at 69 months,
+and why should the far right-hand tail be interpreted cautiously?
+(e) Suppose the men who were censored were censored *because they became too
+unwell to attend the clinic*. In which direction would the Kaplan–Meier
+estimate be biased? What is the name of this assumption violation?
+
+<!-- SOLUTION START -->
+
+**Solution 2.**
+
+(a) We can estimate the survivor function, survival at fixed times and
+percentiles that are reached, with confidence intervals. With only
+`r sum(prostate$status == 1)` deaths the confidence intervals are wide, the
+median is not estimable, and the behaviour of the curve beyond the last death
+is very uncertain.
+
+(b)
+
+```{r sol-prostate-summary}
+summary(km_prostate)
+```
+
+The median is the smallest time at which the estimated survivor function is
+below 0.5. The Kaplan–Meier curve for `prostate` never crosses 0.5 and no median exists in the observed follow-up. The reported
+lower 95 % limit of the median is a *bound*:
+the data are compatible with a median as early as
+that, but the upper limit is not
+estimable.
+
+(c) A sensible answer is to report survival at fixed, clinically meaningful
+times (for example at 36 and 60 months = 3 and 5 years), with a confidence interval and the number at risk, rather than forcing a
+median:
+
+```{r sol-prostate-fixed}
+summary(km_prostate, c(36, 60))
+```
+
+(d) 
+
+```{r}
+plot(km_prostate)
+last_death <- prostate |>
+  filter(status == 1) |>
+  summarise(max(time)) |>
+  pluck(1)
+last_cens <- prostate |> filter(status == 0) |> summarise(max(time)) |> pluck(1)
+```
+
+The last death is at `r last_death` months;
+after that the curve is flat until the last censoring at
+`r last_cens` months. Only
+`r (broom::tidy(km_prostate) |> slice_tail(n = 1) |> pull(n.risk))` men are at
+risk at the last observed time, so the height of the curve there is determined
+by a very small risk set. The far right-hand tail should not be interpreted as
+a precise estimate of long-term survival.
+
+(e) If men who became too unwell stopped attending, their subsequent deaths
+would be missing and the remaining men would look healthier than they really
+were. The Kaplan–Meier estimate would then be biased **upwards**. This is
+**dependent** or **informative censoring**, and it violates the independent
+censoring assumption.
+
+<!-- SOLUTION END -->
+
+**3.** True or false?
+
+(a) A patient censored at 10 months is still in the risk set at 12 months.
+(b) If censoring is informative, the Kaplan–Meier estimate is always biased
+upwards.
+(c) The hazard $h(t)$ is the probability of dying at time $t$.
+(d) Administrative censoring at the end of a study is usually independent
+censoring, provided the analysis time was specified before the data were
+examined.
+(e) Left censoring means that the true event time is smaller than the observed
+time, and interval censoring means that the event time is known only to lie in
+an interval.
+(f) Study time is calendar time in the study, while patient time is measured
+from each patient's own time origin. Administrative censoring at a fixed
+calendar date therefore produces different patient-time censoring times for
+patients recruited at different dates.
+
+<!-- SOLUTION START -->
+
+**Solution 3.**
+
+(a) **False.** A woman censored at 10 months contributes to the risk set up to
+10 months and is removed immediately after 10 months. She is not at risk at 12
+months.
+
+(b) **False.** Informative censoring can bias the estimate in either direction.
+If high-risk patients leave, survival is overestimated; if low-risk patients
+leave, survival is underestimated.
+
+(c) **False.** The hazard is an instantaneous rate, not a probability. It is
+the limiting probability of an event in a short interval divided by the length
+of that interval, and it can be greater than 1.
+
+(d) **True**, provided the analysis time was specified in advance and the
+censoring is not related to prognosis. Administrative censoring at a
+pre-specified calendar date is the usual example of independent censoring.
+
+(e) **True.**
+
+(f) **True.**. *Study time* is calendar time measured from the start of the study;
+*patient time* is measured from each patient's own time origin. If a study
+closes on a fixed calendar date, a patient recruited late has less patient
+time at closure than a patient recruited early. Administrative censoring
+therefore gives different patient-time censoring times, even though all
+patients are censored on the same calendar date. This is usually independent
+censoring if the closing date was pre-specified and the recruitment date is
+unrelated to prognosis.
+
+<!-- SOLUTION END -->
+
+## 2. The empirical survivor function when there is no censoring
+
+The `pulmonary` data contain the survival times of 11 men with pulmonary
+metastasis from osteosarcoma, with no censoring. The empirical survivor
+function is simply the proportion of men whose survival time is at least $t$:
+$$\hat S(t) = \frac{\text{number with survival time} \ge t}{n}.$$
+The estimated curve is a step function, constant between adjacent death times
+and decreasing at each death time.
+
+**4.** Interpret the table:
+
+```{r empirical-table}
+emp_pulm <- pulmonary |>
+  distinct(time) |>
+  arrange(time) |>
+  mutate(
+    n_at_least = map_int(time, \(t) sum(pulmonary$time >= t)),
+    S_hat = n_at_least / nrow(pulmonary)
+  )
+```
+
+Is `S_hat` equivalemnt to the `survival` column from `summary(survfit(Surv(pulmonary$time) ~ 1))`? If not, why?
+
+Plot $\hat S(t)$ above as a step function (HINT: `ggplot2::geom_step()`) and compare with:
+
+```{r empirical-plot}
+#| eval: false
+survfit2(Surv(time) ~ 1, data = pulmonary) |>
+  ggsurvfit()
+```
+
+At which times does the curve drop, and by how much? Why is the curve flat
+between 15 and 17 months?
+
+<!-- SOLUTION START -->
+
+**Solution 4.**
+
+```{r sol-empirical-table}
+emp_pulm |>
+  ggplot(aes(time, S_hat)) +
+  geom_step()
+```
+
+
+With the empirical convention in the table, the estimate is
+`r fmt(emp_pulm$S_hat[1], 3)` at `r emp_pulm$time[1]` months and drops at
+`r paste(emp_pulm$time[-1], collapse = ", ")` months; the sizes of those drops
+are `r paste(fmt(-diff(emp_pulm$S_hat), 3), collapse = ", ")`. It is flat
+between `r emp_pulm$time[4]` and `r emp_pulm$time[5]` months because no one
+dies in that interval.
+
+```{r}
+emp_pulm
+```
+
+There is a small convention issue at an event time. The empirical definition
+\(P(T\ge t)\) gives an estimate of `r fmt(emp_pulm$S_hat[1], 3)` at
+`r emp_pulm$time[1]` months, because all `r nrow(pulmonary)` men have a
+survival time of at least `r emp_pulm$time[1]` months. `survfit()` reports `r fmt(10 / 11, 3)` at
+`r emp_pulm$time[1]` months, because it lets the curve drop at the event time
+and reports the value *after* the drop. Between event times the two conventions
+agree, and at 12 months both give `r fmt(10 / 11, 3)`. The important practical point is to say whether a
+reported "survival at 12 months" includes deaths at exactly 12 months.
+
+```{r}
+summary(survfit(Surv(time) ~ 1, data = pulmonary))
+```
+
+The graphs look similair:
+
+```{r}
+emp_pulm |>
+  ggplot(aes(time, S_hat)) +
+  geom_step()
+
+survfit2(Surv(time) ~ 1, data = pulmonary) |>
+  ggsurvfit()
+```
+
+<!-- SOLUTION END -->
+
+**5.** The observed times are
+
+`r paste(sort(pulmonary$time), collapse = ", ")` months.
+
+Their mean is `r mean(pulmonary$time)` months and their median is `r median(pulmonary$time)` months. 
+Why is the median usually preferred for survival data? Does the mean or the median describe the
+"typical" patient better here? What happens to the mean if the largest
+observation is censored?
+
+<!-- SOLUTION START -->
+
+**Solution 5.**
+
+Survival times are usually right-skewed
+and the mean is sensitive to a few long survivors; the median is the time by
+which half the patients have died and is more robust. Here the mean is
+slightly larger than the median, which is consistent with a right tail. If the
+largest observation were censored, the mean would not be estimable without an
+assumption about the unobserved tail; treating the censored time as a death
+would *underestimate* the mean. The median can still be estimated if the curve
+reaches 0.5.
+
+<!-- SOLUTION END -->
+
+**6.** Five men die at 13 months. With the convention that the curve drops at
+the event time (the convention used by `survfit()`), the estimated survival is
+0.909 just before 13 months and 0.455 at 13 months. If one of the men had been
+censored at exactly 13 months instead of dying, should that censored
+observation be counted *before* or *after* the deaths at 13 months when the
+risk set is formed? What difference would the other convention make to the
+estimate? (Collett discusses this in Section 2.1.2.)
+
+<!-- SOLUTION START -->
+
+**Solution 6.**
+
+The censored observation should be counted **after** the
+deaths at
+`r emp_pulm$time[2]` months: the risk set just before that time includes
+everyone still under observation at that time, including the person who is
+censored there. The deaths are then removed, and the censored observation is
+removed afterwards. If the censoring
+were counted before the deaths, the risk set would be too small and the
+estimated survival would change. 
+
+<!-- SOLUTION END -->
+
+**7. (Optional.)** When there is no censoring, Greenwood's formula reduces to
+the binomial standard error
+$$\operatorname{se}\{\hat S(t)\} = \sqrt{\frac{\hat S(t)(1-\hat S(t))}{n}}.$$
+
+(a) Use this formula to compute the standard error of $\hat S(13)$ and compare
+it with the `std.err` reported by `survfit`.
+
+(b) Why is the standard error `NaN` at the last death time, where
+$\hat S(t)=0$? Does that mean the estimate is known with certainty?
+
+<!-- SOLUTION START -->
+
+**Solution 7 (Optional).**
+
+(a) After `r emp_pulm$time[2]` months,
+`r sum(pulmonary$time <= emp_pulm$time[2])` of the `r nrow(pulmonary)` men have
+died, so
+$\hat S(`r emp_pulm$time[2]`)=`r fmt(5 / 11, 4)`$. The binomial standard error
+is
+
+$$
+\operatorname{se}\{\hat S(13)\}
+= \sqrt{\frac{`r fmt(5 / 11, 4)` \times `r fmt(6 / 11, 4)`}{`r nrow(pulmonary)`}}
+= `r fmt(sqrt((5 / 11) * (6 / 11) / nrow(pulmonary)), 4)`.
+$$
+This is the `std.err` reported by `survfit()` at
+`r emp_pulm$time[2]` months.
+
+(b) At the last death time there is one person at risk and that person dies, so
+$\hat S(t)=0$. Greenwood's sum contains the term
+$d/(n(n-d))=1/(1\times 0)=\infty$, and $0\times\infty$ is `NaN`. The estimate
+is zero because the only remaining person died, but that does not mean the
+survival probability is known with certainty; the sample is small and the tail
+is poorly estimated. This is one reason why the last part of a Kaplan–Meier
+curve is fragile.
+
+<!-- SOLUTION END -->
+
+## 3. Hazard and cumulative hazard
+
+**8.** The cumulative hazard is $H(t)=-\log S(t)$, and the Nelson–Aalen
+estimate is the cumulative sum of the event fractions $d_j/n_j$. The
+`cumhaz` component of a `survfit` object is the Nelson–Aalen estimate. Compare
+it with $-\log \hat S(t)$ from the Kaplan–Meier estimate:
+
+```{r cumulative-hazard}
+km_myeloma <- survfit(Surv(time, status) ~ 1, data = sta310r::myeloma)
+```
+
+(a) Which cumulative hazard is larger, the Nelson–Aalen estimate or
+$-\log\hat S(t)$? Is that guaranteed, or does it depend on the data?
+(b) What does the slope of the cumulative hazard curve represent?
+(c) The two estimates of $S(t)$ differ by only a few percentage points. Is the
+difference practically important compared with the width of the confidence
+intervals?
+
+<!-- SOLUTION START -->
+
+**Solution 8.**
+
+(a)
+
+```{r sol-cumulative-hazard}
+ch <- km_myeloma |>
+  summary(times = c(24, 48, 60), extend = TRUE) |>
+  with(tibble::tibble(
+    time = time,
+    nelson_aalen = cumhaz,
+    minus_log_km = -log(surv),
+    S_from_na = exp(-cumhaz),
+    S_km = surv
+  ))
+
+knitr::kable(ch, digits = 3)
+```
+
+At 24 months the Nelson–Aalen cumulative hazard is
+`r fmt(ch$nelson_aalen[ch$time == 24], 3)` and $-\log\hat S(t)$ is
+`r fmt(ch$minus_log_km[ch$time == 24], 3)`. At 48 months they are
+`r fmt(ch$nelson_aalen[ch$time == 48], 3)` and
+`r fmt(ch$minus_log_km[ch$time == 48], 3)`; at 60 months
+`r fmt(ch$nelson_aalen[ch$time == 60], 3)` and
+`r fmt(ch$minus_log_km[ch$time == 60], 3)`. The Kaplan–Meier-based value is
+larger. This is guaranteed: for $0<x<1$, $-\log(1-x)>x$, so
+$-\log\hat S_{KM}(t)=\sum_j-\log(1-d_j/n_j)>\sum_j d_j/n_j=\hat H_{NA}(t)$.
+Consequently the Nelson–Aalen survivor estimate $\exp(-\hat H_{NA})$ is larger
+than the Kaplan–Meier estimate.
+
+(b) The slope of the cumulative hazard curve is the hazard: a steeper slope
+means a higher event rate.
+
+(c) 
+
+```{r}
+summary(km_myeloma, c(24, 48, 60))
+```
+
+The two estimates of $S(t)$ differ by about
+`r fmt(ch$minus_log_km[ch$time == 24] - ch$nelson_aalen[ch$time == 24], 2)`
+in cumulative hazard at 24 months, which corresponds to survival estimates of
+`r fmt(ch$S_from_na[ch$time == 24], 3)` versus
+`r fmt(ch$S_km[ch$time == 24], 3)`. The pointwise confidence interval at 24
+months is much wider:
+`r fmt(ch$S_km[ch$time == 24], 3)` with 95 % interval
+`r fmt(surv_at(km_myeloma, 24)$lower, 3)`–`r fmt(surv_at(km_myeloma, 24)$upper, 3)`.
+The difference between the estimators is therefore not practically important
+compared with the statistical uncertainty.
+
+<!-- SOLUTION END -->
+
+## 4. Kaplan–Meier
+
+The `iud` data contain the times, in weeks, to discontinuation of an
+intrauterine device because of menstrual bleeding problems, for 18 women. Nine
+times are events and nine are censored. This is the data set used in Collett's
+Examples 2.3–2.10.
+
+
+```{r}
+km_iud <- survfit(Surv(time, status) ~ 1, data = iud)
+```
+
+**9.** 
+
+
+(a) Reproduce Collett's Table 2.2. At each event time $t_j$, compute the
+number at risk $n_j$, the number of events $d_j$, the survival factor
+$(n_j-d_j)/n_j$ and the product-limit estimate.
+
+(b) Report $\hat S(12), \hat S(24), \hat S(52), \hat S(104)$ and $\hat S(107)$.
+
+<!-- SOLUTION START -->
+
+**Solution 9.**
+
+(a)
+```{r sol-km-iud-table}
+broom::tidy(km_iud) |>
+  filter(n.event > 0) |>
+  mutate(factor = estimate / dplyr::lag(estimate, default = 1)) |>
+  select(time, n.risk, n.event, factor, estimate)
+```
+
+The values agree with Collett's Table 2.2 (exept the first line where no event occured). 
+
+(b) The requested estimates are:
+
+```{r sol-iud-at-times}
+summary(km_iud, c(12, 24, 52, 104, 107))
+```
+
+Note that the estimate does not change between 97 and 104 months because there is no event in that interval; the
+censoring at 104 only removes a woman from the risk set.
+
+<!-- SOLUTION END -->
+
+**10.** Look at the last row of `summary(km_iud)`:
+
+(a) The largest observed time is 107 weeks, but there is one event and two
+censorings at that time. Is $\hat S(t)$ defined for $t>107$? What does the
+`survfit` object report?
+(b) What would the estimate be beyond 107 if all three observations at 107 had
+been censored? What if the only observation at 107 had been an event?
+(c) Why does the curve stop at the largest observed time rather than continue
+to, say, 120 weeks?
+
+<!-- SOLUTION START -->
+
+**Solution 10.**
+
+(a) The largest observed time is for:
+
+```{r}
+slice_max(iud, time)
+```
+The Kaplan–Meier estimate is stays constant from week 97, until just before week 107. 
+It is **not defined after 107 weeks**, because there is no one left at risk after
+the event and the censorings at week 107.
+
+(b) If all observations at week 107 had been
+censored, there would be no event, so the estimate would remain from week 97, 
+and it would still be undefined after week 107.
+If the only observation at
+week 107 had been an event with no other person at risk at that time, the
+factor would be $(1-1)/1=0$ and the curve would drop to zero at week 107.
+
+(c) Beyond the largest observed time there is no information about the event
+rate; no one is under observation. Continuing the curve flat would assume that
+no events occur after the end of follow-up, which is an extra assumption, not a
+result of the data. The curve therefore stops at the last observed time.
+
+<!-- SOLUTION END -->
+
+**11. (Optional)** For ungrouped data, the Kaplan–Meier-type hazard estimate in the
+interval from $t_{(j)}$ to $t_{(j+1)}$ is
+ $$\hat h(t)=\frac{d_j}{n_j\tau_j},\qquad \tau_j=t_{(j+1)}-t_{(j)}.$$
+The estimate is not defined after the final death time, because the last
+interval is open-ended.
+
+(a) Compute $\hat h(t)$ for the event times in the `iud` data by:
+
+```{r}
+event_times <- sort(unique(iud$time[iud$status == 1]))
+(x <- tibble::tibble(
+  t = event_times,
+  tau = c(diff(event_times), NA_real_),
+  n = map_int(event_times, \(t) sum(iud$time >= t)),
+  d = map_int(event_times, \(t) sum(iud$time == t & iud$status == 1)),
+  h = d / (n * tau)
+))
+```
+Make sure you understand the formula and the code. 
+Why is the ungrouped estimate so much more irregular than a cumulative summary
+such as the survivor function?
+(b) Why is it usually better to report the cumulative hazard or the survivor
+function than a series of raw hazard estimates?
+
+<!-- SOLUTION START -->
+
+**Solution 11.**
+
+(a) A single death among a small risk set over a short interval produces a large
+and unstable rate; a single death among a large risk set over a long interval
+produces a small one.
+
+```{r}
+ggplot(x, aes(t, h)) + geom_step()
+```
+
+(b) The cumulative hazard and the survivor function are cumulative summaries:
+they use all the information up to time $t$ and are much more stable than a
+sequence of pointwise hazard estimates. A raw hazard plot is useful for
+exploring shape, but it is not a precise summary, especially in small samples.
+
+<!-- SOLUTION END -->
+
+**12.** A colleague ignores censoring and estimates 2-year survival in the
+`iud` data as "the proportion of women who did not discontinue within 104
+weeks", i.e. $1-9/18=0.50$.
+
+(a) Compare this with the Kaplan–Meier estimate $\hat S(104)$.
+(b) In which direction is the naive estimate biased, and why?
+(c) Would the problem be worse or less serious in a study with 80 % censoring?
+(d) Write one sentence interpreting $\hat S(104)=0.373$ correctly.
+
+<!-- SOLUTION START -->
+
+**Solution 12.**
+
+(a) The naive estimate is 0.5; the Kaplan–Meier estimate is
+0.37. The naive estimate is too high by about 13 percentage points.
+
+(b) The naive calculation treats the `r sum(iud$status == 0)` censored women
+as if they had not discontinued during the full `r iud_before_last` weeks. In fact, they were
+only followed until their censoring time, and some of them would have
+discontinued later. Ignoring that incomplete follow-up inflates the estimated
+survival. 
+
+(c) The problem would be worse with 80 % censoring: more of the denominator
+would consist of women with incomplete follow-up treated as if they had
+completed the study. The bias would generally be larger.
+
+(d) "The estimated probability that a woman is still using the IUD at 104
+weeks (2 years) is 0.37, assuming that censoring is non-informative."
+Or: "About 37 % of women are estimated to remain free of
+discontinuation due to bleeding at 2 years."
+
+<!-- SOLUTION END -->
+
+## 5. Comparing two groups
+
+The `breast` data contain the survival times of 45 women with breast cancer,
+classified by whether the tumour stained positively or negatively with the
+lectin HPA. There are 13 women in the negative group (5 deaths) and 32 in the
+positive group (21 deaths). Collett uses these data in Examples 2.11–2.14.
+
+**13.** Plot the Kaplan–Meier curves by staining group, with a risk table and
+a line at the median (HINT: use the ggsurvfit package). 
+Report $\hat S(24)$, $\hat S(60)$ and $\hat S(120)$ (You may use `gtsummary::tbl_survival()`). 
+Interpret the curves in clinical language.
+
+(a) Which group has the better survival?
+(b) Is the median estimable in both groups? If not, what should be reported
+instead?
+(c) Do the estimated curves cross? What does the answer suggest about the
+relative suitability of the log-rank, Wilcoxon and Peto–Peto tests (Collett,
+Section 2.6.5)?
+
+<!-- SOLUTION START -->
+
+**Solution 13.**
+
+```{r km-breast}
+survfit2(Surv(time, status) ~ stain, data = breast) |>
+  ggsurvfit() +
+  add_confidence_interval() +
+  add_quantile(y_value = 0.5) +
+  add_risktable() +
+  add_pvalue()
+```
+
+```{r tbl-breast}
+km_breast <- survfit(Surv(time, status) ~ stain, data = breast)
+
+tbl_survfit(
+  km_breast,
+  times = c(24, 60, 120),
+  label_header = "**Time {time} months**"
+)
+
+summary(km_breast, times = c(24, 60, 120), extend = TRUE)
+```
+
+(a) Women with HPA-negative tumours have better survival at every time point.
+The direction is consistent with the biological
+hypothesis that positive staining marks a tumour with metastatic potential,
+but the study is small and observational.
+
+(b) The median is not estimable in the negative group, although its lower 95 % limit is.
+
+```{r}
+km_breast
+```
+
+Report survival at fixed times instead, for example 5-year (60 month) survival
+together with the number at risk.
+
+(c) The estimated curves do not cross: the negative group is above the
+positive group throughout. This is the pattern in which the log-rank test is
+the natural default (Collett, Section 2.6.5). The Wilcoxon and Peto–Peto tests
+are alternatives that put more weight on early differences; they are more
+useful when the curves cross or when the early difference is the hypothesis of
+interest.
+
+<!-- SOLUTION END -->
+
+## 6. Three or more groups
+
+The `melanoma` data contain survival times of 30 patients from two
+immunotherapy groups, classified into three age groups. Collett uses the data
+in Examples 2.15 and 2.16.
+
+**17.** Using only the BCG treatment group, compare survival across the three
+age groups with a log-rank test.
+
+(a) What is the null hypothesis? How many degrees of freedom does the test
+have?
+(b) Report the test statistic and p-value. Which age group contributes most to
+the test statistic?
+(c) A non-significant result does not show that the groups are the same. What
+else could explain the result? What is the sample size in each age group?
+
+<!-- SOLUTION START -->
+
+**Solution 17.**
+
+```{r}
+bcg <- melanoma |> filter(treatment == 1)
+```
+(a) The null hypothesis is that the survival distributions are the same in the
+three age groups among patients treated with BCG.
+There are `r n_distinct(bcg$age)` groups, so the test has
+`r n_distinct(bcg$age) - 1` degrees of freedom.
+
+
+
+```{r melanoma-three-groups}
+(x <- survdiff(Surv(time, status) ~ age, data = bcg))
+```
+
+
+(b) The test statistic is `r x$chisq`, p = `r x$pvalue`.
+The oldest group (age = 3) contributes most (biggest difference between observed and expected).
+
+(c) 
+
+```{r}
+with(bcg, table(age, status))
+```
+
+The age groups contain few patients, respectively, so the test has
+very little power. A non-significant result is not evidence that the groups are
+the same; it means that these data are compatible with no difference. The
+small numbers also make the asymptotic chi-square approximation questionable.
+
+<!-- SOLUTION END -->
+
+**18.** Now compare the two treatments (`treatment` variable), first without and then with
+stratification by age group (HINT: `strata(age)` in the formula).
+
+(a) Report the test statistic, degrees of freedom and p-value for both tests.
+(b) What does the stratified test estimate that the unstratified test does
+not? What assumption does the stratified test make about the treatment effect
+across age groups?
+(c) Why are the two results so similar here? Check the distribution of age
+group within each treatment group.
+(d) Give an example of a situation in which stratification would change the
+conclusion.
+
+<!-- SOLUTION START -->
+
+**Solution 18.**
+
+(a)
+
+```{r melanoma-stratified}
+bind_rows(
+  unstratified = survdiff(
+    Surv(time, status) ~ treatment,
+    data = melanoma
+  ) |>
+    broom::glance(),
+  stratified = survdiff(
+    Surv(time, status) ~ treatment + strata(age),
+    data = melanoma
+  ) |>
+    broom::glance(),
+  .id = "analysis"
+) |>
+  knitr::kable(digits = 3)
+```
+
+(b) The stratified test compares the treatments *within* each age stratum and
+combines the observed-minus-expected differences and their variances across
+strata. It estimates a common treatment effect while allowing each age group
+to have its own baseline hazard. It assumes that the treatment effect is the
+same in each age stratum (no treatment-by-age interaction) and that the
+strata are comparable in the sense required by the test.
+
+(c) The age distribution is fairly balanced between the treatment groups:
+
+```{r sol-melanoma-age-table}
+gtsummary::tbl_summary(melanoma, treatment, include = age) |>
+  gtsummary::add_difference(~"smd")
+```
+
+Age does not appear to be a strong confounder here. Stratification removes a
+small amount of age imbalance but does not change the conclusion.
+
+(d) Stratification can change the conclusion when age (or another stratifying
+factor) is strongly prognostic and the treatment groups differ substantially
+in its distribution. For example, if older patients were much more likely to
+receive one treatment and older age strongly increased mortality, the
+unstratified test could attribute the age effect to treatment. A stratified
+test would remove that confounding. If the treatment effect itself differs
+across strata, a common-effect stratified test may be misleading, and
+stratum-specific estimates or an interaction test would be needed.
+
+<!-- SOLUTION END -->
+
+
+## 7. Reporting and critical appraisal
+
+**21.** Write a short results paragraph for the `breast` analysis (Questions
+above) that could be read by a clinical colleague.
+
+<!-- SOLUTION START -->
+
+**Solution 21.**
+
+One adequate paragraph is:
+
+> Among 45 women with breast cancer, 26 died and 19 (42 %) were censored. Follow-up started at surgery, and the time scale was months. The Kaplan–Meier estimate of 5-year survival was 85 % (95 % CI 67 %–100 %) in the 13 women with HPA-negative tumours and 53 % (95 % CI 38 %–74 %) in the 32 women with HPA-positive tumours; the numbers at risk at 5 years were 11 and 17, respectively. Median survival was not reached in the negative group and was 64.5 months (95 % CI 41.0–not estimable) in the positive group. The log-rank test provided weak evidence of a difference (chi-square 3.5 on 1 degree of freedom, p = 0.061), with better survival in the HPA-negative group. Because the study is small and observational, these data do not establish that HPA staining causes a worse prognosis.
+
+The exact wording can differ, but the paragraph should contain the numbers,
+the direction, the uncertainty and the limitation. It should not say "proves" or 
+"causes".
+
+<!-- SOLUTION END -->
+
+**22.** The following paragraph was written by a colleague. Find at least six
+problems and rewrite it.
+
+> "Among the 45 women, the mean survival time was 112 months. Women with
+> positive HPA staining had a 2.5-fold higher hazard of death (log-rank
+> p = 0.041), which proves that HPA staining causes metastasis. The p-value of
+> 0.041 means that there is a 95.9 % probability that the null hypothesis is
+> false. Because p < 0.05, the difference is clinically important. We also
+> tested 20 subgroups and report the significant ones."
+
+<!-- SOLUTION START -->
+
+**Solution 22.**
+
+The paragraph contains at least the following problems:
+
+1. **Mean survival is the wrong summary.** Survival times are right-skewed and
+   the mean is sensitive to the tail; with censoring, the mean is not even
+   estimable without an assumption about the unobserved tail. Report the
+   median or survival at fixed times.
+2. **Censored women cannot be excluded.** Excluding them treats incomplete
+   follow-up as if those women had been followed to the end, and biases the
+   estimate. Kaplan–Meier uses their follow-up up to censoring.
+3. **The log-rank test does not estimate a hazard ratio.** A "2.5-fold higher
+   hazard" would come from a Cox model (Chapter 3), not from a log-rank test.
+4. **"Proves that HPA staining causes metastasis" is causal language.** The
+   study is observational; association is not causation.
+5. **The p-value is misinterpreted.** A p-value of 0.041 is not the
+   probability that the null hypothesis is false, and 95.9 % is not the
+   posterior probability that the alternative is true. It is the probability of
+   data at least as extreme as these, assuming the null hypothesis.
+6. **Statistical significance is not clinical importance.** A p-value below
+   0.05 does not by itself mean the difference is large or clinically
+   meaningful; report the effect size and its confidence interval.
+7. **The p-value quoted is not the log-rank p-value.** The log-rank p-value is
+   0.041; 0.041 is closer to the Wilcoxon/Peto–Peto
+   result. The test should be named correctly.
+8. **Testing 20 subgroups and reporting the significant ones is selective
+   reporting.** This inflates the false-positive rate and makes the reported
+   p-values unreliable. Pre-specify the primary analysis, report all
+   pre-specified analyses, and treat subgroup findings as exploratory unless
+   adjusted for multiplicity.
+
+A corrected version might read:
+
+> Among 45 women, 26 died and 19 were censored. Kaplan–Meier estimates showed better survival in the HPA-negative group: 5-year survival was 85 % (95 % CI 67 %–100 %) versus 53 % (95 % CI 38 %–74 %). The log-rank test gave weak evidence of a difference (p = 0.061); the data are observational and do not establish causation. The analysis was pre-specified and no subgroup findings are reported as confirmatory.
+
+<!-- SOLUTION END -->
+
+**23. (Extension.)** Design a short analysis plan for one of the data sets
+(`prostate`, `melanoma` or `breast`). Specify
+
+- the estimand and the time origin;
+- the event and the time scale;
+- how censoring will be described and why it is assumed independent;
+- the primary summary (median, survival at a fixed time, or a percentile),
+  with a confidence interval;
+- one primary hypothesis test;
+- one sensitivity analysis for the censoring assumption;
+- how you will avoid selective reporting of subgroups.
+
+Explain in two or three sentences why the plan should be written before the
+data are analysed.
+
