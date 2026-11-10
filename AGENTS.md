@@ -121,6 +121,81 @@ as a child with `show_solutions: true`. Both are real vignettes and are built by
 `pkgdown.yaml` (push to `main`, releases, manual) builds the site with
 `pkgdown::build_site_github_pages(install = TRUE)` and deploys it.
 
+## Interactive tutorials (learnr2) — reference, not currently used
+
+The CS1 exercise was once converted to a learnr2 tutorial as a trial and then
+removed in favour of the plain vignette. This recipe is kept in case a later
+exercise should be turned into an interactive browser tutorial.
+
+learnr2 turns a Quarto `.qmd` into one self-contained HTML page whose code cells
+run in the reader's browser via WebR — no Shiny, no R Markdown, no server. A
+tutorial lives at `inst/tutorials/<name>/<name>.qmd` (the same `inst/tutorials/`
+convention as classic learnr).
+
+### Scaffold, check, render, run
+
+```r
+learnr2::create_tutorial("<name>", dir = "inst/tutorials", open = FALSE)  # .qmd + _extensions/
+learnr2::check_tutorial("inst/tutorials/<name>")      # static lint (labels, echo, persist, ...)
+learnr2::render_tutorials("inst/tutorials/<name>")    # full render into a temp/cache dir
+devtools::load_all()
+learnr2::run_tutorial("<name>", package = "sta310r")  # serves http://127.0.0.1:7446/sta310r/<name>/ and blocks
+```
+
+`_extensions/r-wasm/live/` is the vendored 'quarto-live' extension (created by
+`create_tutorial`; re-addable with `learnr2::add_live_extension()`).
+
+### YAML header and includes
+
+```yaml
+format: live-html
+engine: knitr
+toc: true
+webr:
+  packages: [survival, dplyr, ggplot2, ...]  # every non-base pkg used in {webr} cells
+  resources: [data/iud.rds, ...]             # files fetched into WebR's virtual FS
+```
+
+Straight after the header:
+
+```markdown
+{{< include _extensions/r-wasm/live/_knitr.qmd >}}
+{{< include _extensions/r-wasm/live/_gradethis.qmd >}}   # only if any exercise is graded
+```
+
+### Authoring patterns
+
+- `{r}` chunks run once at render time (prose + quiz widgets). Widget chunks need
+  `#| echo: false`; every chunk needs a unique `#| label:`.
+- `{webr}` cells run in the browser. An exercise is `#| exercise: id` +
+  `#| persist: true`; a `#| setup: true` cell with the same id runs invisibly
+  first. Hints are `::: {.hint exercise="id"}` divs. Solutions are
+  `#| solution: true` cells. Grading is a `#| check: true` cell calling
+  `gradethis::grade_this_code()` — needs the `_gradethis.qmd` include AND a
+  `solution: true` cell.
+- Quiz widgets: `learnr2::question()` / `learnr2::answer()` / `learnr2::quiz()`
+  in an `{r}` chunk. `type = "reflection"` (locks answer, then shows a model
+  answer) for open questions; single/multiple choice is inferred from
+  `correct = TRUE`. Also `learnr2::student_info()` (top),
+  `learnr2::download_answers_button()` (bottom), and
+  `learnr2::tutorial_options(allow_skip = TRUE, require_submission = FALSE)`.
+
+### Key gotchas
+
+- **Data sets are not available in the browser.** `sta310r` is not on CRAN, so
+  WebR cannot install it. Ship each needed data set as `data/<name>.rds`, list
+  them under `webr: resources:`, and load with `readRDS("data/<name>.rds")` in
+  the `{webr}` setup cells (and in render-time `{r}` chunks for inline values).
+  Never `library(sta310r)` in a `{webr}` cell.
+- `readRDS` paths are relative to the `.qmd`; `run_tutorial()` copies the whole
+  tutorial directory (including `data/`) into its render cache, so they resolve.
+- `quarto render` run in-place leaves `*.html` and `*_files/` artifacts in the
+  tutorial directory — delete them before committing. `run_tutorial()`/
+  `render_tutorials()` render into a cache instead.
+- `learnr2` (and the packages used in `{webr}` cells' `webr: packages:`) must be
+  installed locally to author/render; add `learnr2` to `Suggests` if a tutorial
+  ships with the package.
+
 ## Tips for AI Agents
 
 - **Name collisions with `survival`**: qualify the course data with

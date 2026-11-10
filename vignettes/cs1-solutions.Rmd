@@ -7,7 +7,7 @@ output:
     fig_width: 7
     fig_height: 5
 params:
-  show_solutions: true
+  solutions_only: true
 vignette: >
   %\VignetteIndexEntry{Computer exercise 1: solutions}
   %\VignetteEngine{knitr::rmarkdown}

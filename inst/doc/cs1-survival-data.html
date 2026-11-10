@@ -48,7 +48,6 @@ overflow: visible;
 }
 </style>
 <style type="text/css" data-origin="pandoc">
-html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -349,15 +348,13 @@ software</a></li>
 clinical question to a time-to-event data set</a></li>
 <li><a href="#the-empirical-survivor-function-when-there-is-no-censoring" id="toc-the-empirical-survivor-function-when-there-is-no-censoring">2.
 The empirical survivor function when there is no censoring</a></li>
-<li><a href="#hazard-and-cumulative-hazard" id="toc-hazard-and-cumulative-hazard">3. Hazard and cumulative
+<li><a href="#kaplanmeier" id="toc-kaplanmeier">3. Kaplan–Meier</a></li>
+<li><a href="#hazard-and-cumulative-hazard" id="toc-hazard-and-cumulative-hazard">4. Hazard and cumulative
 hazard</a></li>
-<li><a href="#kaplanmeier" id="toc-kaplanmeier">4. Kaplan–Meier</a></li>
 <li><a href="#comparing-two-groups" id="toc-comparing-two-groups">5.
 Comparing two groups</a></li>
 <li><a href="#three-or-more-groups" id="toc-three-or-more-groups">6.
 Three or more groups</a></li>
-<li><a href="#reporting-and-critical-appraisal" id="toc-reporting-and-critical-appraisal">7. Reporting and critical
-appraisal</a></li>
 </ul>
 </div>
 
@@ -378,7 +375,12 @@ margin: 1em 0;
 <div class="callout-note">
 <p><strong>About this computer exercise.</strong></p>
 <p>This exercise covers <strong>Chapters 1 and 2</strong> of Collett,
-<em>Modelling Survival Data in Medical Research</em> (4th ed.):</p>
+<em>Modelling Survival Data in Medical Research</em> (4th ed.). It
+follows on from the two lectures: <strong>Lecture 1</strong> (basic
+principles, censoring and the Kaplan–Meier estimator) and
+<strong>Lecture 2</strong> (the hazard and cumulative hazard, the
+Nelson–Aalen estimator and the log-rank test). Where a question builds
+on a lecture slide, the slide is noted next to the question.</p>
 </div>
 <div id="data-and-software" class="section level2">
 <h2>Data and software</h2>
@@ -394,47 +396,48 @@ margin: 1em 0;
 <p>A survival analysis starts with four decisions: the <strong>time
 origin</strong>, the <strong>time scale</strong>, the
 <strong>event</strong> and the <strong>censoring mechanism</strong>.
-These decisions are part of the estimand, not a technical detail. The
-help pages (<code>?iud</code>, <code>?breast</code>,
-<code>?prostate</code>, <code>?melanoma</code>, <code>?pulmonary</code>,
-and <code>?sta310r::myeloma</code>) give the background of each
-study.</p>
+These decisions are part of the estimand, not a technical detail, and
+are the same ingredients used throughout Lecture 1 (see the censoring
+and recruitment slides). The help pages (<code>?iud</code>,
+<code>?breast</code>, <code>?prostate</code>, <code>?melanoma</code>,
+<code>?pulmonary</code>, and <code>?sta310r::myeloma</code>) give the
+background of each study.</p>
 <p><strong>1.</strong> For each (or some) of the six data sets,
-identify</p>
+describe:</p>
 <ol style="list-style-type: lower-alpha">
-<li>the time origin;</li>
-<li>the time scale and its unit;</li>
-<li>the event of interest;</li>
-<li>what a censored observation means, and whether the censoring is
-administrative, due to loss to follow-up, or due to a competing
+<li>the time origin</li>
+<li>time scale unit</li>
+<li>the event of interest</li>
+<li>what a censored observation means, for example whether the censoring
+is administrative, due to loss to follow-up, or due to a competing
 event.</li>
 </ol>
 <p>Some help pages state the origin explicitly; where they do not, say
-what you would assume and why. You may answer in a table. Which data set
-has no censoring at all?</p>
-<p><strong>2.</strong> The <code>prostate</code> data set has only 6
-deaths among 38 men (84 % censored).</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>(km_prostate <span class="ot">&lt;-</span> <span class="fu">survfit</span>(<span class="fu">Surv</span>(time, status) <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> prostate))</span>
+what you would assume and why. You may answer in a table.</p>
+<p><strong>2.</strong> Look at the <code>prostate</code> data set.</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>How many events are there and how many observations in
+total?</p></li>
+<li><p>Create a survfit object:</p></li>
+</ol>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>(surv_prostate <span class="ot">&lt;-</span> <span class="fu">survfit</span>(<span class="fu">Surv</span>(time, status) <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> prostate))</span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co">#&gt; Call: survfit(formula = Surv(time, status) ~ 1, data = prostate)</span></span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt;       n events median 0.95LCL 0.95UCL</span></span>
 <span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt; [1,] 38      6     NA      69      NA</span></span></code></pre></div>
-<ol style="list-style-type: lower-alpha">
-<li>What can still be estimated from these data, and what becomes very
-uncertain?</li>
-<li>The Kaplan–Meier output reports a median of <code>NA</code> but a
-lower 95 % limit of 69 months. Why is the median not estimable even
-though a lower limit is reported?</li>
-<li>What would you report instead of a median?</li>
-<li>What happens to the Kaplan–Meier curve after the last death at 69
+<p>What is the median survival? Is it possible to estimate from the
+data? Interpret the <code>0.95LCL</code> and <code>0.95UCL</code>.</p>
+<ol start="3" style="list-style-type: lower-alpha">
+<li><p>What can still be estimated from these data?</p></li>
+<li><p>What happens to the Kaplan–Meier curve after the last death at 69
 months, and why should the far right-hand tail be interpreted
-cautiously?</li>
-<li>Suppose the men who were censored were censored <em>because they
+cautiously?</p></li>
+<li><p>Suppose the men who were censored were censored <em>because they
 became too unwell to attend the clinic</em>. In which direction would
 the Kaplan–Meier estimate be biased? What is the name of this assumption
-violation?</li>
+violation?</p></li>
 </ol>
-<p><strong>3.</strong> True or false?</p>
+<p><strong>3.</strong> True or false (no programmiong required)?</p>
 <ol style="list-style-type: lower-alpha">
 <li>A patient censored at 10 months is still in the risk set at 12
 months.</li>
@@ -461,33 +464,35 @@ with pulmonary metastasis from osteosarcoma, with no censoring. The
 empirical survivor function is simply the proportion of men whose
 survival time is at least <span class="math inline">\(t\)</span>: <span class="math display">\[\hat S(t) = \frac{\text{number with survival
 time} \ge t}{n}.\]</span> The estimated curve is a step function,
-constant between adjacent death times and decreasing at each death
-time.</p>
-<p><strong>4.</strong> Interpret the table:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>emp_pulm <span class="ot">&lt;-</span> pulmonary <span class="sc">|&gt;</span></span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="fu">distinct</span>(time) <span class="sc">|&gt;</span></span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="fu">arrange</span>(time) <span class="sc">|&gt;</span></span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>    <span class="at">n_at_least =</span> <span class="fu">map_int</span>(time, \(t) <span class="fu">sum</span>(pulmonary<span class="sc">$</span>time <span class="sc">&gt;=</span> t)),</span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>    <span class="at">S_hat =</span> n_at_least <span class="sc">/</span> <span class="fu">nrow</span>(pulmonary)</span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>  )</span></code></pre></div>
-<p>Is <code>S_hat</code> equivalemnt to the <code>survival</code> column
-from <code>summary(survfit(Surv(pulmonary$time) ~ 1))</code>? If not,
-why?</p>
-<p>Plot <span class="math inline">\(\hat S(t)\)</span> above as a step
-function (HINT: <code>ggplot2::geom_step()</code>) and compare with:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">survfit2</span>(<span class="fu">Surv</span>(time) <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> pulmonary) <span class="sc">|&gt;</span></span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="fu">ggsurvfit</span>() <span class="sc">+</span></span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="fu">add_confidence_interval</span>() <span class="sc">+</span></span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Time since diagnosis (months)&quot;</span>,</span>
-<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Survival probability&quot;</span></span>
-<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>  )</span></code></pre></div>
-<p><img src="data:image/png;base64,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jTesRo0akbr79+9vq1atshdeeMHOOOOMyHwmEEAAAQQQQAABBBAoTcB3D+hHH33knngUHXx6Fd5www22cOFC7yPvCCCAAAIIIIAAAgiUKeA7ANVYz1dffbXUijT/hBNOKHUZMxFAAAEEEEAAAQQQiBbwHYCql/Odd96xX/7yl7Z582b3RCTdpP7hhx+21157zYYMGRJdL9MIIIAAAggggAACCJQq4HsM6IUXXmijR4+2e++91x544AE3DjQUClmdOnXs/vvvtyuuuKLUFTATAQQQQAABBBBAAIFoAd8BqArddddddtVVV5muiP/444/daffTTjvN2rVrF10n0wgggAACCCCAAAIIlCngOwB97733XCWnn3464z3L5GQBAggggAACCCCAQCIB3wHoQw89ZNu3b+d+n4lEWY4AAggggAACCCAQV8D3RUh5eXm2f/9+d/FR3BpZiAACCCCAAAIIIIBAHAHfPaA333yzvf3223bqqada3759rW3btjE3pNdN6i+66KI4q2IRAggggAACCCCAAAJmvgPQp59+2j799FNntnbt2hJ2l156acIA9PDhw+6G9WvWrLEePXpY7969S9TjzdCY0y1btngf3fvAgQMtNzfXTa9evdoNB2jRooV7HOhxxx0Xk5cPCCCAAAIIIIAAAtkp4DsAfeqpp0yviqQRI0bYrl27TFfO33fffaZ7i5Z1/9Bx48ZZ3bp1rXHjxpFVDhgwwAWgM2fOtPHjx9t3vvMdmzp1qs2ePdv0qNBatXxvTqROJhBAAAEEEEAAAQQyK5BUxLZjxw5bv369denSxRo1auSrxXPnznU3sJ82bZrVrFnT+vXrZ7fffrup57RevXoxdRw5csTd5knPl9cTmKKTxqGOHTvWxowZY127djUNDbj22mvtrbfecnVG52UaAQQQQAABBBBAIPsEyhWAzps3z77//e+74FOboufCd+vWzZ599lk3NjTe5q1cudL69Onjgk/lU/CowHPFihWuRzS67IYNG9wyXfj073//21q2bGknnniiy7Jx40bXM6rySur1VL2LFi2KCUCV791333V59E9+fr57ZaKXVDfoLygocOuLNICJcgnojxD9oXL06NFylSPzMQHZ6VjUsU9KTqCwsNCKioqSK0wpJ6DvQo7Dih0MOgYr8pty6NAh1wC9Hzx4sGKNCWhp+SnxfVixHajf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" /><!-- --></p>
-<p>At which times does the curve drop, and by how much? Why is the curve
-flat between 15 and 17 months?</p>
-<p><strong>5.</strong> The observed times are</p>
-<p>11, 13, 13, 13, 13, 13, 14, 14, 15, 15, 17 months.</p>
+constant between adjacent death times and decreasing at each death time.
+This is the “estimation of the survival function” idea from Lecture 1
+(slides 15–18), where, with no censoring, <span class="math inline">\(\hat S(t)\)</span> is simply the proportion still
+event-free at <span class="math inline">\(t\)</span>.</p>
+<p><strong>4.</strong> Explain why this code is useful (interpret what
+it does, include comments and possibly rewrite it in a more readable
+way). Then run it and look at the resulting table:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>emp_pulm <span class="ot">&lt;-</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  pulmonary <span class="sc">|&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="fu">distinct</span>(time) <span class="sc">|&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="fu">arrange</span>(time) <span class="sc">|&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>    <span class="at">n_at_least =</span> <span class="fu">map_int</span>(time, \(t) <span class="fu">sum</span>(pulmonary<span class="sc">$</span>time <span class="sc">&gt;=</span> t)),</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>    <span class="at">S_hat =</span> n_at_least <span class="sc">/</span> <span class="fu">nrow</span>(pulmonary)</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>  )</span></code></pre></div>
+<ol style="list-style-type: lower-alpha">
+<li><p>Is <code>S_hat</code> equivalemnt to the <code>survival</code>
+column from <code>summary(survfit(Surv(pulmonary$time) ~ 1))</code>? If
+not, why?</p></li>
+<li><p>Plot <span class="math inline">\(\hat S(t)\)</span> above as a
+step function with ggplot2 (HINT:
+<code>geom_step(direction = &quot;vh&quot;)</code>). Compare your figure to
+<code>survfit2(Surv(time) ~ 1, pulmonary) |&gt; ggsurvfit()</code> Are
+they the same?</p></li>
+<li><p>At which times does the curve drop, and by how much? Why is the
+curve flat between 15 and 17 months?</p></li>
+</ol>
+<p><strong>5.</strong> The observed times are 11, 13, 13, 13, 13, 13,
+14, 14, 15, 15, 17 months.</p>
 <p>Their mean is 13.7272727 months and their median is 13 months. Why is
 the median usually preferred for survival data? Does the mean or the
 median describe the “typical” patient better here? What happens to the
@@ -499,7 +504,7 @@ months and 0.455 at 13 months. If one of the men had been censored at
 exactly 13 months instead of dying, should that censored observation be
 counted <em>before</em> or <em>after</em> the deaths at 13 months when
 the risk set is formed? What difference would the other convention make
-to the estimate? (Collett discusses this in Section 2.1.2.)</p>
+to the estimate?</p>
 <p><strong>7. (Optional.)</strong> When there is no censoring,
 Greenwood’s formula reduces to the binomial standard error <span class="math display">\[\operatorname{se}\{\hat S(t)\} = \sqrt{\frac{\hat
 S(t)(1-\hat S(t))}{n}}.\]</span></p>
@@ -511,32 +516,19 @@ time, where <span class="math inline">\(\hat S(t)=0\)</span>? Does that
 mean the estimate is known with certainty?</p></li>
 </ol>
 </div>
-<div id="hazard-and-cumulative-hazard" class="section level2">
-<h2>3. Hazard and cumulative hazard</h2>
-<p><strong>8.</strong> The cumulative hazard is <span class="math inline">\(H(t)=-\log S(t)\)</span>, and the Nelson–Aalen
-estimate is the cumulative sum of the event fractions <span class="math inline">\(d_j/n_j\)</span>. The <code>cumhaz</code>
-component of a <code>survfit</code> object is the Nelson–Aalen estimate.
-Compare it with <span class="math inline">\(-\log \hat S(t)\)</span>
-from the Kaplan–Meier estimate:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>km_myeloma <span class="ot">&lt;-</span> <span class="fu">survfit</span>(<span class="fu">Surv</span>(time, status) <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> sta310r<span class="sc">::</span>myeloma)</span></code></pre></div>
-<ol style="list-style-type: lower-alpha">
-<li>Which cumulative hazard is larger, the Nelson–Aalen estimate or
-<span class="math inline">\(-\log\hat S(t)\)</span>? Is that guaranteed,
-or does it depend on the data?</li>
-<li>What does the slope of the cumulative hazard curve represent?</li>
-<li>The two estimates of <span class="math inline">\(S(t)\)</span>
-differ by only a few percentage points. Is the difference practically
-important compared with the width of the confidence intervals?</li>
-</ol>
-</div>
 <div id="kaplanmeier" class="section level2">
-<h2>4. Kaplan–Meier</h2>
+<h2>3. Kaplan–Meier</h2>
 <p>The <code>iud</code> data contain the times, in weeks, to
 discontinuation of an intrauterine device because of menstrual bleeding
 problems, for 18 women. Nine times are events and nine are censored.
 This is the data set used in Collett’s Examples 2.3–2.10.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>km_iud <span class="ot">&lt;-</span> <span class="fu">survfit</span>(<span class="fu">Surv</span>(time, status) <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> iud)</span></code></pre></div>
-<p><strong>9.</strong></p>
+<p>The Kaplan–Meier estimator multiplies the survival factors at each
+event time (Lecture 1, slides 19–22): <span class="math display">\[\hat
+S(t)=\prod_{j:\,t_{(j)}\le t}\left(1-\frac{d_j}{n_j}\right),\]</span>
+where <span class="math inline">\(d_j\)</span> is the number of events
+at the event time <span class="math inline">\(t_{(j)}\)</span> and <span class="math inline">\(n_j\)</span> the number at risk just before it.
+Question 9 reproduces this product by hand.</p>
+<p><strong>8.</strong></p>
 <ol style="list-style-type: lower-alpha">
 <li><p>Reproduce Collett’s Table 2.2. At each event time <span class="math inline">\(t_j\)</span>, compute the number at risk <span class="math inline">\(n_j\)</span>, the number of events <span class="math inline">\(d_j\)</span>, the survival factor <span class="math inline">\((n_j-d_j)/n_j\)</span> and the product-limit
 estimate.</p></li>
@@ -544,62 +536,84 @@ estimate.</p></li>
 S(52), \hat S(104)\)</span> and <span class="math inline">\(\hat
 S(107)\)</span>.</p></li>
 </ol>
-<p><strong>10.</strong> Look at the last row of
-<code>summary(km_iud)</code>:</p>
+<p><strong>9.</strong></p>
 <ol style="list-style-type: lower-alpha">
-<li>The largest observed time is 107 weeks, but there is one event and
-two censorings at that time. Is <span class="math inline">\(\hat
-S(t)\)</span> defined for <span class="math inline">\(t&gt;107\)</span>?
-What does the <code>survfit</code> object report?</li>
+<li>The largest observed time (<code>max(iud$time)</code>) is 107 weeks,
+but there is one event and two censorings at that time. Is <span class="math inline">\(\hat S(t)\)</span> defined for <span class="math inline">\(t&gt;107\)</span>? What does the
+<code>survfit</code> object report?</li>
 <li>What would the estimate be beyond 107 if all three observations at
 107 had been censored? What if the only observation at 107 had been an
 event?</li>
 <li>Why does the curve stop at the largest observed time rather than
 continue to, say, 120 weeks?</li>
 </ol>
-<p><strong>11. (Optional)</strong> For ungrouped data, the
-Kaplan–Meier-type hazard estimate in the interval from <span class="math inline">\(t_{(j)}\)</span> to <span class="math inline">\(t_{(j+1)}\)</span> is <span class="math display">\[\hat h(t)=\frac{d_j}{n_j\tau_j},\qquad
+<p><strong>10.</strong> The Kaplan–Meier-type hazard estimate in the
+interval from <span class="math inline">\(t_{(j)}\)</span> to <span class="math inline">\(t_{(j+1)}\)</span> is <span class="math display">\[\hat h(t)=\frac{d_j}{n_j\tau_j},\qquad
 \tau_j=t_{(j+1)}-t_{(j)}.\]</span> The estimate is not defined after the
 final death time, because the last interval is open-ended.</p>
 <ol style="list-style-type: lower-alpha">
 <li>Compute <span class="math inline">\(\hat h(t)\)</span> for the event
 times in the <code>iud</code> data by:</li>
 </ol>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>event_times <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(iud<span class="sc">$</span>time[iud<span class="sc">$</span>status <span class="sc">==</span> <span class="dv">1</span>]))</span>
-<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>(x <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tibble</span>(</span>
-<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="at">t =</span> event_times,</span>
-<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="at">tau =</span> <span class="fu">c</span>(<span class="fu">diff</span>(event_times), <span class="cn">NA_real_</span>),</span>
-<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>  <span class="at">n =</span> <span class="fu">map_int</span>(event_times, \(t) <span class="fu">sum</span>(iud<span class="sc">$</span>time <span class="sc">&gt;=</span> t)),</span>
-<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  <span class="at">d =</span> <span class="fu">map_int</span>(event_times, \(t) <span class="fu">sum</span>(iud<span class="sc">$</span>time <span class="sc">==</span> t <span class="sc">&amp;</span> iud<span class="sc">$</span>status <span class="sc">==</span> <span class="dv">1</span>)),</span>
-<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>  <span class="at">h =</span> d <span class="sc">/</span> (n <span class="sc">*</span> tau)</span>
-<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>))</span>
-<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="co">#&gt; # A tibble: 9 × 5</span></span>
-<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="co">#&gt;       t   tau     n     d        h</span></span>
-<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a><span class="co">#&gt;   &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt;    &lt;dbl&gt;</span></span>
-<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a><span class="co">#&gt; 1    10     9    18     1  0.00617</span></span>
-<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a><span class="co">#&gt; 2    19    11    15     1  0.00606</span></span>
-<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a><span class="co">#&gt; 3    30     6    13     1  0.0128 </span></span>
-<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a><span class="co">#&gt; 4    36    23    12     1  0.00362</span></span>
-<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a><span class="co">#&gt; 5    59    16     8     1  0.00781</span></span>
-<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a><span class="co">#&gt; 6    75    18     7     1  0.00794</span></span>
-<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a><span class="co">#&gt; 7    93     4     6     1  0.0417 </span></span>
-<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a><span class="co">#&gt; 8    97    10     5     1  0.02   </span></span>
-<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a><span class="co">#&gt; 9   107    NA     3     1 NA</span></span></code></pre></div>
-<p>Make sure you understand the formula and the code. Why is the
-ungrouped estimate so much more irregular than a cumulative summary such
-as the survivor function? (b) Why is it usually better to report the
-cumulative hazard or the survivor function than a series of raw hazard
-estimates?</p>
-<p><strong>12.</strong> A colleague ignores censoring and estimates
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>event_times <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(iud<span class="sc">$</span>time[iud<span class="sc">$</span>status <span class="sc">==</span> <span class="dv">1</span>]))</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>(haz <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tibble</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="at">t =</span> event_times,</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="at">tau =</span> <span class="fu">c</span>(<span class="fu">diff</span>(event_times), <span class="cn">NA_real_</span>),</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  <span class="at">n =</span> <span class="fu">map_int</span>(event_times, \(t) <span class="fu">sum</span>(iud<span class="sc">$</span>time <span class="sc">&gt;=</span> t)),</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  <span class="at">d =</span> <span class="fu">map_int</span>(event_times, \(t) <span class="fu">sum</span>(iud<span class="sc">$</span>time <span class="sc">==</span> t <span class="sc">&amp;</span> iud<span class="sc">$</span>status <span class="sc">==</span> <span class="dv">1</span>)),</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>  <span class="at">h =</span> d <span class="sc">/</span> (n <span class="sc">*</span> tau)</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>))</span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt; # A tibble: 9 × 5</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt;       t   tau     n     d        h</span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt;   &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt;    &lt;dbl&gt;</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt; 1    10     9    18     1  0.00617</span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt; 2    19    11    15     1  0.00606</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt; 3    30     6    13     1  0.0128 </span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt; 4    36    23    12     1  0.00362</span></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co">#&gt; 5    59    16     8     1  0.00781</span></span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt; 6    75    18     7     1  0.00794</span></span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co">#&gt; 7    93     4     6     1  0.0417 </span></span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="co">#&gt; 8    97    10     5     1  0.02   </span></span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="co">#&gt; 9   107    NA     3     1 NA</span></span></code></pre></div>
+<p>Make sure you understand the formula and the code. Then interpret the
+results (you may use a graph). Why is the ungrouped estimate so much
+more irregular than a cumulative summary such as the survivor
+function?</p>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Why is it usually better to report the cumulative hazard or the
+survivor function than a series of raw hazard estimates?</li>
+</ol>
+<p><strong>11.</strong> A colleague ignores censoring and estimates
 2-year survival in the <code>iud</code> data as “the proportion of women
-who did not discontinue within 104 weeks”, i.e. <span class="math inline">\(1-9/18=0.50\)</span>.</p>
+who did not discontinue within 104 weeks”.</p>
 <ol style="list-style-type: lower-alpha">
 <li>Compare this with the Kaplan–Meier estimate <span class="math inline">\(\hat S(104)\)</span>.</li>
 <li>In which direction is the naive estimate biased, and why?</li>
 <li>Would the problem be worse or less serious in a study with 80 %
 censoring?</li>
 <li>Write one sentence interpreting <span class="math inline">\(\hat
-S(104)=0.373\)</span> correctly.</li>
+S(104)\)</span> correctly.</li>
+</ol>
+</div>
+<div id="hazard-and-cumulative-hazard" class="section level2">
+<h2>4. Hazard and cumulative hazard</h2>
+<p><strong>12.</strong> The cumulative hazard is <span class="math inline">\(H(t)=-\log S(t)\)</span>, and the Nelson–Aalen
+estimate is the cumulative sum of the event fractions <span class="math inline">\(d_j/n_j\)</span>.</p>
+<ol style="list-style-type: lower-alpha">
+<li>Compare the estimated survival by Kaplan-Meier and Nelson-Aalen for
+the <code>sta310r::myeloma</code> data. (HINT: use argument
+<code>stype</code>, see <code>?survfit.formula()</code>)?</li>
+</ol>
+<p>Note that <code>sta310r::myeloma</code> and
+<code>survival::myeloma</code> are two different data sets so use the
+::-notation to access the correct version!</p>
+<ol style="list-style-type: lower-alpha">
+<li>How does the estimated survival differ comparing Kaplan–Meier and
+Nelson–Aalen</li>
+<li>What does the slope of the cumulative hazard curve represent?</li>
+<li>The two estimates of <span class="math inline">\(S(t)\)</span>
+differ by only a few percentage points. Is the difference practically
+important compared with the width of the confidence intervals?</li>
 </ol>
 </div>
 <div id="comparing-two-groups" class="section level2">
@@ -609,37 +623,38 @@ with breast cancer, classified by whether the tumour stained positively
 or negatively with the lectin HPA. There are 13 women in the negative
 group (5 deaths) and 32 in the positive group (21 deaths). Collett uses
 these data in Examples 2.11–2.14.</p>
-<p><strong>13.</strong> Plot the Kaplan–Meier curves by staining group,
-with a risk table and a line at the median (HINT: use the ggsurvfit
-package). Report <span class="math inline">\(\hat S(24)\)</span>, <span class="math inline">\(\hat S(60)\)</span> and <span class="math inline">\(\hat S(120)\)</span> (You may use
-<code>gtsummary::tbl_survival()</code>). Interpret the curves in
-clinical language.</p>
+<p><strong>13.</strong></p>
 <ol style="list-style-type: lower-alpha">
-<li>Which group has the better survival?</li>
-<li>Is the median estimable in both groups? If not, what should be
-reported instead?</li>
-<li>Do the estimated curves cross? What does the answer suggest about
-the relative suitability of the log-rank, Wilcoxon and Peto–Peto tests
-(Collett, Section 2.6.5)?</li>
+<li><p>Plot the Kaplan–Meier curves by staining group, with a risk table
+and a line at the median (HINT: look at the example: <a href="https://www.danieldsjoberg.com/ggsurvfit/index.html" class="uri">https://www.danieldsjoberg.com/ggsurvfit/index.html</a>).</p></li>
+<li><p>Report <span class="math inline">\(\hat S(24)\)</span>, <span class="math inline">\(\hat S(60)\)</span> and <span class="math inline">\(\hat S(120)\)</span> (You may use
+<code>gtsummary::tbl_survival()</code>).</p></li>
+<li><p>Interpret the curves in clinical language.</p></li>
+<li><p>Is the median estimable in both groups? If not, what should be
+reported instead?</p></li>
+<li><p>Do the estimated curves cross? What does the answer suggest about
+the relative suitability of the log-rank, Wilcoxon and Peto–Peto tests?
+<em>(Collett, Section 2.6.5; Lecture 2, the log-rank test and the
+Wilcoxon test)</em></p></li>
+<li><p>Perform a log-rank test to compare the two groups. Report the
+test statistic and p-value.</p></li>
 </ol>
 </div>
 <div id="three-or-more-groups" class="section level2">
 <h2>6. Three or more groups</h2>
 <p>The <code>melanoma</code> data contain survival times of 30 patients
-from two immunotherapy groups, classified into three age groups. Collett
-uses the data in Examples 2.15 and 2.16.</p>
-<p><strong>17.</strong> Using only the BCG treatment group, compare
+from two immunotherapy groups, classified into three age groups.
+<em>Collett uses the data in Examples 2.15 and 2.16.</em></p>
+<p><strong>14.</strong> Using only the BCG treatment group, compare
 survival across the three age groups with a log-rank test.</p>
 <ol style="list-style-type: lower-alpha">
 <li>What is the null hypothesis? How many degrees of freedom does the
 test have?</li>
 <li>Report the test statistic and p-value. Which age group contributes
 most to the test statistic?</li>
-<li>A non-significant result does not show that the groups are the same.
-What else could explain the result? What is the sample size in each age
-group?</li>
+<li>Interpret the test results</li>
 </ol>
-<p><strong>18.</strong> Now compare the two treatments
+<p><strong>15.</strong> Now compare the two treatments
 (<code>treatment</code> variable), first without and then with
 stratification by age group (HINT: <code>strata(age)</code> in the
 formula).</p>
@@ -654,39 +669,6 @@ age group within each treatment group.</li>
 <li>Give an example of a situation in which stratification would change
 the conclusion.</li>
 </ol>
-</div>
-<div id="reporting-and-critical-appraisal" class="section level2">
-<h2>7. Reporting and critical appraisal</h2>
-<p><strong>21.</strong> Write a short results paragraph for the
-<code>breast</code> analysis (Questions above) that could be read by a
-clinical colleague.</p>
-<p><strong>22.</strong> The following paragraph was written by a
-colleague. Find at least six problems and rewrite it.</p>
-<blockquote>
-<p>“Among the 45 women, the mean survival time was 112 months. Women
-with positive HPA staining had a 2.5-fold higher hazard of death
-(log-rank p = 0.041), which proves that HPA staining causes metastasis.
-The p-value of 0.041 means that there is a 95.9 % probability that the
-null hypothesis is false. Because p &lt; 0.05, the difference is
-clinically important. We also tested 20 subgroups and report the
-significant ones.”</p>
-</blockquote>
-<p><strong>23. (Extension.)</strong> Design a short analysis plan for
-one of the data sets (<code>prostate</code>, <code>melanoma</code> or
-<code>breast</code>). Specify</p>
-<ul>
-<li>the estimand and the time origin;</li>
-<li>the event and the time scale;</li>
-<li>how censoring will be described and why it is assumed
-independent;</li>
-<li>the primary summary (median, survival at a fixed time, or a
-percentile), with a confidence interval;</li>
-<li>one primary hypothesis test;</li>
-<li>one sensitivity analysis for the censoring assumption;</li>
-<li>how you will avoid selective reporting of subgroups.</li>
-</ul>
-<p>Explain in two or three sentences why the plan should be written
-before the data are analysed.</p>
 </div>
 
 
