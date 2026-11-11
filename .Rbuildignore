@@ -15,3 +15,8 @@
 ^AGENTS\.md$
 ^\.codewhale$
 ^\.vscode$
+^\.posit$
+^cox$
+# cs2 är under arbete — hålls utanför bygget tills den är klar
+^vignettes/cs2-cox-regression\.Rmd$
+^inst/doc/cs2-cox-regression\.html$

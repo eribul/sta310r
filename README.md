@@ -6,6 +6,7 @@
 [![R-CMD-check](https://github.com/eribul/sta310r/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/eribul/sta310r/actions/workflows/R-CMD-check.yaml)
 [![Package
 documentation](https://img.shields.io/badge/docs-eribul.github.io%2Fsta310r-blue)](https://eribul.github.io/sta310r/)
+[![r-universe](https://eribul.r-universe.dev/badges/sta310r)](https://eribul.r-universe.dev/sta310r)
 <!-- badges: end -->
 
 `sta310r` collects the data sets that accompany Collett (2023),
@@ -15,6 +16,24 @@ of Gothenburg. The package focuses on the data sets, their documentation
 and the exercise vignettes.
 
 ## Installation
+
+The recommended way is from R-universe, which provides pre-built
+binaries for Windows, macOS and Linux, so no compiler toolchain is
+needed:
+
+``` r
+install.packages(
+  "sta310r",
+  repos = c(
+    "https://eribul.r-universe.dev",
+    "https://cloud.r-project.org"
+  ),
+  dependencies = TRUE
+)
+```
+
+You can also install the development version directly from GitHub with
+`pak` (this builds from source, so Windows users need Rtools installed):
 
 ``` r
 pak::pak("eribul/sta310r")
@@ -1145,7 +1164,7 @@ dataset_by_exercise |>
 
 The course exercises are shipped as vignettes. The first exercise covers
 censoring, the survivor and hazard functions, Kaplan–Meier, Nelson–Aalen
-and the log-rank family:
+and the log-rank family, and ships with a solutions vignette:
 
 ``` r
 vignette("cs1-survival-data")

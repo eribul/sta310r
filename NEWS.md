@@ -1,5 +1,9 @@
 # sta310r (development version)
 
+* The package is now published on R-universe at
+  <https://eribul.r-universe.dev>, which serves pre-built binaries for Windows,
+  macOS and Linux so installation no longer requires a local toolchain (for
+  example Rtools on Windows).
 * Added a new pair of vignettes, "Computer exercise 1: Describing and
   comparing survival data" and its solutions, restricted to Chapters 1–2 of
   Collett (2023). The exercise covers censoring, the survivor/hazard/cumulative

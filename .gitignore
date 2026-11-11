@@ -10,3 +10,11 @@ README.html
 **/*.quarto_ipynb
 *.tar.gz
 lectures/
+
+# Lokalt arbetsmaterial och cs2 (under arbete) — hålls utanför git tills vidare
+/.posit/
+/.vscode/
+/cox/
+/vignettes/cs2-cox-regression.Rmd
+/inst/doc/cs2-cox-regression.html
+/dev/cs2-cox-regression-solutions.Rmd

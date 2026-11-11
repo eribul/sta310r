@@ -623,7 +623,7 @@ The Kaplan–Meier estimator multiplies the survival factors at each event time
 (Lecture 1, slides 19–22):
 $$\hat S(t)=\prod_{j:\,t_{(j)}\le t}\left(1-\frac{d_j}{n_j}\right),$$
 where $d_j$ is the number of events at the event time $t_{(j)}$ and $n_j$ the
-number at risk just before it. Question 9 reproduces this product by hand.
+number at risk just before it.
 
 
 **8.** 
@@ -831,7 +831,7 @@ so use the ::-notation to access the correct version!
 
 (a) How does the estimated survival differ comparing Kaplan–Meier and Nelson–Aalen 
 (b) What does the slope of the cumulative hazard curve represent?
-(c) The two estimates of $S(t)$ differ by only a few percentage points. Is the
+(c) The two estimates of $S(t)$ differs only slightly. Is the
 difference practically important compared with the width of the confidence
 intervals?
 
