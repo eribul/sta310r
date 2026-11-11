@@ -37,73 +37,22 @@ The file \code{scottish_mbc_cohort.xlsx} in the \code{onco-stats} repository of
 the Edinburgh Cancer Informatics group,
 \url{https://github.com/Edinburgh-Cancer-Informatics/onco-stats/tree/main/docs/data},
 redistributed under the MIT licence of that repository (Copyright (c) 2025
-Edinburgh-Cancer-Informatics). See also \emph{Survival Analysis in R: A
-Practical Tutorial},
-\url{https://edinburgh-cancer-informatics.github.io/onco-stats/tutorials/survival_analysis_tutorial.html},
-which documents the same cohort and the simulation that generated it.
+Edinburgh-Cancer-Informatics).
 }
 \usage{
 scottish_mbc_cohort
 }
 \description{
-A cohort of 850 patients diagnosed with metastatic breast cancer, used in the
-computer exercise on survival analysis. The data are \strong{not} from Collett
-(2023); they come from the teaching material of the Edinburgh Cancer
-Informatics group, which is redistributed here (see Source).
+A cohort of 850 patients diagnosed with metastatic breast cancer.
 }
 \details{
 The time origin is the date of diagnosis of metastatic breast cancer and the
 time scale is time since diagnosis, in months. The event of interest is death
 from any cause; patients who were alive at the end of follow-up are
-right-censored. Of the 850 patients, 703 died and 147 (17.3 \%) were censored,
-and the observed follow-up times range from 0.5 to 71.2 months. The patients
-were diagnosed between 5 January 2018 and 28 December 2022.
+right-censored.
 
 The cohort is \strong{entirely synthetic}. It was generated for teaching purposes
 and contains no real patient data, but it was designed to reproduce realistic
-patterns of metastatic breast cancer in Scotland. The code that generated it,
-together with a longer walk-through of the same cohort, is part of the
-tutorial by the Edinburgh Cancer Informatics group that is cited under
-Source.
-
-Compared with the data sets from Collett (2023), two columns are stored in a
-slightly different form: \code{status} is an integer and \code{diagnosis_date} a \code{Date},
-so that the object matches the other data sets in the package. Otherwise the
-file is used as distributed.
-}
-\section{Aliases}{
-
-This course data set is not used in a numbered example, so it has no \code{dX.Y}
-alias. See \link{dataset_by_exercise} for the complete index.
-}
-
-\examples{
-# Not from Collett (2023) ---------------------------------------------
-# The synthetic Scottish metastatic breast cancer cohort used in the
-# first computer exercise; see the vignette cs1-survival-data.
-survival::survfit(
-  survival::Surv(observed_time, status) ~ hormone_receptor,
-  data = scottish_mbc_cohort
-)
-
-# Modern tools --------------------------------------------------------
-if (requireNamespace("ggsurvfit", quietly = TRUE)) {
-  ggsurvfit::survfit2(
-    survival::Surv(observed_time, status) ~ hormone_receptor,
-    data = scottish_mbc_cohort
-  ) |>
-    ggsurvfit::ggsurvfit() |>
-    ggsurvfit::add_risktable()
-}
-if (requireNamespace("broom", quietly = TRUE)) {
-  broom::tidy(
-    survival::coxph(
-      survival::Surv(observed_time, status) ~ age_at_diagnosis +
-        factor(hormone_receptor) + factor(ecog_ps),
-      data = scottish_mbc_cohort
-    ),
-    exponentiate = TRUE, conf.int = TRUE
-  )
-}
+patterns of metastatic breast cancer in Scotland.
 }
 \keyword{datasets}

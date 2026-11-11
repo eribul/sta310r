@@ -10,10 +10,6 @@
 #
 # Användning:  dev/release.sh "sta310r: kort beskrivning"
 #
-# cs2 (vignettes/cs2-*.Rmd, inst/doc/cs2-*.html, dev/cs2-*) är tillfälligt
-# borttagna ur .gitignore och .Rbuildignore och räknas därför inte med. När cs2
-# ska publiceras: ta bort de raderna och kör scriptet.
-
 set -euo pipefail
 
 root="$(cd "$(dirname "$0")/.." && pwd)"
