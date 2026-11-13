@@ -495,9 +495,9 @@ prostate |>
 (c) With the empirical convention in the table, the estimate is
 `r fmt(emp_pulm$S_hat[1], 3)` at `r emp_pulm$time[1]` months and drops at
 `r paste(emp_pulm$time[-1], collapse = ", ")` months; the sizes of those drops
-are `r paste(fmt(-diff(emp_pulm$S_hat), 3), collapse = ", ")`. It is flat
-between `r emp_pulm$time[4]` and `r emp_pulm$time[5]` months because no one
-dies in that interval.
+are `r paste(fmt(-diff(emp_pulm$S_hat), 3), collapse = ", ")`. 
+This is also what would have been visualized with the default setting of `geom_step()`, which drops at the event time. Specifying `direction = "vh"` makes the drop occur *after* the event time, which is consistent with the `survfit()` convention.
+It is flat between `r emp_pulm$time[4]` and `r emp_pulm$time[5]` months (as for any other interval between event times) because no one dies in that interval.
 
 
 <!-- SOLUTION END -->
