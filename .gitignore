@@ -12,6 +12,7 @@ README.html
 lectures/
 
 # Lokalt arbetsmaterial — hålls utanför git tills vidare
+/book/
 /.posit/
 /.vscode/
 /cox/

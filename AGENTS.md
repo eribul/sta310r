@@ -99,6 +99,30 @@ as a child with `show_solutions: true`. Both are real vignettes and are built by
 - Tests: testthat edition 3. Assert the structure of the data sets with
   `expect_named()`/`expect_identical()` and check dimensions and codings.
 
+## Exercise vignettes (`cs1`, `cs3`, ...)
+
+- One source file per exercise plus a thin `*-solutions.Rmd` wrapper that knits
+  it as a child. Solution blocks are wrapped in
+  `<!-- SOLUTION START -->` / `<!-- SOLUTION END -->`; a `document` knit hook
+  drops them (exercise) or keeps only them (solutions). Do not break the
+  `show_solutions` / `solutions_only` parameters.
+- **Never hardcode an analysis result in the prose.** Every number that comes
+  out of R — estimates, confidence limits, p-values, counts, derived quantities
+  such as crossing points — must be written as inline `` `r ...` `` and read from
+  an object created by the code shown in the document, so that the text cannot
+  drift from the output. Literal numbers are allowed only for input data quoted
+  from Collett (the failure times of Table 12.2, the values he reads off a
+  figure) and for chapter/table/equation numbers.
+- Code that only exists to feed a number into the prose may be hidden with
+  `include = FALSE`. Code the reader is meant to run must stay visible and must
+  be runnable in order, with no hidden state.
+- Keep the R code minimal: use existing functions (`count()`, `tidy()`,
+  `survfit()`, `cuminc()`, `crr()`, `predict()`, base graphics) rather than
+  writing helpers. No `fmt`/`hr_ci`-style functions; control output with
+  `options(digits = 3)` and let tibbles print as they are. No `kable()`,
+  `labs()` or theming unless there is a reason.
+- Questions are numbered, sections are not.
+
 ## Git Workflow
 
 - Single trunk branch `main`; work directly or on a topic branch, then merge.

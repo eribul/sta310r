@@ -1,0 +1,18 @@
+---
+title: "Computer exercise 3: solutions"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+    fig_width: 7
+    fig_height: 5
+params:
+  solutions_only: true
+vignette: >
+  %\VignetteIndexEntry{Computer exercise 3: solutions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r child = "cs3-competing-risks.Rmd"}
+```

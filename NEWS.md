@@ -1,5 +1,31 @@
 # sta310r (development version)
 
+* Added a new pair of vignettes, "Computer exercise 3: Competing risks" and its
+  solutions, based on Chapter 12 of Collett (2023) and the R code in Section
+  17.12. The exercise covers the difference between the cause-specific hazard
+  and the cumulative incidence function, why the complement of the
+  cause-specific Kaplan–Meier estimate is not an incidence, the Aalen–Johansen
+  estimator and Gray's test (`tidycmprsk::cuminc()`), cause-specific Cox models
+  and the Fine–Gray subdistribution model (`tidycmprsk::crr()`), the
+  interpretation of subhazard ratios, and how to check proportional
+  subhazards with residuals and a time-dependent term (`cmprsk::crr()`). The
+  data sets are `liver` and `mice`. As for the other exercise, the exercise and
+  the solutions are generated from a single source file.
+* `modelsummary` is now declared in `Suggests` so it can be installed with
+  the other dependencies needed to build the competing-risks solutions.
+* Corrected the competing-risks solutions, including the interpretation of
+  cause-specific hazards and cumulative incidence, the graft failure
+  predictions, and the Fine–Gray diagnostics.
+* Shortened the competing-risks exercise by removing the optional
+  Kaplan–Meier question and combining the two thrombosis model comparisons.
+* Simplified the competing-risks solutions using `riskRegression` for
+  Fine–Gray predictions, `glance()` for Gray's tests, and `prop.table()` for
+  terminal cause proportions.
+* Aligned the competing-risks terminology with Chapters 12 and 17 of Collett.
+* Removed five subquestions and made the time-dependent Fine and Gray
+  calculations optional, with their results provided for interpretation.
+* `muhaz` is now declared in `Suggests`; it was used by the first exercise but
+  missing from the dependency list, which gave a NOTE in `R CMD check`.
 * The package is now published on R-universe at
   <https://eribul.r-universe.dev>, which serves pre-built binaries for Windows,
   macOS and Linux so installation no longer requires a local toolchain (for
