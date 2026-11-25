@@ -12,16 +12,6 @@ articles:
   contents:
   - cs1-survival-data
   - cs1-solutions
-- title: Computer exercise 3
-  desc: >
-    Chapter 12 only: competing risks, why the Kaplan–Meier estimate is not
-    appropriate, the cause-specific hazard and the cumulative incidence
-    function, Gray's test, cause-specific Cox models and the Fine–Gray
-    subdistribution model. The exercise and its solutions are two separate
-    documents that share the same numbering.
-  contents:
-  - cs3-competing-risks
-  - cs3-solutions
 - title: Getting started
   desc: >
     A walk-through of the data sets.

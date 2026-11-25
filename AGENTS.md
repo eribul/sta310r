@@ -99,7 +99,7 @@ as a child with `show_solutions: true`. Both are real vignettes and are built by
 - Tests: testthat edition 3. Assert the structure of the data sets with
   `expect_named()`/`expect_identical()` and check dimensions and codings.
 
-## Exercise vignettes (`cs1`, `cs3`, ...)
+## Exercise vignettes
 
 - One source file per exercise plus a thin `*-solutions.Rmd` wrapper that knits
   it as a child. Solution blocks are wrapped in

@@ -1162,8 +1162,7 @@ dataset_by_exercise |>
 
 ## Computer exercises
 
-The course exercises are shipped as vignettes, each with a solutions
-vignette.
+The package includes Computer exercise 1 and its solutions as vignettes.
 
 The first exercise covers censoring, the survivor and hazard functions,
 Kaplan–Meier, Nelson–Aalen and the log-rank family (Chapters 1–2):
@@ -1173,12 +1172,5 @@ vignette("cs1-survival-data")
 vignette("cs1-solutions")
 ```
 
-The third exercise covers competing risks: why the Kaplan–Meier estimate
-is not appropriate, the cause-specific hazard and the cumulative
-incidence function, cause-specific Cox models and the Fine–Gray
-subdistribution model (Chapter 12):
-
-``` r
-vignette("cs3-competing-risks")
-vignette("cs3-solutions")
-```
+Computer exercise 4 on competing risks is part of the STA310 course
+materials.
