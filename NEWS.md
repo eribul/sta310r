@@ -1,5 +1,7 @@
 # sta310r (development version)
 
+* Added Computer exercise 3 and its solutions on time-dependent Cox models
+  and recurrent events, based on Chapters 8 and 13 of Collett (2023).
 * Moved the competing-risks vignettes to the STA310 course materials as
   required Computer exercise 4, with Quarto instructions and a submission
   template.

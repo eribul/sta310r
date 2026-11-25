@@ -1,0 +1,640 @@
+---
+title: "Computer exercise 3: Time-dependent Cox models and recurrent events"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+    fig_width: 7
+    fig_height: 5
+params:
+  show_solutions: false
+  solutions_only: false
+vignette: >
+  %\VignetteIndexEntry{Computer exercise 3: Time-dependent Cox models and recurrent events}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE,
+  warning = FALSE
+)
+# When not rendering:
+if (!exists("params")) {
+  params <- list(show_solutions = FALSE, solutions_only = FALSE)
+}
+# When the solutions vignette renders this file as a child, `params` is set by
+# the parent. The default is the question-only version.
+show_solutions <- isTRUE(params$show_solutions)
+solutions_only <- isTRUE(params$solutions_only)
+
+# The solution blocks are marked with HTML comments in the document body. The
+# document hook below either drops them (question-only version) or drops
+# everything except them (solutions-only version).
+knitr::knit_hooks$set(document = function(x) {
+  lines <- unlist(strsplit(x, "\n", fixed = TRUE))
+
+  # This hook runs once on the child (via knit_child) and once more on the
+  # parent document. On the second run the markers have already been removed,
+  # so return the already-filtered document unchanged.
+  if (
+    solutions_only &&
+      !any(grepl("<!-- SOLUTION START -->", lines, fixed = TRUE))
+  ) {
+    return(paste(lines, collapse = "\n"))
+  }
+
+  if (solutions_only) {
+    # Keep only the solution blocks, and promote their "**Solution N.**"
+    # headers to real headings so they appear in the table of contents.
+    keep <- rep(FALSE, length(lines))
+    inside <- FALSE
+    for (i in seq_along(lines)) {
+      if (identical(lines[i], "<!-- SOLUTION START -->")) {
+        inside <- TRUE
+        next
+      }
+      if (identical(lines[i], "<!-- SOLUTION END -->")) {
+        inside <- FALSE
+        next
+      }
+      if (inside) {
+        lines[i] <- sub(
+          "^\\*\\*Solution ([0-9].*?)\\.\\*\\*$",
+          "## Solution \\1",
+          lines[i]
+        )
+        keep[i] <- TRUE
+      }
+    }
+  } else if (!show_solutions) {
+    # Question-only version: drop the solution blocks.
+    keep <- rep(TRUE, length(lines))
+    inside <- FALSE
+    for (i in seq_along(lines)) {
+      if (identical(lines[i], "<!-- SOLUTION START -->")) {
+        inside <- TRUE
+        keep[i] <- FALSE
+        next
+      }
+      if (identical(lines[i], "<!-- SOLUTION END -->")) {
+        inside <- FALSE
+        keep[i] <- FALSE
+        next
+      }
+      if (inside) keep[i] <- FALSE
+    }
+  } else {
+    # Questions and solutions together.
+    keep <- rep(TRUE, length(lines))
+  }
+
+  paste(lines[keep], collapse = "\n")
+})
+```
+
+This exercise follows **Chapters 8 and 13** of Collett, *Modelling Survival Data
+in Medical Research* (4th ed.).
+Questions 9–10 are optional extensions.
+
+## Data and software
+
+```{r}
+library(tidyverse)
+library(sta310r)
+library(survival)
+library(broom)
+
+options(digits = 3)
+
+# Qualify data set names that are also used by survival.
+bmt <- sta310r::bmt_leukaemia
+ov <- sta310r::ovarian
+rat_data <- sta310r::rats
+```
+
+## A time-dependent explanatory variable
+
+In Collett's Example 8.2, patients are followed from bone marrow
+transplantation until death or censoring. Platelet recovery means the
+platelet count has returned to the level specified in `?bmt_leukaemia`.
+We study whether the rate of death is associated with platelet recovery
+status during follow-up.
+
+**1.**
+
+(a) Read `?bmt_leukaemia`. Identify the follow-up time, event indicator,
+recovery time and disease group. How many patients died, and how many of
+those died without a recorded platelet recovery?
+
+(b) Inspect patients 7 and 8. What does the missing recovery time for
+patient 7 mean? At the time of patient 7's death, would patient 8 be
+classified as recovered?
+
+<!-- SOLUTION START -->
+
+**Solution 1.**
+
+(a) Follow-up is `time` in days from transplantation, `status` is the
+death indicator, `ptime` is the day of platelet recovery and `group` is
+the leukaemia group.
+
+```{r}
+with(bmt, table(status, precovery))
+```
+
+There were `r sum(bmt$status == 1)` deaths, including
+`r sum(bmt$status == 1 & bmt$precovery == 0)` without prior recovery.
+
+(b)
+
+```{r}
+bmt |>
+  filter(patient %in% c(7, 8)) |>
+  select(patient, time, status, precovery, ptime)
+```
+
+Patient 7 died without reaching the specified platelet level. The missing
+`ptime` reflects the absence of a recovery event. Patient 8 was alive at
+day `r bmt$time[bmt$patient == 7]`, but recovered on day
+`r bmt$ptime[bmt$patient == 8]`. Patient 8 was therefore still in the
+unrecovered group at the time of patient 7's death.
+
+<!-- SOLUTION END -->
+
+**2.** Use `tmerge()` to create counting-process data with a death indicator
+`death` and a time-dependent recovery indicator `recovered`. Use `event()`
+to define the endpoint and `tdc()` to update recovery. Supply only patients
+with a recorded recovery to the second call.
+
+NOTE: `tmerge()` is in the `survival` package. See `?tmerge` for its
+operational arguments, including `tdc()` and `event()`.
+
+(a) Print the intervals for patients 7 and 8. Explain the interval
+convention and where the death indicator is placed.
+
+(b) Check that all interval lengths are positive and that expanding the
+data preserves the numbers of patients and deaths.
+
+(c) At patient 7's death time, how many patients in the risk set had already
+recovered and how many had yet to recover? Use the interval endpoints to
+select the risk set.
+
+<!-- SOLUTION START -->
+
+**Solution 2.**
+
+(a)
+
+```{r}
+cp <- tmerge(bmt, bmt, id = patient, death = event(time, status))
+cp <- tmerge(
+  cp,
+  filter(bmt, precovery == 1),
+  id = patient,
+  recovered = tdc(ptime)
+)
+
+cp |>
+  filter(patient %in% c(7, 8)) |>
+  select(patient, tstart, tstop, death, recovered)
+```
+
+Each row represents $(\mathrm{tstart},\mathrm{tstop}]$. Patient 7 contributes
+one interval ending in death. Patient 8 contributes one interval before
+recovery and another after recovery. Recovery changes the covariate for the
+next interval. Only the interval ending in death has `death = 1`.
+
+(b)
+
+```{r}
+c(
+  patients = n_distinct(cp$patient) == nrow(bmt),
+  deaths = sum(cp$death) == sum(bmt$status),
+  positive_lengths = all(cp$tstart < cp$tstop)
+)
+```
+
+(c)
+
+```{r}
+day <- bmt$time[bmt$patient == 7]
+
+cp |>
+  filter(tstart < day, day <= tstop) |>
+  count(recovered)
+```
+
+The interval ending at `day` contributes to its risk set, including the
+patient who dies then. A new interval starting exactly at `day` contributes
+only afterwards.
+
+<!-- SOLUTION END -->
+
+**3.** Fit two Cox models for death, adjusting both for the three disease
+groups with `factor(group)`.
+
+(a) In the one-row-per-patient data, use `precovery` as if it were a baseline
+explanatory variable. In the counting-process data, use current
+`recovered` status. Report the recovery hazard ratio and 95% confidence
+interval from each fit.
+
+(b) Explain how the fixed analysis classifies patient 8 at the time of
+patient 7's death. What bias can this introduce? Which association would
+you report, and how would you describe the comparison?
+
+<!-- SOLUTION START -->
+
+**Solution 3.**
+
+(a)
+
+```{r}
+fixed <- coxph(Surv(time, status) ~ precovery + factor(group), data = bmt)
+updated <- coxph(
+  Surv(tstart, tstop, death) ~ recovered + factor(group),
+  data = cp
+)
+
+tidy(fixed, exponentiate = TRUE, conf.int = TRUE) |>
+  filter(term == "precovery")
+tidy(updated, exponentiate = TRUE, conf.int = TRUE) |>
+  filter(term == "recovered")
+```
+
+(b) The fixed analysis counts patient 8 as recovered even before the
+recovery day. Patients classified as ever recovered had to survive until
+recovery. Assigning that earlier time to the recovered group can create
+immortal time bias.
+
+The time-dependent model compares the instantaneous death rates for
+patients who have recovered and those who have yet to recover, at the
+same time since transplantation and within the same disease group.
+Its estimated hazard ratio is closer to 1 than the fixed estimate, and
+its confidence interval includes 1.
+Platelet recovery is a prognostic marker that can reflect underlying
+health. The association alone gives no causal effect of inducing recovery.
+
+<!-- SOLUTION END -->
+
+## A time-dependent coefficient
+
+`ovarian` contains follow-up from randomisation to death or censoring
+(Collett, Example 8.3). Here age is recorded at baseline. We allow its
+coefficient to vary with time since randomisation.
+
+**4.**
+
+(a) Define age in decades, centred at 60 years, and fit a Cox model with
+this age variable and treatment. What does the age hazard ratio compare?
+
+(b) Use `tt()` to add an interaction between age in decades and
+$(t-365)/365$, where $t$ is follow-up time in days. Keep the main effects
+of age (as derived from (a)) and treatment. Why is $t$ the current risk-set time? At what
+follow-up time does the main age coefficient give the log hazard ratio
+per decade?
+
+NOTE: `tt()` is a special term in `coxph()`. See `?coxph` for its
+documentation.
+
+(c) From the model in (b): Calculate the age hazard ratio per decade at days 100 and 400.
+
+(d) Compare the models from (a) and (b) by a likelihood ratio test with one degree of freedom.
+Is there evidence that the age hazard ratio varies over time?
+
+NOTE: `tt()` expands the risk sets internally, which prevents a direct
+`anova()` comparison with the proportional hazards fit (you need some lower level calculations).
+
+<!-- SOLUTION START -->
+
+**Solution 4.**
+
+(a)
+
+```{r}
+ov <- ov |> mutate(age10 = (age - 60) / 10)
+
+ph <- coxph(Surv(time, status) ~ age10 + factor(treat), data = ov)
+tidy(ph, exponentiate = TRUE, conf.int = TRUE)
+```
+
+The age hazard ratio compares women who differ by ten years of age at
+randomisation, within the same treatment group. The proportional hazards
+model uses the same ratio throughout follow-up.
+
+(b)
+
+```{r}
+varying <- coxph(
+  Surv(time, status) ~ age10 + factor(treat) + tt(age10),
+  data = ov,
+  tt = \(x, t, ...) x * (t - 365) / 365
+)
+coef(varying)
+```
+
+All women in a given risk set are compared at the same event time. Using
+each woman's eventual observed follow-up time as $t$ would use information
+from after that risk-set comparison. At day 365 the interaction is zero,
+so the main age coefficient gives the log hazard ratio per decade at
+that time.
+
+(c)
+
+```{r}
+days <- c(100, 400)
+b <- coef(varying)
+tibble(
+  day = days,
+  hr_per_decade = exp(
+    b[["age10"]] +
+      b[["tt(age10)"]] * (days - 365) / 365
+  )
+)
+```
+The fitted age hazard ratio becomes smaller later in follow-up.
+
+(d)
+
+```{r}
+lr <- 2 * as.numeric(logLik(varying) - logLik(ph))
+pchisq(lr, df = 1, lower.tail = FALSE)
+```
+
+The likelihood ratio test gives little evidence for the added term, and
+there are only `r sum(ov$status)` deaths. The point estimates alone do
+not establish a change with time. The partial log likelihoods can be
+compared directly because both models use the same patients and events.
+
+<!-- SOLUTION END -->
+
+## Recurrent events in the counting-process format
+
+In Collett's Example 13.2, rats were randomised to retinoid prophylaxis or
+control and followed for detection of mammary tumours. Several tumours
+could be detected in the same rat. Read `?sta310r::rats` for the treatment codes and
+how the recorded times handle multiple tumours found at the same visit.
+
+**5.**
+
+(a) Arrange the rows by rat and time. Within each rat, create a start
+time and an event-order variable. Print the rows for rats 3 and 17.
+Explain the difference between an interval's event order and the
+`status` at its end.
+
+(b) Check the number of rats, number of tumours and whether any intervals
+have zero or negative length. Create a data set for time to first tumour.
+How many tumour events does it contain, and what information is omitted?
+
+<!-- SOLUTION START -->
+
+**Solution 5.**
+
+(a)
+
+```{r}
+rat_intervals <- rat_data |>
+  arrange(rat, time) |>
+  mutate(
+    start = lag(time, default = 0),
+    event_number = row_number(),
+    .by = rat
+  )
+
+rat_intervals |> filter(rat %in% c(3, 17))
+```
+
+Each row uses time since randomisation, with the previous tumour time
+(or zero) as its start. Event order indicates the tumour number the rat
+is currently at risk of. On a censored interval, that next tumour was
+not observed.
+
+(b)
+
+```{r}
+rat_intervals |>
+  summarise(
+    rats = n_distinct(rat),
+    tumours = sum(status),
+    nonpositive = sum(start >= time)
+  )
+
+rat_first <- rat_intervals |> filter(event_number == 1)
+sum(rat_first$status)
+```
+
+The first-tumour data retain one interval per rat. They describe when a
+rat first develops a tumour and omit all subsequent tumour times.
+
+<!-- SOLUTION END -->
+
+## The Andersen–Gill and Prentice–Williams–Peterson models
+
+**6.**
+
+(a) Fit a Cox model for time to first tumour and an Andersen–Gill (AG) model
+using all the intervals. Use `cluster = rat` in the AG fit. Report the
+estimated treatment hazard ratios and 95% confidence intervals. Explain
+which events and risk sets each model uses.
+
+(b) Refit the same AG model without clustering, using `robust = FALSE`.
+Compare the estimated treatment coefficients and standard errors.
+What does clustering by rat change, and why?
+
+<!-- SOLUTION START -->
+
+**Solution 6.**
+
+(a)
+
+```{r}
+first <- coxph(Surv(time, status) ~ treatment, data = rat_first)
+ag <- coxph(
+  Surv(start, time, status) ~ treatment,
+  data = rat_intervals,
+  cluster = rat
+)
+
+tidy(first, exponentiate = TRUE, conf.int = TRUE)
+tidy(ag, exponentiate = TRUE, conf.int = TRUE)
+```
+
+The first model compares the rates of first tumour in the two groups
+among rats still tumour-free and under follow-up. The AG model compares
+the intensities of tumour detection among rats currently at risk,
+regardless of their previous tumour count. It uses a common baseline
+intensity across event orders.
+
+(b)
+
+```{r}
+ag_model_based <- coxph(
+  Surv(start, time, status) ~ treatment,
+  data = rat_intervals,
+  robust = FALSE
+)
+tibble(
+  variance = c("Model-based", "Cluster-robust"),
+  coefficient = c(coef(ag_model_based), coef(ag)),
+  standard_error = c(sqrt(vcov(ag_model_based)[1, 1]), sqrt(vcov(ag)[1, 1]))
+)
+```
+
+The estimated coefficients agree. The cluster-robust standard error in
+these data is larger. The fit uses the same risk sets and partial
+likelihood. The variance calculation allows contributions from the same
+rat to be dependent, treating different rats as independent clusters.
+
+<!-- SOLUTION END -->
+
+**7.**
+
+(a) On day 80 after randomisation, count how many rats are eligible for the
+AG risk set and how many are eligible for the PWP risk set for a second
+tumour. Explain the difference.
+
+(b) Fit a Prentice–Williams–Peterson (PWP) model on time since randomisation.
+Use a common treatment coefficient, stratify by event order and combine
+the fifth and later orders as in the Chapter 13 exercises. Cluster by
+rat. Compare the estimated treatment hazard ratio and interval with the
+AG results. What is allowed to differ across the strata?
+
+<!-- SOLUTION START -->
+
+**Solution 7.**
+
+(a)
+
+```{r}
+risk80 <- rat_intervals |> filter(start < 80, 80 <= time)
+nrow(risk80)
+risk80 |> filter(event_number == 2) |> nrow()
+```
+
+The AG risk set includes all rats under observation and at risk on day
+80. For the PWP second-tumour comparison, a rat must already have had a
+first tumour and still be at risk of its second at that time.
+
+(b)
+
+```{r}
+rat_intervals <- rat_intervals |>
+  mutate(event_stratum = pmin(event_number, 5))
+
+pwp <- coxph(
+  Surv(start, time, status) ~ treatment + strata(event_stratum),
+  data = rat_intervals,
+  cluster = rat
+)
+tidy(pwp, exponentiate = TRUE, conf.int = TRUE)
+```
+
+Both fits estimate a lower tumour intensity for the retinoid group.
+The PWP estimate is closer to 1 and its confidence interval is narrower
+in these data. The PWP comparison is made within event-order strata.
+The first four orders
+each have their own baseline intensity, and the fifth and later orders
+share another baseline. The model fits one treatment hazard ratio
+across these strata. A model with separate treatment coefficients by
+event order would answer a different question.
+
+<!-- SOLUTION END -->
+
+**8.** A trial team records every hospital admission over two years.
+The team wants both a comparison of the intensity of admissions
+throughout follow-up and a comparison restricted to patients still at
+risk of a second admission. Which models would you use? How would you
+represent time spent in hospital if a patient cannot have another
+admission until discharge? Explain how you would handle repeated records
+from the same patient when reporting uncertainty.
+
+<!-- SOLUTION START -->
+
+**Solution 8.**
+
+An AG model can address the first question by including all eligible
+admissions. For the second question, fit a PWP total-time model restricted
+to the second-admission stratum, or fit event-order-specific treatment
+coefficients and report the one for the second admission. Both approaches
+condition that comparison on a first admission. The clock can measure
+time since trial entry for both analyses.
+
+A patient who cannot be admitted again while already in hospital is out
+of the risk set from admission to discharge. Use intervals that end at
+admission and resume at discharge. A patient whose stay lasts until the
+end of follow-up contributes no further at-risk time. Cluster standard
+errors by patient to allow for dependence among records for the same
+person.
+
+<!-- SOLUTION END -->
+
+## Optional extensions
+
+**9.** Restrict the rats data to the first four event orders and fit two PWP
+models with the same event-order strata, one using *total time* and one
+using *gap time*. Define time zero for the first and for later tumours in
+the gap-time fit. Compare the treatment estimates and explain how the
+time scale changes the comparison.
+
+<!-- SOLUTION START -->
+
+**Solution 9.**
+
+```{r}
+first_four <- rat_intervals |>
+  filter(event_number <= 4) |>
+  mutate(gap = time - start)
+pwp_total <- coxph(
+  Surv(start, time, status) ~ treatment + strata(event_number),
+  data = first_four,
+  cluster = rat
+)
+pwp_gap <- coxph(
+  Surv(gap, status) ~ treatment + strata(event_number),
+  data = first_four,
+  cluster = rat
+)
+tidy(pwp_total, exponentiate = TRUE, conf.int = TRUE)
+tidy(pwp_gap, exponentiate = TRUE, conf.int = TRUE)
+```
+
+The gap clock starts at randomisation for the first tumour and restarts
+after each tumour. A final censored interval contributes the time since
+the last tumour until censoring if its event order is included. Both
+fits use the same event orders, and the gap-time estimate is somewhat
+further below 1 in these data. The gap-time fit compares rats at the
+same elapsed time since the start of the current interval, within the
+same stratum. The total-time fit compares rats at the same elapsed time
+since randomisation.
+
+<!-- SOLUTION END -->
+
+**10.** Fit a shared gamma frailty model for recurrent tumours with a
+frailty for each rat. Explain what is shared and interpret the treatment
+hazard ratio. How does this approach differ from using cluster-robust
+standard errors in the AG model?
+
+<!-- SOLUTION START -->
+
+**Solution 10.**
+
+```{r}
+shared <- coxph(
+  Surv(start, time, status) ~ treatment + frailty(rat, distribution = "gamma"),
+  data = rat_intervals
+)
+tidy(shared, exponentiate = TRUE, conf.int = TRUE) |>
+  filter(term == "treatment")
+```
+
+Each rat has an unobserved multiplicative factor shared by its tumour
+intensities. The treatment hazard ratio compares rats with the same
+frailty. This changes the intensity model to account explicitly for
+between-rat heterogeneity. Clustering the AG standard errors groups
+the variance contributions by rat without fitting a rat-specific
+frailty.
+
+<!-- SOLUTION END -->

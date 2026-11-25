@@ -78,7 +78,7 @@ dataset_by_exercise |>
 
 ## Computer exercises
 
-The package includes Computer exercise 1 and its solutions as vignettes.
+The package includes Computer exercises 1 and 3 and their solutions as vignettes.
 
 The first exercise covers censoring, the survivor and hazard functions,
 Kaplan–Meier, Nelson–Aalen and the log-rank family (Chapters 1–2):
@@ -86,6 +86,14 @@ Kaplan–Meier, Nelson–Aalen and the log-rank family (Chapters 1–2):
 ```{r, eval = FALSE}
 vignette("cs1-survival-data")
 vignette("cs1-solutions")
+```
+
+Computer exercise 3 covers time-dependent Cox models and recurrent events
+(Chapters 8 and 13). Allow about four hours for the main questions.
+
+```{r, eval = FALSE}
+vignette("cs3-time-dependent-recurrent")
+vignette("cs3-solutions")
 ```
 
 Computer exercise 4 on competing risks is part of the STA310 course materials.

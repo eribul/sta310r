@@ -52,12 +52,15 @@ Every data set that is used in a worked example of Collett (2023) has an alias
 
 ## Computer exercises
 
-The course exercises are vignettes in the package:
+The package includes instructions and solutions for two computer exercises:
 
 - `vignette("cs1-survival-data")` — the questions for Computer exercise 1
   (Chapters 1–2).
-- `vignette("cs1-solutions")` — the same document with the solutions included
-  after each question.
+- `vignette("cs1-solutions")` — the solutions for Computer exercise 1.
+- `vignette("cs3-time-dependent-recurrent")` — the questions for Computer
+  exercise 3 on time-dependent Cox models and recurrent events (Chapters 8
+  and 13).
+- `vignette("cs3-solutions")` — the solutions for Computer exercise 3.
 
 The exercises use the data sets in this package together with the `survival`
 package. They do not rely on any estimator functions from `sta310r`; the

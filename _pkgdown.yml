@@ -12,6 +12,13 @@ articles:
   contents:
   - cs1-survival-data
   - cs1-solutions
+- title: Computer exercise 3
+  desc: >
+    Chapters 8 and 13: time-dependent explanatory variables and coefficients,
+    counting-process data and models for recurrent events.
+  contents:
+  - cs3-time-dependent-recurrent
+  - cs3-solutions
 - title: Getting started
   desc: >
     A walk-through of the data sets.
