@@ -352,14 +352,11 @@ coefficient</a></li>
 events in the counting-process format</a></li>
 <li><a href="#the-andersengill-and-prenticewilliamspeterson-models" id="toc-the-andersengill-and-prenticewilliamspeterson-models">The
 Andersen–Gill and Prentice–Williams–Peterson models</a></li>
-<li><a href="#optional-extensions" id="toc-optional-extensions">Optional
-extensions</a></li>
 </ul>
 </div>
 
 <p>This exercise follows <strong>Chapters 8 and 13</strong> of Collett,
-<em>Modelling Survival Data in Medical Research</em> (4th ed.).
-Questions 9–10 are optional extensions.</p>
+<em>Modelling Survival Data in Medical Research</em> (4th ed.).</p>
 <div id="data-and-software" class="section level2">
 <h2>Data and software</h2>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
@@ -504,19 +501,12 @@ still at risk of a second admission. Which models would you use? How
 would you represent time spent in hospital if a patient cannot have
 another admission until discharge? Explain how you would handle repeated
 records from the same patient when reporting uncertainty.</p>
-</div>
-<div id="optional-extensions" class="section level2">
-<h2>Optional extensions</h2>
 <p><strong>9.</strong> Restrict the rats data to the first four event
 orders and fit two PWP models with the same event-order strata, one
 using <em>total time</em> and one using <em>gap time</em>. Define time
 zero for the first and for later tumours in the gap-time fit. Compare
 the treatment estimates and explain how the time scale changes the
 comparison.</p>
-<p><strong>10.</strong> Fit a shared gamma frailty model for recurrent
-tumours with a frailty for each rat. Explain what is shared and
-interpret the treatment hazard ratio. How does this approach differ from
-using cluster-robust standard errors in the AG model?</p>
 </div>
 
 

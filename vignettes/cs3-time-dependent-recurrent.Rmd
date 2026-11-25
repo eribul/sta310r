@@ -98,7 +98,6 @@ knitr::knit_hooks$set(document = function(x) {
 
 This exercise follows **Chapters 8 and 13** of Collett, *Modelling Survival Data
 in Medical Research* (4th ed.).
-Questions 9–10 are optional extensions.
 
 ## Data and software
 
@@ -571,8 +570,6 @@ person.
 
 <!-- SOLUTION END -->
 
-## Optional extensions
-
 **9.** Restrict the rats data to the first four event orders and fit two PWP
 models with the same event-order strata, one using *total time* and one
 using *gap time*. Define time zero for the first and for later tumours in
@@ -609,32 +606,5 @@ further below 1 in these data. The gap-time fit compares rats at the
 same elapsed time since the start of the current interval, within the
 same stratum. The total-time fit compares rats at the same elapsed time
 since randomisation.
-
-<!-- SOLUTION END -->
-
-**10.** Fit a shared gamma frailty model for recurrent tumours with a
-frailty for each rat. Explain what is shared and interpret the treatment
-hazard ratio. How does this approach differ from using cluster-robust
-standard errors in the AG model?
-
-<!-- SOLUTION START -->
-
-**Solution 10.**
-
-```{r}
-shared <- coxph(
-  Surv(start, time, status) ~ treatment + frailty(rat, distribution = "gamma"),
-  data = rat_intervals
-)
-tidy(shared, exponentiate = TRUE, conf.int = TRUE) |>
-  filter(term == "treatment")
-```
-
-Each rat has an unobserved multiplicative factor shared by its tumour
-intensities. The treatment hazard ratio compares rats with the same
-frailty. This changes the intensity model to account explicitly for
-between-rat heterogeneity. Clustering the AG standard errors groups
-the variance contributions by rat without fitting a rat-specific
-frailty.
 
 <!-- SOLUTION END -->

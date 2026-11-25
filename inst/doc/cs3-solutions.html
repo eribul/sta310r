@@ -350,7 +350,6 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <li><a href="#solution-7" id="toc-solution-7">Solution 7</a></li>
 <li><a href="#solution-8" id="toc-solution-8">Solution 8</a></li>
 <li><a href="#solution-9" id="toc-solution-9">Solution 9</a></li>
-<li><a href="#solution-10" id="toc-solution-10">Solution 10</a></li>
 </ul>
 </div>
 
@@ -713,25 +712,6 @@ is somewhat further below 1 in these data. The gap-time fit compares
 rats at the same elapsed time since the start of the current interval,
 within the same stratum. The total-time fit compares rats at the same
 elapsed time since randomisation.</p>
-</div>
-<div id="solution-10" class="section level2">
-<h2>Solution 10</h2>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>shared <span class="ot">&lt;-</span> <span class="fu">coxph</span>(</span>
-<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>  <span class="fu">Surv</span>(start, time, status) <span class="sc">~</span> treatment <span class="sc">+</span> <span class="fu">frailty</span>(rat, <span class="at">distribution =</span> <span class="st">&quot;gamma&quot;</span>),</span>
-<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a>  <span class="at">data =</span> rat_intervals</span>
-<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a>)</span>
-<span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a><span class="fu">tidy</span>(shared, <span class="at">exponentiate =</span> <span class="cn">TRUE</span>, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">&quot;treatment&quot;</span>)</span>
-<span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 7</span></span>
-<span id="cb18-8"><a href="#cb18-8" tabindex="-1"></a><span class="co">#&gt;   term      estimate std.error statistic  p.value conf.low conf.high</span></span>
-<span id="cb18-9"><a href="#cb18-9" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;        &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;</span></span>
-<span id="cb18-10"><a href="#cb18-10" tabindex="-1"></a><span class="co">#&gt; 1 treatment    0.422     0.223      14.9 0.000112    0.272     0.654</span></span></code></pre></div>
-<p>Each rat has an unobserved multiplicative factor shared by its tumour
-intensities. The treatment hazard ratio compares rats with the same
-frailty. This changes the intensity model to account explicitly for
-between-rat heterogeneity. Clustering the AG standard errors groups the
-variance contributions by rat without fitting a rat-specific
-frailty.</p>
 </div>
 
 
